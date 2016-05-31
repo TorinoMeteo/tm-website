@@ -1,0 +1,56 @@
+{% load static %}
+{% load pipeline %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>{% block title %}TorinoMeteo{% endblock %}</title>
+        {% block meta %}
+            <meta name="title" content="TorinoMeteo" />
+            <meta name="description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
+            <meta name="keywords" content="" />
+
+            <meta property="og:title" content="TorinoMeteo" />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="http://ws.torinometeo.org" />
+            <meta property="og:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
+
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:url" content="http://ws.torinometeo.org" />
+            <meta name="twitter:title" content="TorinoMeteo" />
+            <meta name="twitter:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
+            <meta name="twitter:creator" content="@abidibo" />
+        {% endblock %}
+        {% stylesheet 'vendor' %}
+        {% stylesheet 'torinometeo' %}
+        {% block extra_css %}{% endblock %}
+        <script src="{% static 'core/src/vendor/jquery/jquery.js' %}"></script>
+        {% javascript 'vendor' %}
+        {% javascript 'torinometeo' %}
+        {% block extra_js %}{% endblock %}
+    </head>
+    <body class="{% block body_css %}{% endblock %}">
+        {% block navbar %}
+            <nav class="navbar navbar-dark bg-inverse">
+                <button class="navbar-toggler hidden-sm-up pull-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+                    &#9776;
+                </button>
+                <a class="navbar-brand" href="#">TorinoMeteo</a>
+                <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        {% endblock %}
+        {% block jumbotron %}{% endblock %}
+        {% block content %}{% endblock %}
+        <footer>
+            <div class="container">
+            </div>
+        </footer>
+    </body>
+</html>

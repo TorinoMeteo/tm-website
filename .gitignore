@@ -1,0 +1,11 @@
+*.swp
+*.pyc
+torinometeo/.env
+.virtualenv
+torinometeo/media
+torinometeo/static
+provisioning/ansible_remote_variables
+provisioning/ansible_remote_inventory
+provisioning/playbooks/roles/webapp/templates/env
+releases
+logs

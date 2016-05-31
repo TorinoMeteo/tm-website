@@ -1,0 +1,75 @@
+{% extends 'base_site.html' %}
+{% load thumbnail %}
+{% load blog_tags %}
+{% load tagging_tags %}
+{% load disqus_tags %}
+{% load static %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block content %}
+<div class="container margin-top faded">
+     <div class="row">
+        <div class="col-md-8">
+            <section class="forecast">
+                <h1>Previsioni del tempo</h1>
+                <p><small>A cura di <strong>Paolo L. Bertolotto</strong></small></p>
+                <p><a class="btn btn-info" data-toggle="modal" data-target="#legendModal"><i class="fa fa-book"></i> Legenda simboli</a></p>
+                <h2>Situazione</h2>
+                {{ forecast.pattern | safe }}
+                {% for fd in forecast.dayforecast_set.all %}
+                    <h2>{{ fd.date }}</h2>
+                    <p><i class="fa fa-check-circle fa-2x" style="color: green"></i> <span style="font-size: 24px; display: inline-block; margin-left: 10px; font-weight: bold;">{{ fd.reliability }}%</span></p>
+                    <div>
+                        <div class="col-xs-6">
+                            <img class="forecast-img img-responsive" src="{{ fd.image12.url }}" alt="previsioni 00-12"/>
+                        </div>
+                        <div class="col-xs-6">
+                            <img class="forecast-img img-responsive" src="{{ fd.image24.url }}" alt="previsioni 12-24"/>
+                        </div>
+                    </div>
+                    {{ fd.text | safe }}
+                    <h3><i class="wi wi-thermometer"></i> Temperature</h3>
+                    {{ fd.temperatures | safe }}
+                    <h3><i class="wi wi-strong-wind"></i> Venti</h3>
+                    {{ fd.winds | safe }}
+                {% endfor %}
+
+                <table class="table"><tr><td style="vertical-align: middle; color: red;"><i class="fa fa-exclamation-triangle fa-2x"></i></td><td><small>Le previsioni meteorologiche qui presentate sono da considerarsi ad uso ed interesse personale e non mirano in alcun modo a sostituirsi agli organi preposti.<br />
+                                <strong>L'Associazione Culturale Torinometeo ed il suo staff, non si assumuno alcuna responsabilità per l'uso indebito di tale bollettino</strong></small></td></tr></table>
+            </section>
+            <section id="legendModal" class="modal fade">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <!-- <h1 id="modal-title" class="modal-title">Legenda simboli</h4> -->
+                        </div>
+                        <div id="modal-body" class="modal-body">
+                            <img class="img-responsive" src="{% static 'torinometeo/src/img/legenda.jpg' %}" />
+                        </div>
+                        <div id="modal-footer" class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </section><!-- /.modal -->
+        </div>
+        <div class="col-md-4">
+            <section class="panel panel-primary" style="margin-top: 20px;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">TorinoMeteo & Open Source</h3>
+                </div>
+                <div class="panel-body">
+                    <p><b>TorinoMeteo</b> ha sviluppato una libreria javascript (<strong>tmforecast</strong>) che permette di inserire facilmente le nostre previsioni all'interno di siti esterni, utilizzando dei semplici tag!</p>
+                    <p>Per non fare torto a nessuno, abbiamo creato una versione per jQuery ed una per MooTools, se non ci credete date un'occhiata al nostro account su<br />
+                        <a class="btn btn-info" href="https://github.com/TorinoMeteo/tm-forecast" target="_blank">github »</a><br />
+                        e troverete le istruzioni, demo ed ogni informazione utile all'utilizzo, ovviamente tutto open!</p>
+                    <p><strong>Forniamo tutto il codice gratuitamente, chiaramente sarebbe gradita una citazione con link della fonte.</strong></p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
