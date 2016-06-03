@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'disqus',
     'taggit',
     'rest_framework',
+    'rest_framework.authtoken',
     'forecast',
 )
 

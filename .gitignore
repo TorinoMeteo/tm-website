@@ -1,5 +1,6 @@
 *.swp
 *.pyc
+torinometeo/.ropeproject
 torinometeo/.env
 .virtualenv
 torinometeo/media
