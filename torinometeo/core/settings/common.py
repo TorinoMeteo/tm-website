@@ -86,6 +86,7 @@ INSTALLED_APPS = (
     'ckeditor',
     'ckeditor_uploader',
     'pipeline',
+    'corsheaders',
     'filer',
     'mptt',
     'easy_thumbnails',
@@ -162,6 +163,19 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_FORECAST_IMG_REL = 'forecast/img'
 
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
+# CORS HEADERS
+CORS_ORIGIN_WHITELIST = (
+    'localhost'
+)
+CORS_ALLOW_CREDENTIALS = True
+
 # ADMIN
 
 SUIT_CONFIG = {
@@ -171,6 +185,8 @@ SUIT_CONFIG = {
         '-',
 
         {'app': 'auth', 'label': 'Authentication', 'icon': 'icon-lock'},
+        {'app': 'authtoken', 'label': 'REST token authentication',
+         'icon': 'icon-lock'},
         {'app': 'sites', 'label': 'Sites', 'icon': 'icon-leaf'},
 
 
