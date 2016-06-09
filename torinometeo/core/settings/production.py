@@ -9,6 +9,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['ws.torinometeo.org',]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 STATIC_ROOT = '/home/torinometeo/www/torinometeo/static/'
 MEDIA_ROOT = '/home/torinometeo/www/torinometeo/media/'
 # CKEDITOR
