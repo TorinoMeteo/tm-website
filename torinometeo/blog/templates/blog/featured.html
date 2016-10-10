@@ -1,0 +1,30 @@
+{% load sorl_thumbnail %}
+{% load blog_tags %}
+<section class="blog-featured">
+    <h1 class="hidden">Blog</h1>
+    {% for entry in entries %}
+    <article class="col-md-12 col-lg-6{% if forloop.counter0 %} hidden-md-down{% endif %}">
+        <div class="content">
+            <h1>{{ entry.title }}</h1>
+            {% tags_bar entry.tags.all 'blog' %}
+            {{ entry.text | safe | truncatewords_html:entry.index_words }}
+            <p><a class="read-all serif" href="{{ entry.get_absolute_url }}">leggi tutto <i class="fa fa-arrow-right"></i></a></p>
+        </div>
+        {% sorl_thumbnail entry.image "400x200" crop="center" format="PNG" as im %}
+        <div class="blog-entry-f-figure" style="width: 100%; height: 200px;background: url({{ im.url }}) no-repeat center center;background-size: cover;">
+            <div class="blog-entry-f-info">
+                <i class="fa fa-clock-o"></i>
+                <time class="left serif" content="{{ entry.creation_date|date:"Y-m-d" }}" datetime="{{ entry.get_time_attribute }}" pubdate="pubdate">
+                    {{ entry.creation_date }}
+                </time>
+                <p class="pull-right">
+                    <span class="glyphicon glyphicon-comment"></span> 
+                    <a class="serif" href="http://www.torinometeo.org/{{ entry.get_absolute_url }}#disqus_thread" data-disqus-identifier="blogentry_{{ entry.id }}">commenti</a>
+                </p>
+                <span class="clearfix"></span>
+            </div>
+        </div>
+        {% endthumbnail %}
+    </article>
+    {% endfor %}
+</section>

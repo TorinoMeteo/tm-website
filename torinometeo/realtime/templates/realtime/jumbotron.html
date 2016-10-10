@@ -1,0 +1,12 @@
+<div id="rt-jumbotron" class="jumbotron">
+    <script type="text/javascript">
+        //var stations = [];
+        var stations = [1, 2, 4];
+        var stations_name = ['Torino Regio Parco', 'Torino Lingotto', 'Bielmonte'];
+        {% for station in stations %}
+            //stations.push({{ station.id }})
+        {% endfor %}
+        var jumbotron = new torinometeo.realtime.Jumbotron('rt-jumbotron', stations, stations_name);
+        jumbotron.load();
+    </script>
+</div>

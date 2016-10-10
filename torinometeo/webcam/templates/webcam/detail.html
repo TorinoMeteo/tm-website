@@ -1,0 +1,38 @@
+{% extends 'base_site.html' %}
+{% load thumbnail %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block content %}
+<div id="webcam-bkg-url" style="background: url({{ object.url }}) no-repeat top center; background-size: 100%; background-attachment: fixed; margin-top: -20px; padding-top: 40px;" class="container-fluid faded">
+    <div class="container">
+     <div class="row">
+        <div class="col-xs-12">
+            <section>
+                <div id="webcam-desc" style=" padding: 14px; margin-bottom: 20px; max-height: 100%; background: rgba(255, 255, 255, 0.5);">
+                    <h1>{{ object.name }}</h1>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <p><i class="fa fa-camera"></i> <strong>{{ webcam.technology }}</strong></p>
+                            {{ object.description|safe }}
+                        </div>
+                        <div class="col-sm-5">
+                            <img src="{{ object.url }}" class="img-responsive" style="margin: auto" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <script>
+                $('#webcam-desc').on('mouseover', function() {
+                    $(this).css('background-color', 'rgba(255, 255, 255, 0.8)');
+                });
+                $('#webcam-desc').on('mouseout', function() {
+                    $(this).css('background-color', 'rgba(255, 255, 255, 0.5)');
+                });
+            </script>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

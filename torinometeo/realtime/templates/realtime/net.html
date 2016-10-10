@@ -1,0 +1,50 @@
+{% extends 'base_site.html' %}
+{% load thumbnail %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block content %}
+<div class="container margin-top faded">
+    <section class="realtime-net">
+        <h1>Rete TorinoMeteo</h1>
+        <p>La rete Realtime di TorinoMeteo è composta da diverse stazioni meteorologiche amatoriali situate sul territorio Piemontese ed in alcune regioni/stati confinanti. Ciascun appartenente alla rete è proprietario dei dati rilevati dalla propria stazione, che mette a disposizione della comunità di meteo appassionati.</p>
+        <p>Chiunque può entrare a far parte della rete TorinoMeteo, purché condivida lo spirito di condivisione e le finalità del progetto.<br />
+            I passi da seguire per far si che la propria stazione diventi un nodo della rete sono i seguenti:</p>
+        <ul>
+            <li>Compilate il form che trovate <a href="{% url 'realtime-net-request' %}">qui</a>. Dovete inserire le informazioni generali richieste ed allegare una foto che ritragga in modo ben visibile l'installazione della stazione.</li>
+            <li>Lo staff di TorinoMeteo valuterà se la stazione possiede i requisiti per entrare nella rete (affidabilità delle misure, ubicazione, etc...).</li>
+            <li>Se la stazione viene "accettata" sarete contattati per verificare il funzionamento della lettura automatica del file di dati realtime generati dalla stazione, ed eventualmente riceverete un aiuto per generarne uno compatibile.</li>
+        </ul>
+
+        <div class="row">
+            {% for station in object_list %}
+                {% if forloop.counter0|divisibleby:2  %}
+                    <div class="clearfix visible-sm"></div>
+                {% endif %}
+                {% if forloop.counter0|divisibleby:3 %}
+                  <div class="clearfix visible-md"></div>
+                {% endif %}
+                {% if forloop.counter0|divisibleby:4 %}
+                  <div class="clearfix visible-lg"></div>
+                {% endif %}
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <div class="net-station-box" onclick="$(this).hasClass('flip') ? $(this).removeClass('flip') : $(this).addClass('flip')">
+                        <div class="front">
+                            {% thumbnail station.image "600x300" crop="center" format="PNG" as im %}
+                                <img alt="{{ station.name }} img" class="img-responsive" src={{ im.url }} />
+                            {% endthumbnail %}
+                            <h2>{{ station.name }}</h2>
+                        </div>
+                        <div class="back">
+                            <h2>{{ station.name }}</h2>
+                            {{ station.description | safe | truncatewords_html:10 }}
+                            <p style="margin-top: 10px;"><a href="{% url 'realtime-station' station.slug %}">PAGINA STAZIONE <i class="fa fa-arrow-right"></i></a></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

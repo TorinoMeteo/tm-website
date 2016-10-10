@@ -1,0 +1,333 @@
+{% extends 'base_site.html' %}
+{% load thumbnail %}
+{% load static %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block content %}
+<div class="container margin-top faded">
+    <section class="realtime-station-historic">
+        <h1>{{ object.name }}</h1>
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Storico
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="{% url 'realtime-station' object.slug %}">Principale</a></li>
+                <li><a href="{% url 'realtime-station-realtime' object.slug %}">Live</a></li>
+                <li><a href="{% url 'realtime-station-graph' object.slug %}">Grafici</a></li>
+            </ul>
+        </div>
+        </nav>
+        <div class="row">
+            <div class="col-sm-12">
+                <p>Vengono qui riportati tutti i dati storici archiviati per la Stazione <strong>{{ object.name }}</strong>.</p>
+                <p>Per ciascun giorno sono stati salvati i seguenti dati:</p>
+                <ul>
+                    <li>Temperatura massima, minima e media</li>
+                    <li>Pressione massima, minima e media</li>
+                    <li>Umidità relativa massima, minima e media</li>
+                    <li>Accumulo precipitativo</li>
+                </ul>
+                <p class="alert alert-info">I dati sono stati raccolti a partire dal {{ first_date }}.</p>
+                <div class="row">
+                    <div class="col-xs-3" style="text-align: right">
+                        <a style="cursor: pointer;" class="fa fa-arrow-left" id="arrow-left"></a>
+                    </div>
+                    <div class="col-xs-3">
+                        <select data-minmonth="{{ min_month }}" name=month id="month" class="form-control">
+                            <option{% if month == 1 %} selected="selected"{% endif %} value="1">Gennaio</option>
+                            <option{% if month == 2 %} selected="selected"{% endif %} value="2">Febbraio</option>
+                            <option{% if month == 3 %} selected="selected"{% endif %} value="3">Marzo</option>
+                            <option{% if month == 4 %} selected="selected"{% endif %} value="4">Aprile</option>
+                            <option{% if month == 5 %} selected="selected"{% endif %} value="5">Maggio</option>
+                            <option{% if month == 6 %} selected="selected"{% endif %} value="6">Giugno</option>
+                            <option{% if month == 7 %} selected="selected"{% endif %} value="7">Luglio</option>
+                            <option{% if month == 8 %} selected="selected"{% endif %} value="8">Agosto</option>
+                            <option{% if month == 9 %} selected="selected"{% endif %} value="9">Settembre</option>
+                            <option{% if month == 10 %} selected="selected"{% endif %} value="10">Ottobre</option>
+                            <option{% if month == 11 %} selected="selected"{% endif %} value="11">Novembre</option>
+                            <option{% if month == 12 %} selected="selected"{% endif %} value="12">Dicembre</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <select data-mindate="{{ min_year }}" name="year" id="year" class="form-control">
+                            {% for y in range_years %}
+                            <option value="{{ y }}"{% if year == y %} selected="selected"{% endif %}>{{ y }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <a style="cursor: pointer" class="fa fa-arrow-right" id="arrow-right"></a>
+                    </div>
+                </div>
+                <p class="text-center"><button id="update-date" class="btn btn-primary">aggiorna</button></p>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="form-inline">Ricerca i valori di 
+                            <select id="up_var" class="form-control">
+                                <option value=""></option>
+                                <option value="temp">temperatura</option>
+                                <option value="press">pressione</option>
+                                <option value="rh">umidità relativa</option>
+                                <option value="rain">accumulo</option>
+                            </select>
+                            &gt; <input id="up_value" type="text" size="5" class="form-control" />
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="form-inline limit-blue">Ricerca i valori di 
+                            <select id="down_var" class="form-control">
+                                <option value=""></option>
+                                <option value="temp">temperatura</option>
+                                <option value="press">pressione</option>
+                                <option value="rh">umidità relativa</option>
+                                <option value="rain">accumulo</option>
+                            </select>
+                             &lt; <input id="down_value" type="text" size="5" class="form-control" />
+                        </p>
+                    </div>
+                </div>
+                <hr />
+                <div class="table-responsive-vertical">
+                <table class="table table-striped table-hover table-realtime-historic">
+                    <thead>
+                        <tr>
+                            <th class="day-th">Giorno<br /><i class="fa fa-calendar"></i></th>
+                            <th class="temp-th" colspan="3">Temperatura<br /><i class="wi wi-thermometer"></i> (°C)</th>
+                            <th class="press-th" colspan="3">Pressione<br /><i class="wi wi-barometer"></i> (hPa)</th>
+                            <th class="rh-th" colspan="3">Umidità relativa<br /><i class="wi wi-humidity"></i> (%)</th>
+                            <th class="rain-th">Accumulo<br /><i class="wi wi-raindrops"></i> (mm)</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Media</th>
+                            <th class="border">Min</th>
+                            <th>Max</th>
+                            <th>Media</th>
+                            <th class="border">Min</th>
+                            <th>Max</th>
+                            <th>Media</th>
+                            <th class="border"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data %}
+                            <tr>
+                                <td data-title="Giorno">{{ d.date|slice:'8:10' }}</td>
+                                <td data-type="temp" class="border" data-title="Temperatura minima (°C)">{{ d.temperature_min }}</td>
+                                <td data-type="temp" data-title="Temperatura massima (°C)">{{ d.temperature_max }}</td>
+                                <td data-type="temp" data-title="Temperatura media (°C)">{{ d.temperature_mean }}</td>
+                                <td data-type="press" class="border" data-title="Pressione minima (hPa)">{{ d.pressure_min }}</td>
+                                <td data-type="press" data-title="Pressione massima (hPa)">{{ d.pressure_max }}</td>
+                                <td data-type="press" data-title="Pressione media (hPa)">{{ d.pressure_mean }}</td>
+                                <td data-type="rh" class="border" data-title="Umidità relativa minima (%)">{{ d.relative_humidity_min }}</td>
+                                <td data-type="rh" data-title="Umidità relativa massima (%)">{{ d.relative_humidity_max }}</td>
+                                <td data-type="rh" data-title="Umidità relativa media (%)">{{ d.relative_humidity_mean }}</td>
+                                <td data-type="rain" class="border" data-title="Accumulo (mm)">{{ d.rain }}</td>
+                            </tr>
+                            {% if  d.date_obj.day == 10 %}
+                                <tr class="decade">
+                                    <td data-title="Giorno">1° decade medie</td>
+                                    <td data-type="temp" class="border" data-title="Media temperature minime (°C)">{{ t_mean_min_1d }}</td>
+                                    <td data-type="temp" data-title="Media temperature massime (°C)">{{ t_mean_max_1d }}</td>
+                                    <td data-type="temp" data-title="Media temperature medie (°C)">{{ t_mean_mean_1d }}</td>
+                                    <td class="hidden-xs" data-type="press" class="border" data-title="Media pressione minime (hPa)">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rain" class="border" data-title="">&#160;</td>
+                                </tr>
+                                <tr class="decade">
+                                    <td data-title="Giorno">1° decade estremi</td>
+                                    <td data-type="temp" class="border" data-title="Minima temperatura (°C)">{{ t_min_1d }}</td>
+                                    <td data-type="temp" data-title="Massima temperatura (°C)">{{ t_max_1d }}</td>
+                                    <td class="hidden-xs" data-type="temp" data-title="">&#160;</td>
+                                    <td data-type="press" class="border" data-title="Minima pressione (hPa)">{{ p_min_1d }}</td>
+                                    <td data-type="press" data-title="Massima pressione (hPa)">{{ p_max_1d }}</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td data-type="rh" class="border" data-title="Minima umidità relativa (%)">{{ rh_min_1d }}</td>
+                                    <td data-type="rh" data-title="Massima umidità relativa (%)">{{ rh_max_1d }}</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td data-type="rain" class="border" data-title="Accumulo totale (mm)">{{ r_sum_1d }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if  d.date_obj.day == 20 %}
+                                <tr class="decade">
+                                    <td data-title="Giorno">2° decade medie</td>
+                                    <td data-type="temp" class="border" data-title="Media temperature minime (°C)">{{ t_mean_min_2d }}</td>
+                                    <td data-type="temp" data-title="Media temperature massime (°C)">{{ t_mean_max_2d }}</td>
+                                    <td data-type="temp" data-title="Media temperature medie (°C)">{{ t_mean_mean_2d }}</td>
+                                    <td class="hidden-xs" data-type="press" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rain" class="border" data-title="">&#160;</td>
+                                </tr>
+                                <tr class="decade">
+                                    <td data-title="Giorno">2° decade estremi</td>
+                                    <td data-type="temp" class="border" data-title="Minima temperatura (°C)">{{ t_min_2d }}</td>
+                                    <td data-type="temp" data-title="Massima temperatura (°C)">{{ t_max_2d }}</td>
+                                    <td class="hidden-xs" data-type="temp" data-title="">&#160;</td>
+                                    <td data-type="press" class="border" data-title="Minima pressione (hPa)">{{ p_min_2d }}</td>
+                                    <td data-type="press" data-title="Massima pressione (hPa)">{{ p_max_2d }}</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td data-type="rh" class="border" data-title="Minima umidità relativa (%)">{{ rh_min_2d }}</td>
+                                    <td data-type="rh" data-title="Massima umidità relativa (%)">{{ rh_max_2d }}</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td data-type="rain" class="border" data-title="Accumulo totale (mm)">{{ r_sum_2d }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if  d.date_obj.day == last_day_month %}
+                                <tr class="decade">
+                                    <td data-title="Giorno">3° decade medie</td>
+                                    <td data-type="temp" class="border" data-title="Media temperature minime (°C)">{{ t_mean_min_3d }}</td>
+                                    <td data-type="temp" data-title="Media temperature massime (°C)">{{ t_mean_max_3d }}</td>
+                                    <td data-type="temp" data-title="Media temperature medie (°C)">{{ t_mean_mean_3d }}</td>
+                                    <td class="hidden-xs" data-type="press" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rain" class="border" data-title="">&#160;</td>
+                                </tr>
+                                <tr class="decade">
+                                    <td data-title="Giorno">3° decade estremi</td>
+                                    <td data-type="temp" class="border" data-title="Minima temperatura (°C)">{{ t_min_3d }}</td>
+                                    <td data-type="temp" data-title="Massima temperatura (°C)">{{ t_max_3d }}</td>
+                                    <td class="hidden-xs" data-type="temp" data-title="">&#160;</td>
+                                    <td data-type="press" class="border" data-title="Minima pressione (hPa)">{{ p_min_3d }}</td>
+                                    <td data-type="press" data-title="Massima pressione (hPa)">{{ p_max_3d }}</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td data-type="rh" class="border" data-title="Minima umidità relativa (%)">{{ rh_min_3d }}</td>
+                                    <td data-type="rh" data-title="Massima umidità relativa (%)">{{ rh_max_3d }}</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td data-type="rain" class="border" data-title="Accumulo totale (mm)">{{ r_sum_3d }}</td>
+                                </tr>
+                                <tr class="decade_month">
+                                    <td data-title="Giorno">Medie mese</td>
+                                    <td data-type="temp" class="border" data-title="Media temperature minime (°C)">{{ t_mean_min_m }}</td>
+                                    <td data-type="temp" data-title="Media temperature massime (°C)">{{ t_mean_max_m }}</td>
+                                    <td data-type="temp" data-title="Media temperature medie (°C)">{{ t_mean_mean_m }}</td>
+                                    <td class="hidden-xs" data-type="press" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" class="border" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td class="hidden-xs" data-type="rain" class="border" data-title="">&#160;</td>
+                                </tr>
+                                <tr class="decade_month">
+                                    <td data-title="Giorno">Estremi mese</td>
+                                    <td data-type="temp" class="border" data-title="Minima temperatura (°C)">{{ t_min_m }}</td>
+                                    <td data-type="temp" data-title="Massima temperatura (°C)">{{ t_max_m }}</td>
+                                    <td class="hidden-xs" data-type="temp" data-title="">&#160;</td>
+                                    <td data-type="press" class="border" data-title="Minima pressione (hPa)">{{ p_min_m }}</td>
+                                    <td data-type="press" data-title="Massima pressione (hPa)">{{ p_max_m }}</td>
+                                    <td class="hidden-xs" data-type="press" data-title="">&#160;</td>
+                                    <td data-type="rh" class="border" data-title="Minima umidità relativa (%)">{{ rh_min_m }}</td>
+                                    <td data-type="rh" data-title="Massima umidità relativa (%)">{{ rh_max_m }}</td>
+                                    <td class="hidden-xs" data-type="rh" data-title="">&#160;</td>
+                                    <td data-type="rain" class="border" data-title="Accumulo totale (mm)">{{ r_sum_m }}</td>
+                                </tr>
+
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <script>
+            (function() {
+                var month_el = $('#month'),
+                    year_el = $('#year');
+
+                var month = parseInt(month_el.val(), 10),
+                    year = parseInt(year_el.val(), 10);
+
+                var min_month = month_el.attr('data-minmonth'),
+                    min_year = year_el.attr('data-minyear');
+
+                // arrows visibility
+
+                if(year == {{ today.year }} && month >= {{ today.month }}) {
+                    $('#arrow-right').css('display', 'none');
+                }
+                else {
+                    $('#arrow-right').css('display', 'inline');
+                }
+
+                if(year == min_year && month <= min_month) {
+                    $('#arrow-left').css('display', 'none');
+                }
+                else {
+                    $('#arrow-left').css('display', 'inline');
+                }
+
+                // links
+                var next_month = month == 12 ? 1 : month + 1;
+                var next_year = month == 12 ? year + 1 : year;
+
+                var prev_month = month == 1 ? 12 : month - 1;
+                var prev_year = month == 1 ? year - 1 : year;
+
+                $('#arrow-left').on('click', function() {
+                    location.href = "{% url 'realtime-station-historic' object.slug %}?m=" + prev_month + "&y=" + prev_year;
+                });
+
+                $('#arrow-right').on('click', function() {
+                    location.href = "{% url 'realtime-station-historic' object.slug %}?m=" + next_month + "&y=" + next_year;
+                });
+
+                // update
+                console.log($('#update_date'));
+                $('#update-date').on('click', function() {
+                    location.href = "{% url 'realtime-station-historic' object.slug %}?m=" + $('#month').val() + "&y=" + $('#year').val();
+                });
+
+                // colors
+                function checkLimits() {
+                    $('td[data-type]').removeClass('red');
+                    $('td[data-type]').removeClass('blue');
+                    if($('#up_var').val() && $('#up_value').val()) {
+                        $('td[data-type=' + $('#up_var').val() + ']').each(function(index, item) {
+                            if(parseFloat($(item).text()) > parseFloat($('#up_value').val())) {
+                                $(item).addClass('red');
+                            }
+                        })
+                    }
+                    if($('#down_var').val() && $('#down_value').val()) {
+                        $('td[data-type=' + $('#down_var').val() + ']').each(function(index, item) {
+                            if(parseFloat($(item).text()) < parseFloat($('#down_value').val())) {
+                                $(item).addClass('blue');
+                            }
+                        })
+                    }
+                }
+                $('#up_var, #down_var, #up_value, #down_value').on('change', function() {
+                    checkLimits();
+                });
+
+                $('#up_value, #down_value').on('change', function() {
+                    checkLimits();
+                });
+
+                checkLimits();
+
+             })(jQuery);
+        </script>
+    </section>
+
+</div>
+{% endblock %}

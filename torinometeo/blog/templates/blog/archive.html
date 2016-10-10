@@ -1,0 +1,43 @@
+<section class="blog-archive hidden-xs">
+    <h1>Archivio</h1>
+    <div class="tree">
+    <ul class="" id="blog-entry-tree">
+    {% for entry in entries %}
+        {% ifchanged entry.creation_date|date:"Y" %}
+            {% if entry != entries.0 %}
+                </ul></li></ul>
+            {% endif %}
+        <li><span class="year">{{ entry.creation_date|date:"Y" }}</span><ul>
+        {% endifchanged %}
+        {% ifchanged entry.creation_date|date:"M" %}
+                {% ifchanged entry.creation_date|date:"Y" %}
+                {% else %}
+                    </ul></li>
+                {% endifchanged %}
+          <li><span class="month">{{ entry.creation_date|date:"M" }}</span><ul>
+        {% endifchanged %}
+            <li><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></li>
+    {% endfor %}
+    </ul></li></ul></li>
+    </ul>
+    </div>
+    <script>
+    (function ($) {
+        $('.tree li + li li').hide();
+        $('.tree li').addClass('hid');
+        $('#blog-entry-tree > li:first-child > ul > li:first-child').removeClass('hid');
+        $('.tree li').on('click', function (e) {
+            var children = $(this).find('> ul > li');
+            if (children.is(":visible")) {
+                children.hide('fast');
+                $(this).addClass('hid');
+            }
+            else {
+                children.show('fast');
+                $(this).removeClass('hid');
+            }
+            e.stopPropagation();
+        });
+    })(jQuery);
+    </script>
+</section>

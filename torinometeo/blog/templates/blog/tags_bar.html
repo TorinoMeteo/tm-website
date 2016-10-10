@@ -1,0 +1,8 @@
+{% if tags.count %}
+<p class="tag">
+    <span class="fa fa-tags"></span> 
+    {% for tag in tags %}
+    <a class="serif" href="{% url 'blog-category-list' tag.name|iriencode %}">{{ tag.name }}</a> 	
+    {% endfor %}
+</p>
+{% endif %}

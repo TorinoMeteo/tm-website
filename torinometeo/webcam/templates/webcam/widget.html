@@ -1,0 +1,18 @@
+<section class="webcam-widget" ng-controller="webcam.showcaseController" ng-cloak>
+    <h1>Webcam</h1>
+    <div class="row">
+        {% for webcam in webcams %}
+            <div class="col-md-4 col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <h2><a href="">{{ webcam.name }}</a></h2>
+                        <p><strong>{{ webcam.technology }}</strong></p>
+                        {{ webcam.description|safe|truncatewords_html:26 }}
+                        <p><a class="read-all serif" href="{% url 'webcam-detail' webcam.slug %}">Scopri di più <i class="fa fa-arrow-right"></i></a></p>
+                        <img class="img-responsive" src={{ webcam.url }} />
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>

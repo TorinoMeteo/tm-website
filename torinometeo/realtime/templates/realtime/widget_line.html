@@ -1,0 +1,19 @@
+<section>
+    <h1 class="hidden">Temperature</h1>
+    <div class="rwl-container">
+        <div class="rwl-rail">
+            {% for station in stations %}
+            &#160;<span class="fa fa-star"></span>&#160;
+            <i><b>{{ station.name }}</b></i>: T: {{ station.get_realtime_data.temperature }} °C, Tmax: {{ station.get_realtime_data.temperature_max }} °C, Tmin: {{ station.get_realtime_data.temperature_min }} °C
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        (function($) {
+            var rail = $('.rwl-rail');
+            var new_left = 40 - parseInt(rail.width());
+            setTimeout(function() { rail.css('left', new_left); }, 2000);
+            setInterval(function() { rail.css('left', new_left); }, 422000);
+         })(jQuery)
+    </script>
+</section>

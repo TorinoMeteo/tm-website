@@ -1,0 +1,144 @@
+{% extends 'base_site.html' %}
+{% load thumbnail %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block extra_js %}
+    <script src="//code.highcharts.com/highcharts.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container margin-top faded">
+    <section class="realtime-station">
+        <h1>{{ object.name }}</h1>
+        <nav>
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Live
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="{% url 'realtime-station' object.slug %}">Principale</a></li>
+                <li><a href="{% url 'realtime-station-historic' object.slug %}">Storico</a></li>
+                <li><a href="{% url 'realtime-station-graph' object.slug %}">Grafici</a></li>
+            </ul>
+        </div>
+        </nav>
+        <div class="row">
+            <div class="col-sm-8 col-xs-12">
+                <p class="alert alert-info"><i class="fa fa-clock-o"></i> <strong>Ultima rilevazione</strong>: <strong>{{ data_date }}</strong></p>
+                <div class="table-responsive-vertical">
+                    <table class="table table-bordered realtime-data">
+                        <thead>
+                            <tr>
+                                <th>Temperatura</th>
+                                <th>Umidità relativa</th>
+                                <th>Punto di rugiada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-title="Temperatura">{{ data.temperature }} °C</td>
+                                <td data-title="Umidità relativa">{{ data.relative_humidity }} %</td>
+                                <td data-title="Punto di rugiada">{{ data.dewpoint }} °C</td>
+                            </tr>
+                            <tr>
+                                <td data-title="Temperatura max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.temperature_max }} °C alle {{ data.temperature_max_time }}</td>
+                                <td data-title="Umidità relativa max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.relative_humidity_max }} % alle {{ data.relative_humidity_max_time }}</td>
+                                <td data-title="Punto di rugiada max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.dewpoint_max }} °C alle {{ data.dewpoint_max_time }}</td>
+                            </tr>
+                            <tr>
+                                <td data-title="Temperatura min"><span class="visible-sm-inline visible-md-inline visible-lg-inline">min: </span>{{ data.temperature_min }} °C alle {{ data.temperature_min_time }}</td>
+                                <td data-title="Umidità relativa min"><span class="visible-sm-inline visible-md-inline visible-lg-inline">min: </span>{{ data.relative_humidity_min }} % alle {{ data.relative_humidity_min_time }}</td>
+                                <td data-title="Punto di rugiada min"><span class="visible-sm-inline visible-md-inline visible-lg-inline">min: </span>{{ data.dewpoint_min }} °C alle {{ data.dewpoint_min_time }}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Vento</th>
+                                <th>Pressione</th>
+                                <th>Precipitazioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-title="Vento">{{ data.wind_strength }} Km/h {{ data.wind_dir }}</td>
+                                <td data-title="Pressione">{{ data.pressure }} hPa</td>
+                                <td data-title="Precipitazioni">{{ data.rain_rate }} mm/h</td>
+                            </tr>
+                            <tr>
+                                <td data-title="Vento max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.wind_strength_max }} Km/h {{ data.wind_dir_max }} alle {{ data.wind_max_time }}</td>
+                                <td data-title="Pressione max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.pressure_max }} hPa alle {{ data.pressure_max_time }}</td>
+                                <td data-title="Precipitazioni max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.rain_rate_max }} mm/h alle {{ data.rain_rate_max_time }}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Precipitazione giornaliera</th>
+                                <th>Precipitazione mensile</th>
+                                <th>Precipitazione annua - media</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-title="Precipitazione giornaliera">{{ data.rain }} mm</td>
+                                <td data-title="Precipitazione mensile">{{ data.rain_month }} mm</td>
+                                <td data-title="Precipitazione annua - media">{{ data.rain_year }} mm</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Grafici rilevazioni odierne</h2>
+                <div class="row">
+                    <div class="vol-md-6">
+                        <div id="rt-graph"></div>
+                        <script type="text/javascript">
+                            tm.render24Graphs('#rt-graph', jQuery.parseJSON('{{ day_data|safe }}'), {height: 400});
+                        </script>
+                    </div>
+                    <div class="vol-md-6"></div>
+                </div>
+
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><i class="fa fa-map-marker"></i> Mappa</h3>
+                    </div>
+                    <div id="map" style="width: 100%; height: 200px;"></div>
+                </div>
+                {% if object.webcam %}
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <h3><i class="fa fa-camera"></i> Webcam</h3>
+                        </div>
+                        <img class="img-responsive" src={{ object.webcam }} alt="webcam" />
+                    </div>
+                {% endif %}
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><i class="fa fa-cog"></i> Installazione</h3>
+                    </div>
+                    <img class="img-responsive" src="{{ object.image.url }}" alt="installazione" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyDQOI7eFzJLaNxHQ6vfAegcfwESgcNfAPg &callback=initMap" async defer></script>
+    <script>
+        var map,
+            initMap = function() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: {{ object.lat }}, lng: {{ object.lng }}},
+                    zoom: 8
+                });
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ object.lat }}, {{ object.lng }}),
+                    map: map
+                });
+            }
+    </script>
+</div>
+{% endblock %}

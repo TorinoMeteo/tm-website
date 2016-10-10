@@ -1,0 +1,8 @@
+<section>
+<h1>Categorie</h1>
+<div class="article cloud">
+{% for tag in blog_tags %}
+    <a style="font-size:{{tag.font_size}}em" href="{% url 'blog-category-list' tag %}">{{ tag }}({{tag.count}})</a>	
+{% endfor %}
+</div>
+</section>
