@@ -97,7 +97,11 @@ INSTALLED_APPS = (
     'taggit',
     'rest_framework',
     'rest_framework.authtoken',
+    # tm
     'forecast',
+    'realtime',
+    'blog',
+    'webcam',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -163,6 +167,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_FORECAST_IMG_REL = 'forecast/img'
+MEDIA_REALTIME_STATION_IMG_REL = 'realtime/station/img'
+MEDIA_REALTIME_NET_REQUEST_IMG_REL = 'realtime/net_request/img'
+MEDIA_BLOG_IMG_REL = 'blog/img'
+MEDIA_WEBCAM_IMG_REL = 'webcam/img'
 
 # DRF
 REST_FRAMEWORK = {
@@ -183,24 +191,27 @@ SUIT_CONFIG = {
 
         '-',
 
-        {'app': 'auth', 'label': 'Authentication', 'icon': 'icon-lock'},
+        {'app': 'auth', 'label': 'Authentication', 'icon': 'fa fa-lock'},
         {'app': 'authtoken', 'label': 'REST token authentication',
-         'icon': 'icon-lock'},
-        {'app': 'sites', 'label': 'Sites', 'icon': 'icon-leaf'},
+         'icon': 'fa fa-lock'},
+        {'app': 'sites', 'label': 'Sites', 'icon': 'fa fa-leaf'},
 
 
         '-',
 
-        {'app': 'filer', 'label': 'Files', 'icon': 'icon-file'},
+        {'app': 'filer', 'label': 'Files', 'icon': 'fa fa-file'},
 
 
         '-',
 
-        {'app': 'flatpages', 'label': 'Pagine', 'icon': 'icon-book'},
+        {'app': 'flatpages', 'label': 'Pagine', 'icon': 'fa fa-file-text-o'},
+        {'app': 'blog', 'label': 'Blog', 'icon': 'fa fa-book'},
 
         '-',
 
-        {'app': 'forecast', 'label': 'Previsioni', 'icon': 'icon-globe'},
+        {'app': 'realtime', 'label': 'Realtime', 'icon': 'fa fa-clock-o'},
+        {'app': 'forecast', 'label': 'Previsioni', 'icon': 'fa fa-globe'},
+        {'app': 'webcam', 'label': 'Webcam', 'icon': 'fa fa-camera'},
 
     )
 }
@@ -256,12 +267,16 @@ PIPELINE_JS = {
         'source_filenames': (
             'core/src/vendor/bootstrap/js/bootstrap.min.js',
             'core/src/vendor/moment/moment-with-locales.min.js',
+            'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
+            'core/src/vendor/bootstrap-material-design/scripts/material.js',
+            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
         ),
         'output_filename': 'core/js/vendor.min.js'
     },
     'torinometeo': {
         'source_filenames': (
             'core/src/js/core.js',
+            'core/src/js/realtime_jumbotron.js',
         ),
         'output_filename': 'core/js/core.min.js'
     },

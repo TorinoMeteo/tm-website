@@ -1,0 +1,28 @@
+// scss-lint:disable all
+body > footer {
+    background: rgba(0, 0, 20, 0.8);
+    margin-top: 0px;
+    overflow: auto;
+    padding: 20px 0;
+    color: #fff;
+    a {
+        color: $brand-primary;
+    }
+    h1 {
+        font-size: 24px;
+        margin-top: 15px;
+    }
+    ul {
+        list-style-type: none;
+        padding-left: 10px;
+        li {
+            &:before {
+                content: "";
+                font-family: 'FontAwesome';
+                margin-right: 5px;
+                color: $brand-primary;
+            }
+        }
+    }
+    border-top: 3px double #f8f8f8;
+}

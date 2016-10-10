@@ -34,6 +34,11 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
     # ckeditor uploader
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^realtime/', include('realtime.urls')),
+    url(r'^blog/', include('blog.urls')),
+    url(r'^previsioni/', include('forecast.urls')),
+    url(r'^captcha/', include('captcha.urls')),
+    url(r'^webcam/', include('webcam.urls')),
 
     # API
     url(r'^api/v1/auth/login/$', LoginView.as_view(),

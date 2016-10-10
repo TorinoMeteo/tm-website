@@ -13,11 +13,11 @@
 
             <meta property="og:title" content="TorinoMeteo" />
             <meta property="og:type" content="website" />
-            <meta property="og:url" content="http://ws.torinometeo.org" />
+            <meta property="og:url" content="https://ws.torinometeo.org" />
             <meta property="og:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
 
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:url" content="http://ws.torinometeo.org" />
+            <meta name="twitter:url" content="https://ws.torinometeo.org" />
             <meta name="twitter:title" content="TorinoMeteo" />
             <meta name="twitter:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
             <meta name="twitter:creator" content="@abidibo" />
@@ -31,26 +31,77 @@
         {% block extra_js %}{% endblock %}
     </head>
     <body class="{% block body_css %}{% endblock %}">
-        {% block navbar %}
-            <nav class="navbar navbar-dark bg-inverse">
-                <button class="navbar-toggler hidden-sm-up pull-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
-                    &#9776;
-                </button>
-                <a class="navbar-brand" href="#">TorinoMeteo</a>
-                <div class="collapse navbar-toggleable-xs" id="collapsingNavbar">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                    </ul>
-                </div>
+        {% block header %}
+        <header>
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button class="navbar-toggler hidden-md-up pull-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <a class="navbar-brand" href="/">TorinoMeteo</a>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        MENU
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
             </nav>
+        </header>
         {% endblock %}
         {% block jumbotron %}{% endblock %}
         {% block content %}{% endblock %}
         <footer>
             <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <section>
+                            <h1>TorinoMeteo</h1>
+                            <ul>
+                                <li><a href="/chi-siamo/">Chi siamo</a></li>
+                                <li><a href="/contatti/">Contatti</a></li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <nav>
+                            <h1>Open Source&Data</h1>
+                            <ul>
+                                <li><a href="/api-tmforecast/">API Previsioni</a></li>
+                                <li><a href="/js-tmforecast/">JS Previsioni</a></li>
+                                <li><a href="/open-source/coming-soon/">Coming Soon</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <nav>
+                            <h1>Realtime</h1>
+                            <ul>
+                                <li><a href="/progetti/rete-stazioni/">Progetto</a></li>
+                                <li><a href="/realtime/rete/">Mappa</a></li>
+                                <li><a href="{% url 'realtime-net' %}">Rete</a></li>
+                                <li><a href="/realtime/entra/">Entra nella rete</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <nav>
+                            <h1>Risorse</h1>
+                            <ul>
+                                <li><a href="/blog/">Blog</a></li>
+                                <li><a href="/blog/">Nowcasting</a></li>
+                                <li><a href="/previsioni/">Previsioni</a></li>
+                            </ul>
+                            <p>
+                                <a href="https://www.facebook.com/torino.meteo.7"><i class="fa fa-2x fa-facebook-square"></i></a>
+                                <a href="https://www.twitter.com/torinometeoweb"><i class="fa fa-2x fa-twitter-square"></i></a>
+                            </p>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </footer>
     </body>
+
 </html>
