@@ -14,7 +14,7 @@ class NetRequestForm(forms.ModelForm):
         model = NetRequest
         fields = '__all__'
         widgets = {
-                'firstname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. Mario', 'required': 'required', }),
+            'firstname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. Mario', 'required': 'required', }),
             'lastname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. Rossi', 'required': 'required', }),
             'email': forms.TextInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder': 'es. mario@rossi.it', 'required': 'required', }),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. 011 324355',}),
@@ -25,8 +25,8 @@ class NetRequestForm(forms.ModelForm):
             'lat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. 45.76443', 'required': 'required', }),
             'lng': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. 7.0453', 'required': 'required', }),
             'elevation': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. 520', 'required': 'required', }),
-            'station_description': forms.Textarea(attrs={'class': 'form-control', 'required': 'required', }),
-            'climate': forms.Textarea(attrs={'class': 'form-control', 'required': 'required', }),
+            'station_description': forms.Textarea(attrs={'class': 'form-control', 'required': 'required', 'rows': '3', }),
+            'climate': forms.Textarea(attrs={'class': 'form-control', 'required': 'required', 'rows': '3', }),
             'web_site_url': forms.TextInput(attrs={'type': 'url', 'class': 'form-control', 'placeholder': 'es. http://www.example.com'}),
             'webcam_url': forms.TextInput(attrs={'type': 'url', 'class': 'form-control', 'placeholder': 'es. http://www.example.com'}),
             'mean_year_rain': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'es. 990', 'required': 'required', }),

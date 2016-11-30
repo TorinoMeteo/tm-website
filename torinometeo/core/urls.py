@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^previsioni/', include('forecast.urls')),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^webcam/', include('webcam.urls')),
+    url(r'^treenav/', include('treenav.urls')),
 
     # API
     url(r'^api/v1/auth/login/$', LoginView.as_view(),

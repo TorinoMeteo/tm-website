@@ -1,5 +1,6 @@
 {% load static %}
 {% load pipeline %}
+{% load treenav_tags %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,6 +23,7 @@
             <meta name="twitter:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
             <meta name="twitter:creator" content="@abidibo" />
         {% endblock %}
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,300italic,400italic,500,700,900' rel='stylesheet' type='text/css'>
         {% stylesheet 'vendor' %}
         {% stylesheet 'torinometeo' %}
         {% block extra_css %}{% endblock %}
@@ -35,16 +37,19 @@
         <header>
             <nav class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
-                        <button class="navbar-toggler hidden-md-up pull-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
-                            <i class="fa fa-bars"></i>
+                        <button class="navbar-toggler pull-right hidden-lg-up" type="button" onclick="$(body).toggleClass('show-menu')">
+                            <i class="fa fa-bars fa-2x"></i>
                         </button>
                         <a class="navbar-brand" href="/">TorinoMeteo</a>
                     </div>
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        MENU
+                    <div class="collapsing-navbar">
+                        <div class="menu-container menu-container-sx">
+                            {% show_treenav 'menu-principale-sx' full_tree="True" %}
+                        </div>
+                        <div class="menu-container menu-container-dx">
+                            {% show_treenav 'menu-principale-dx' full_tree="True" %}
+                        </div>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </nav>

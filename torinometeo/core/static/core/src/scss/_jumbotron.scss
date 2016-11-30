@@ -14,9 +14,14 @@
     padding: 40px 20px;
     h1 {
         position: relative;
-        font-size: 40px;
+        font-size: 30px !important;
         cursor: pointer;
         margin-top: 40px;
+
+        @media(max-width: map-get($grid-breakpoints, 'md')) {
+          font-size: 40px;
+        }
+
         &:after {
             content: "";
             margin-left: 10px;
@@ -43,7 +48,8 @@
     #rt-graph-wrapper {
         position: relative;
         height: 220px;
-        width: 80%;
+        width: 100%;
+        padding: 0 50px;
         float: left;
         margin-left: 30px;
         margin-top: 10px;
@@ -71,13 +77,15 @@
         text-align: center;
         cursor: pointer;
         line-height: 28px;
+        transform: rotate(90deg);
+        transform-origin: center;
     }
     .rt-label.active {
         background: #fff;
     }
     .rt-relative-humidity-label, .rt-rain-label {
         border-radius: 0 12px 0 0;
-        right: -45px;
+        right: 5px;
     }
     .rt-relative-humidity-label {
         top: 15px;
@@ -87,7 +95,8 @@
     }
     .rt-temperature-label, .rt-pressure-label {
         border-radius: 12px 0 0 0;
-        left: -45px;
+        left: 5px;
+        transform: rotate(-90deg);
     }
     .rt-temperature-label {
         top: 15px;
@@ -111,6 +120,15 @@
     .rt-data {
         float: left;
     }
+    .rt-data2 {
+      float: right;
+      text-align: right;
+
+      @media(min-width: map-get($grid-breakpoints, 'lg')) {
+        float: left;
+        text-align: left;
+      }
+    }
     .rt-data-temperature, .rt-data-pressure, .rt-data-relative-humidity, .rt-data-wind, .rt-data-rain {
         i {
             font-size: 25px;
@@ -123,9 +141,9 @@
             font-weight: bold;
         }
         span[data-heat] {
-            font-weight: bold;
-            -webkit-text-stroke: 1px black;
+            font-weight: 900;
             font-size: 25px;
+            font-family: 'Roboto';
         }
     }
     span[data-heat=vcold] { color: #74BBFB; }

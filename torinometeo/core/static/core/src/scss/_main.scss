@@ -1,69 +1,84 @@
-// scss-lint:disable all
-/* body */
-html {
+$bg-body-1: #fff;
+$bg-body-2: #102b62;
+$bg-page: #f8f8f8;
 
-}
+$spinner-color: #aaa;
+$spinner-bg: #333;
+$spinner-shadow: #fff;
+
 body {
-    padding-top: 67px;
-    background-image:url(../img/skyline.png), linear-gradient(0deg, #fff, #102B62 60%);
-    background-size: auto, auto;
-    background-repeat: no-repeat, no-repeat;
-    background-position: bottom center, top center;
+  background-image: url('../img/skyline.png'), linear-gradient(0deg, $bg-body-1, $bg-body-2 60%);
+  background-position: bottom center, top center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: auto, auto;
+  font-family: 'Roboto';
+  font-weight: 300;
+  left: 0;
+  padding-top: 67px;
+  position: relative;
+  transition: left .3s linear;
 }
 
-body.page {
-    background-color: #f8f8f8;
-    background-image: url(../img/skyline.png), url(../img/j_bkg.png), url(../img/html_bkg.jpg);
-    background-size: auto, auto, 100% auto;
-    background-repeat: no-repeat, repeat, no-repeat;
-    // background-position: top left, 50% 50%;
-    background-position: bottom center, top left, 50% top;
+.page {
+  background-color: $bg-page;
+  background-image: url('../img/skyline.png'), url('../img/j_bkg.png'), url('../img/html_bkg.jpg');
+  background-position: bottom center, top left, 50% top;
+  background-repeat: no-repeat, repeat, no-repeat;
+  background-size: auto, auto, 100% auto;
+  // background-position: top left, 50% 50%;
 }
 
-/* classes */
+// classes
 .margin-top {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
-/* spinner */
-.spinner{
-    box-sizing: content-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -15px 0 0 -15px;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    border: solid 10px #aaa;
-    animation: spin 0.8s linear infinite;
+.hidden {
+  display: none;
 }
-.spinner:before {
+
+// spinner
+.spinner {
+  animation: spin .8s linear infinite;
+  border: solid 10px $spinner-color;
+  border-radius: 50%;
+  box-sizing: content-box;
+  height: 30px;
+  left: 50%;
+  margin: -15px 0 0 -15px;
+  position: absolute;
+  top: 50%;
+  width: 30px;
+
+  &::before {
+    background: $spinner-bg;
+    border-radius: 50%;
+    box-shadow: 2px 0 2px $spinner-shadow;
     content: '';
     display: block;
-    border-radius: 50%;
-    width: 10px;
     height: 10px;
-    background: #333;
     margin-top: 15px;
     position: absolute;
     top: 12px;
-    box-shadow: 2px 0 2px #fff;
+    width: 10px;
+  }
 }
 
+
 @keyframes spin{
-    0%{
-        transform: rotate(0deg)
-    }
+  0% {
+    transform: rotate(0deg);
+  }
 
-    33%{
-        transform: rotate(120deg);
-    }
+  33% {
+    transform: rotate(120deg);
+  }
 
-    66%{
-        transform: rotate(240deg);
-    }
-     100%{
-        transform: rotate(360deg)
-    }
+  66% {
+    transform: rotate(240deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

@@ -49,7 +49,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             .appendTo(this.$dom.container);
 
         // columns
-        this.$dom.col1 = jQuery('<div>', {'class': 'col-lg-3 col-md-6 hidden-sm hidden-xs'}).appendTo(this.$dom.container);
+        this.$dom.col1 = jQuery('<div>', {'class': 'col-lg-3 col-md-6 hidden-sm-down'}).appendTo(this.$dom.container);
         this.$dom.col2 = jQuery('<div>', {'class': 'col-lg-4 col-md-6 col-sm-12'}).appendTo(this.$dom.container);
         this.$dom.col3 = jQuery('<div>', {'class': 'col-lg-2 col-md-6 col-sm-6 col-xs-6'}).appendTo(this.$dom.container);
         this.$dom.col4 = jQuery('<div>', {'class': 'col-lg-3 col-md-6 col-sm-6 col-xs-6'}).appendTo(this.$dom.container);
@@ -84,7 +84,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.rt_data_pressure = jQuery('<div>', {'class': 'rt-data-pressure'}).appendTo(this.$dom.rt_data3);
         this.$dom.rt_data_relative_humidity = jQuery('<div>', {'class': 'rt-data-relative-humidity'}).appendTo(this.$dom.rt_data3);
 
-        this.$dom.rt_data4 = jQuery('<div>', {'class': 'rt-data'}).appendTo(this.$dom.col4);
+        this.$dom.rt_data4 = jQuery('<div>', {'class': 'rt-data rt-data2'}).appendTo(this.$dom.col4);
         this.$dom.rt_data_wind = jQuery('<div>', {'class': 'rt-data-wind'}).appendTo(this.$dom.rt_data4);
         this.$dom.rt_data_rain_rate = jQuery('<div>', {'class': 'rt-data-rain'}).appendTo(this.$dom.rt_data4);
         this.$dom.rt_data_rain = jQuery('<div>', {'class': 'rt-data-rain'}).appendTo(this.$dom.rt_data4);

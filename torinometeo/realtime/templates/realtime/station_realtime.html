@@ -1,4 +1,4 @@
-{% extends 'base_site.html' %}
+{% extends 'base.html' %}
 {% load thumbnail %}
 
 {% block jumbotron %}{% endblock %}
@@ -13,17 +13,16 @@
     <section class="realtime-station">
         <h1>{{ object.name }}</h1>
         <nav>
-        <div class="dropdown">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Live
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="{% url 'realtime-station' object.slug %}">Principale</a></li>
-                <li><a href="{% url 'realtime-station-historic' object.slug %}">Storico</a></li>
-                <li><a href="{% url 'realtime-station-graph' object.slug %}">Grafici</a></li>
-            </ul>
-        </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Live
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'realtime-station' object.slug %}">Principale</a>
+                    <a class="dropdown-item" href="{% url 'realtime-station-historic' object.slug %}">Storico</a>
+                    <a class="dropdown-item" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
+                </div>
+            </div>
         </nav>
         <div class="row">
             <div class="col-sm-8 col-xs-12">

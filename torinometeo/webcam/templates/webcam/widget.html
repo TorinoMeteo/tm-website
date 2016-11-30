@@ -3,13 +3,15 @@
     <div class="row">
         {% for webcam in webcams %}
             <div class="col-md-4 col-sm-12">
-                <div class="panel">
-                    <div class="panel-body">
-                        <h2><a href="">{{ webcam.name }}</a></h2>
-                        <p><strong>{{ webcam.technology }}</strong></p>
-                        {{ webcam.description|safe|truncatewords_html:26 }}
-                        <p><a class="read-all serif" href="{% url 'webcam-detail' webcam.slug %}">Scopri di più <i class="fa fa-arrow-right"></i></a></p>
-                        <img class="img-responsive" src={{ webcam.url }} />
+
+                <div class="card card-webcam">
+                    <div class="card-block">
+                        <h4 class="card-title">{{ webcam.name }}</h4>
+                        <h6 class="card-subtitle text-muted">{{ webcam.technology }}</h6>
+                    </div>
+                    <img class="card-img-top img-responsive" src="{{ webcam.url }}" alt="{{ webcam.name }}">
+                    <div class="card-block">
+                        <a href="{% url 'webcam-detail' webcam.slug %}" class="card-link">Scopri di più</a>
                     </div>
                 </div>
             </div>

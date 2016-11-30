@@ -1,205 +1,207 @@
-{% extends 'base_site.html' %}
+{% extends 'base.html' %}
 {% load thumbnail %}
 
 {% block jumbotron %}{% endblock %}
 
 {% block body_css %}page{% endblock %}
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
     <section class="realtime-net-request">
         <h1>Entra nella rete di TorinoMeteo</h1>
         <p>Per richiedere l'ingresso all'interno della rete realtime di TorinoMeteo compila il form che segue. I campi preceduti da asterisco sono obbligatori.</p>
-        <form class="form-horizontal" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <fieldset>
+                        <legend>Dati personali</legend>
+                        <div class="form-group clearfix">
+                            <label for="id_firstname" class="col-sm-3 control-label required label-right">Nome</label>
+                            <div class="col-sm-9">
+                                {{ form.firstname.errors }}
+                                {{ form.firstname }}
+                            </div>
+                        </div>
 
-            <fieldset>
-                <legend>Dati personali</legend>
-                <div class="form-group">
-                    <label for="id_firstname" class="col-sm-2 control-label required">Nome</label>
-                    <div class="col-sm-10">
-                        {{ form.firstname.errors }}
-                        {{ form.firstname }}
-                    </div>
-                </div>
+                        <div class="form-group clearfix">
+                            <label for="id_lastname" class="col-sm-3 control-label required label-right">Cognome</label>
+                            <div class="col-sm-9">
+                                {{ form.lastname.errors }}
+                                {{ form.lastname }}
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="id_lastname" class="col-sm-2 control-label required">Cognome</label>
-                    <div class="col-sm-10">
-                        {{ form.lastname.errors }}
-                        {{ form.lastname }}
-                    </div>
-                </div>
+                        <div class="form-group clearfix">
+                            <label for="id_email" class="col-sm-3 label-right control-label required">E-mail</label>
+                            <div class="col-sm-9">
+                                {{ form.email.errors }}
+                                {{ form.email }}
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="id_email" class="col-sm-2 control-label required">E-mail</label>
-                    <div class="col-sm-10">
-                        {{ form.email.errors }}
-                        {{ form.email }}
-                    </div>
-                </div>
+                        <div class="form-group clearfix">
+                            <label for="id_phone" class="col-sm-3 label-right control-label">Telefono</label>
+                            <div class="col-sm-9">
+                                {{ form.phone.errors }}
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                    </fieldset>
 
-                <div class="form-group">
-                    <label for="id_phone" class="col-sm-2 control-label">Telefono</label>
-                    <div class="col-sm-10">
-                        {{ form.phone.errors }}
-                        {{ form.phone }}
-                    </div>
-                </div>
-            </fieldset>
+                    <fieldset>
+                        <legend>Ubicazione Stazione</legend>
+                        <div class="form-group clearfix">
+                            <label for="id_address" class="col-sm-3 label-right control-label required">Indirizzo</label>
+                            <div class="col-sm-9">
+                                {{ form.address.errors }}
+                                {{ form.address }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_city" class="col-sm-3 label-right control-label required">Città</label>
+                            <div class="col-sm-9">
+                                {{ form.city.errors }}
+                                {{ form.city }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_province" class="col-sm-3 label-right control-label required">Provincia</label>
+                            <div class="col-sm-9">
+                                {{ form.province.errors }}
+                                {{ form.province }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_nation" class="col-sm-3 label-right control-label required">Nazione</label>
+                            <div class="col-sm-9">
+                                {{ form.nation.errors }}
+                                {{ form.nation }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_lat" class="col-sm-3 label-right control-label required">Latitudine</label>
+                            <div class="col-sm-9">
+                                {{ form.lat.errors }}
+                                {{ form.lat }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_lng" class="col-sm-3 label-right control-label required">Longitudine</label>
+                            <div class="col-sm-9">
+                                {{ form.lng.errors }}
+                                {{ form.lng }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_elevation" class="col-sm-3 label-right control-label required">Altitudine (m)</label>
+                            <div class="col-sm-9">
+                                {{ form.elevation.errors }}
+                                {{ form.elevation }}
+                            </div>
+                        </div>
+                    </fieldset>
 
-            <fieldset>
-                <legend>Ubicazione Stazione</legend>
-                <div class="form-group">
-                    <label for="id_address" class="col-sm-2 control-label required">Indirizzo</label>
-                    <div class="col-sm-10">
-                        {{ form.address.errors }}
-                        {{ form.address }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_city" class="col-sm-2 control-label required">Città</label>
-                    <div class="col-sm-10">
-                        {{ form.city.errors }}
-                        {{ form.city }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_province" class="col-sm-2 control-label required">Provincia</label>
-                    <div class="col-sm-10">
-                        {{ form.province.errors }}
-                        {{ form.province }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_nation" class="col-sm-2 control-label required">Nazione</label>
-                    <div class="col-sm-10">
-                        {{ form.nation.errors }}
-                        {{ form.nation }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_lat" class="col-sm-2 control-label required">Latitudine</label>
-                    <div class="col-sm-10">
-                        {{ form.lat.errors }}
-                        {{ form.lat }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_lng" class="col-sm-2 control-label required">Longitudine</label>
-                    <div class="col-sm-10">
-                        {{ form.lng.errors }}
-                        {{ form.lng }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_elevation" class="col-sm-2 control-label required">Altitudine (m)</label>
-                    <div class="col-sm-10">
-                        {{ form.elevation.errors }}
-                        {{ form.elevation }}
-                    </div>
-                </div>
-            </fieldset>
+                    <fieldset>
+                        <legend>Informazioni Stazione</legend>
+                        <div class="form-group clearfix">
+                            <label for="id_station_description" class="col-sm-3 label-right control-label required">Descrizione</label>
+                            <div class="col-sm-9">
+                                {{ form.station_description.errors }}
+                                {{ form.station_description }}
+                            </div>
+                        </div>
 
-            <fieldset>
-                <legend>Informazioni Stazione</legend>
-                <div class="form-group">
-                    <label for="id_station_description" class="col-sm-2 control-label required">Descrizione</label>
-                    <div class="col-sm-10">
-                        {{ form.station_description.errors }}
-                        {{ form.station_description }}
-                    </div>
-                </div>
+                        <div class="form-group clearfix">
+                            <label for="id_climate" class="col-sm-3 label-right control-label required">Microclima</label>
+                            <div class="col-sm-9">
+                                {{ form.climate.errors }}
+                                {{ form.climate }}
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="id_climate" class="col-sm-2 control-label required">Microclima</label>
-                    <div class="col-sm-10">
-                        {{ form.climate.errors }}
-                        {{ form.climate }}
-                    </div>
-                </div>
+                        <div class="form-group clearfix">
+                            <label for="id_web_site_url" class="col-sm-3 label-right control-label">URL sito web</label>
+                            <div class="col-sm-9">
+                                {{ form.web_site_url.errors }}
+                                {{ form.web_site_url }}
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label for="id_web_site_url" class="col-sm-2 control-label">URL sito web</label>
-                    <div class="col-sm-10">
-                        {{ form.web_site_url.errors }}
-                        {{ form.web_site_url }}
-                    </div>
-                </div>
+                        <div class="form-group clearfix">
+                            <label for="id_webcam_url" class="col-sm-3 label-right control-label">URL webcam</label>
+                            <div class="col-sm-9">
+                                {{ form.webcam_url.errors }}
+                                {{ form.webcam_url }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_mean_year_rain" class="col-sm-3 label-right control-label required">Pioggia media annua (mm)</label>
+                            <div class="col-sm-9">
+                                {{ form.mean_year_rain.errors }}
+                                {{ form.mean_year_rain }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_station_model" class="col-sm-3 label-right control-label required">Modello</label>
+                            <div class="col-sm-9">
+                                {{ form.station_model.errors }}
+                                {{ form.station_model }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_software_model" class="col-sm-3 label-right control-label required">Software</label>
+                            <div class="col-sm-9">
+                                {{ form.software_model.errors }}
+                                {{ form.software_model }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_installation_type" class="col-sm-3 label-right control-label required">Tipologia installazione</label>
+                            <div class="col-sm-9">
+                                {{ form.installation_type.errors }}
+                                {{ form.installation_type }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_installation_position" class="col-sm-3 label-right control-label required">Ubicazione installazione</label>
+                            <div class="col-sm-9">
+                                {{ form.installation_position.errors }}
+                                {{ form.installation_position }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_elevation_ground" class="col-sm-3 label-right control-label required">Altezza dal suolo (m)</label>
+                            <div class="col-sm-9">
+                                {{ form.elevation_ground.errors }}
+                                {{ form.elevation_ground }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_image" class="col-sm-3 label-right control-label required">Foto installazione</label>
+                            <div class="col-sm-9">
+                                {{ form.image.errors }}
+                                {{ form.image }}
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label for="id_image" class="col-sm-3 label-right control-label required">Captcha</label>
+                            <div class="col-sm-9">
+                                {{ form.captcha.errors }}
+                                {{ form.captcha }}
+                            </div>
+                        </div>
+                    </fieldset>
 
-                <div class="form-group">
-                    <label for="id_webcam_url" class="col-sm-2 control-label">URL webcam</label>
-                    <div class="col-sm-10">
-                        {{ form.webcam_url.errors }}
-                        {{ form.webcam_url }}
+                    <div class="form-group">
+                        <label class="col-sm-3"></label>
+                        <div class="col-sm-9">
+                            <input class="btn btn-primary" type="submit" value="Invia richiesta" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_mean_year_rain" class="col-sm-2 control-label required">Pioggia media annua (mm)</label>
-                    <div class="col-sm-10">
-                        {{ form.mean_year_rain.errors }}
-                        {{ form.mean_year_rain }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_station_model" class="col-sm-2 control-label required">Modello</label>
-                    <div class="col-sm-10">
-                        {{ form.station_model.errors }}
-                        {{ form.station_model }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_software_model" class="col-sm-2 control-label required">Software</label>
-                    <div class="col-sm-10">
-                        {{ form.software_model.errors }}
-                        {{ form.software_model }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_installation_type" class="col-sm-2 control-label required">Tipologia installazione</label>
-                    <div class="col-sm-10">
-                        {{ form.installation_type.errors }}
-                        {{ form.installation_type }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_installation_position" class="col-sm-2 control-label required">Ubicazione installazione</label>
-                    <div class="col-sm-10">
-                        {{ form.installation_position.errors }}
-                        {{ form.installation_position }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_elevation_ground" class="col-sm-2 control-label required">Altezza dal suolo (m)</label>
-                    <div class="col-sm-10">
-                        {{ form.elevation_ground.errors }}
-                        {{ form.elevation_ground }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_image" class="col-sm-2 control-label required">Foto installazione</label>
-                    <div class="col-sm-10">
-                        {{ form.image.errors }}
-                        {{ form.image }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_image" class="col-sm-2 control-label required">Captcha</label>
-                    <div class="col-sm-10">
-                        {{ form.captcha.errors }}
-                        {{ form.captcha }}
-                    </div>
-                </div>
-            </fieldset>
-
-            <div class="form-group">
-                <label class="col-sm-2"></label>
-                <div class="col-sm-10">
-                    <input class="btn btn-primary" type="submit" value="Invia richiesta" />
-                </div>
+                </form>
             </div>
-
-        </form>
+        </div>
     </section>
 </div>
 {% endblock %}

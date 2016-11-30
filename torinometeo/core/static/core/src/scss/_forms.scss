@@ -1,0 +1,11 @@
+form {
+  .required {
+    &::before {
+      content: '* ';
+    }
+  }
+}
+
+.label-right {
+  text-align: right;
+}

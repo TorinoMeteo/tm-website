@@ -1,122 +1,96 @@
-{% extends 'base_site.html' %}
-{% load thumbnail %}
+{% extends 'base.html' %}
+{% load sorl_thumbnail %}
 
 {% block jumbotron %}{% endblock %}
 
 {% block body_css %}page{% endblock %}
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
     <section class="realtime-station">
         <h1>{{ object.name }}</h1>
         <nav>
-        <div class="dropdown">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Principale
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="{% url 'realtime-station-realtime' object.slug %}">Live</a></li>
-                <li><a href="{% url 'realtime-station-historic' object.slug %}">Storico</a></li>
-                <li><a href="{% url 'realtime-station-graph' object.slug %}">Grafici</a></li>
-            </ul>
-        </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Principale
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'realtime-station-realtime' object.slug %}">Live</a>
+                    <a class="dropdown-item" href="{% url 'realtime-station-historic' object.slug %}">Storico</a>
+                    <a class="dropdown-item" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
+                </div>
+            </div>
         </nav>
-        <div class="row">
+         <div class="row">
             <div class="col-sm-8 col-xs-12">
                 {{ object.description | safe }}
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2><i class="fa fa-globe"></i> Ubicazione geografica</h2>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th>Località</th>
-                                    <td>{{ object.city }} ({{ object.province }}), {{ object.nation }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Latitudine</th>
-                                    <td>{{ object.lat }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Longitudine</th>
-                                    <td>{{ object.lng }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Altitudine</th>
-                                    <td>{{ object.elevation }} m</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-               <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2><i class="fa fa-home"></i> Ubicazione fisica</h2>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th>Altezza dal suolo</th>
-                                    <td>{{ object.elevation_ground }} m</td>
-                                </tr>
-                                <tr>
-                                    <th>Tipologia di installazione</th>
-                                    <td>{{ object.installation_type }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ubicazione</th>
-                                    <td>{{ object.installation_position }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-               <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2><i class="fa fa-cogs"></i> Strumentazione</h2>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th>Modello stazione</th>
-                                    <td>{{ object.station_model }} m</td>
-                                </tr>
-                                <tr>
-                                    <th>Modello software</th>
-                                    <td>{{ object.software_model }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-               <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2><i class="fa fa-sun-o"></i> Microclima</h2>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th>Precipitazione media annua</th>
-                                    <td>{{ object.mean_year_rain }} mm</td>
-                                </tr>
-                                <tr>
-                                    <th>Clima</th>
-                                    <td>{{ object.climate | safe }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
+                <table class="table table-station-data">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">
+                                <h2><i class="fa fa-globe"></i> Ubicazione geografica</h2>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Località</th>
+                            <td>{{ object.city }} ({{ object.province }}), {{ object.nation }}</td>
+                        </tr>
+                        <tr>
+                            <th>Latitudine</th>
+                            <td>{{ object.lat }}</td>
+                        </tr>
+                        <tr>
+                            <th>Longitudine</th>
+                            <td>{{ object.lng }}</td>
+                        </tr>
+                        <tr>
+                            <th>Altitudine</th>
+                            <td>{{ object.elevation }} m</td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <h2><i class="fa fa-home"></i> Ubicazione fisica</h2>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Altezza dal suolo</th>
+                            <td>{{ object.elevation_ground }} m</td>
+                        </tr>
+                        <tr>
+                            <th>Tipologia di installazione</th>
+                            <td>{{ object.installation_type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ubicazione</th>
+                            <td>{{ object.installation_position }}</td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <h2><i class="fa fa-cogs"></i> Strumentazione</h2>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Modello stazione</th>
+                            <td>{{ object.station_model }} m</td>
+                        </tr>
+                        <tr>
+                            <th>Modello software</th>
+                            <td>{{ object.software_model }}</td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                <h2><i class="fa fa-sun-o"></i> Microclima</h2>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Precipitazione media annua</th>
+                            <td>{{ object.mean_year_rain }} mm</td>
+                        </tr>
+                        <tr>
+                            <th>Clima</th>
+                            <td>{{ object.climate | safe }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-sm-4 col-xs-12">
                 <div class="thumbnail">

@@ -65,7 +65,7 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD', required=True),
         'PORT': '',
         'OPTIONS': {
-            'init_command': 'SET storage_engine=InnoDB',
+            'init_command': 'SET default_storage_engine=InnoDB',
         }
     }
 }
@@ -97,6 +97,7 @@ INSTALLED_APPS = (
     'taggit',
     'rest_framework',
     'rest_framework.authtoken',
+    'treenav',
     # tm
     'forecast',
     'realtime',
@@ -114,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'core.urls'
@@ -130,6 +132,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'treenav.context_processors.treenav_active',
             ],
         },
     },
@@ -196,6 +199,9 @@ SUIT_CONFIG = {
          'icon': 'fa fa-lock'},
         {'app': 'sites', 'label': 'Sites', 'icon': 'fa fa-leaf'},
 
+        '-',
+
+        {'app': 'treenav', 'label': 'Menu', 'icon': 'fa fa-bars'},
 
         '-',
 
