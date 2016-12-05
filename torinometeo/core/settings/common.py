@@ -48,10 +48,13 @@ ADMINS = (
 
 # SITE
 SITE_ID = 1
+HTTPS = False
 
 # MAIL
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
+NOREPLY_EMAIL = 'noreply@torinometeo.org'
+NET_REQUEST_EMAIL = 'info@torinometeo.org'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -258,6 +261,7 @@ PIPELINE_CSS = {
     'vendor': {
         'source_filenames': (
             'core/src/vendor/Font-Awesome/scss/font-awesome.scss',
+            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
         ),
         'output_filename': 'core/css/vendor.min.css',
     },
@@ -271,6 +275,7 @@ PIPELINE_CSS = {
 PIPELINE_JS = {
     'vendor': {
         'source_filenames': (
+            'core/src/vendor/bootstrap/js/tether.js',
             'core/src/vendor/bootstrap/js/bootstrap.min.js',
             'core/src/vendor/moment/moment-with-locales.min.js',
             'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
@@ -295,8 +300,9 @@ PIPELINE_CSS_COMPRESSOR = None
 PIPELINE_JS_COMPRESSOR = None
 
 
-DISQUS_API_KEY = ''
-DISQUS_WEBSITE_SHORTNAME = ''
+# Disqus
+DISQUS_API_KEY = 'kjNmaqKMTwg388VnEJicaYV1jdteFZYQLQcsvQwmQJth4V2LpW9lJ3sfgSsxN4YP'
+DISQUS_WEBSITE_SHORTNAME = 'torinometeo'
 
 THUMBNAIL_HIGH_RESOLUTION = True
 THUMBNAIL_PROCESSORS = (

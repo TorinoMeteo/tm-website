@@ -15,7 +15,7 @@ class CategoryListView(ListView):
 
     def get_queryset(self):
         tag = self.kwargs['tag']
-        return Entry.objects.published().filter(tags__name__in=[tag]).order_by('-last_edit_date')
+        return Entry.objects.filter(published=True, tags__name__in=[tag]).order_by('-last_edit_date')
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context

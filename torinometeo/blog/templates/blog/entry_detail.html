@@ -1,14 +1,13 @@
-{% extends 'base_site.html' %}
+{% extends 'base.html' %}
 {% load thumbnail %}
 {% load blog_tags %}
-{% load tagging_tags %}
 {% load disqus_tags %}
 
 {% block jumbotron %}{% endblock %}
 
 {% block body_css %}page{% endblock %}
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
      <div class="row">
         <div class="col-md-8">
             <section>
@@ -18,13 +17,15 @@
                     <time style="margin-right: 20px;" class="left" content="{{ entry.creation_date|date:"Y-m-d" }}" datetime="{{ entry.get_time_attribute }}" pubdate="pubdate">
                         {{ entry.creation_date }}
                     </time>
-                    <span class="fa fa-tags"></span> 
-                    {% tags_for_object entry as tags %}{% for tag in tags %}
-                        <a class="uppercase" href="{% url 'blog-category-list' tag %}">{{ tag }}</a> 	
-                    {% endfor %}
+                    {% if entry.tags.count %}
+                        <span class="fa fa-tags"></span> 
+                        {% for tag in entry.tags.all %}
+                            <a class="serif" href="{% url 'blog-category-list' tag.name|iriencode %}">{{ tag.name }}</a> 	
+                        {% endfor %}
+                    {% endif %}
                 </aside>
                 {% if entry.image %}
-                    <div style="background: #000"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
+                    <div class="blog-entry-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
                 {% endif %}
                 {{ object.text|safe }}
 
@@ -37,7 +38,6 @@
         </div>
         <div class="col-md-4">
             {% blog_archive %}
-            {% blog_tag_cloud %}
         </div>
     </div>
 </div>

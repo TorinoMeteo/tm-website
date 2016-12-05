@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
     <section class="realtime-station">
         <h1>{{ object.name }}</h1>
         <nav>
@@ -25,7 +25,7 @@
             </div>
         </nav>
         <div class="row">
-            <div class="col-sm-8 col-xs-12">
+            <div class="col-md-8">
                 <p class="alert alert-info"><i class="fa fa-clock-o"></i> <strong>Ultima rilevazione</strong>: <strong>{{ data_date }}</strong></p>
                 <div class="table-responsive-vertical">
                     <table class="table table-bordered realtime-data">
@@ -91,17 +91,16 @@
 
                 <h2>Grafici rilevazioni odierne</h2>
                 <div class="row">
-                    <div class="vol-md-6">
+                    <div class="col-sm-10 col-sm-offset-1">
                         <div id="rt-graph"></div>
                         <script type="text/javascript">
                             tm.render24Graphs('#rt-graph', jQuery.parseJSON('{{ day_data|safe }}'), {height: 400});
                         </script>
                     </div>
-                    <div class="vol-md-6"></div>
                 </div>
 
             </div>
-            <div class="col-sm-4 col-xs-12">
+            <div class="col-md-4 col-xs-12">
                 <div class="thumbnail">
                     <div class="caption">
                         <h3><i class="fa fa-map-marker"></i> Mappa</h3>

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 
 from ckeditor.fields import RichTextField
 
@@ -48,4 +49,9 @@ class Entry(models.Model):
         return self.creation_date.strftime("%Y-%m-%dT%H:%M:%S%Z+01:00")
 
     def get_http_absolute_url(self):
-        return settings.HTTP_HOST + self.get_absolute_url()
+        current_site = get_current_site(None)
+        return ''.join([
+            'https' if settings.HTTPS else 'http',
+            current_site.domain,
+            self.get_absolute_url()
+        ])

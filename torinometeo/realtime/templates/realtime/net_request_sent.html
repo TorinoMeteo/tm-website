@@ -1,14 +1,19 @@
-{% extends 'base_site.html' %}
-{% load thumbnail %}
+{% extends 'base.html' %}
 
 {% block jumbotron %}{% endblock %}
 
 {% block body_css %}page{% endblock %}
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
     <section class="realtime-net-request">
         <h1>Entra nella rete di TorinoMeteo</h1>
-        <p>Grazie per aver effettuato la richiesta!</p>
+        <p style="margin: 50px 0;" class="text-center">
+            <i style="color: green; font-size: 90px;" class="fa fa-check-circle"></i>
+        </p>
+        <p class="text-center alert alert-success">
+            La tua richiesta è stata correttamente inoltrata.
+        </p>
+        <p><strong>Grazie per aver effettuato la richiesta!</strong></p>
         <p>Una mail è stata inviata ai nostri esperti, ti contatteremo il prima possibile per procedere con la messa in rete della tua stazione meteo!</p>
         <p><strong>Lo Staff di TorinoMeteo</strong></p>
     </section>

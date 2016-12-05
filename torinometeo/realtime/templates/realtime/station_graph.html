@@ -1,4 +1,4 @@
-{% extends 'base_site.html' %}
+{% extends 'base.html' %}
 {% load thumbnail %}
 {% load static %}
 
@@ -12,54 +12,54 @@
 
 {% block body_css %}page{% endblock %}
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
     <section class="realtime-station">
         <h1>{{ object.name }}</h1>
-        <div class="dropdown">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Grafici
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="{% url 'realtime-station' object.slug %}">Principale</a></li>
-                <li><a href="{% url 'realtime-station-realtime' object.slug %}">Live</a></li>
-                <li><a href="{% url 'realtime-station-historic' object.slug %}">Storico</a></li>
-            </ul>
-        </div>
+        <nav>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Grafici
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'realtime-station' object.slug %}">Principale</a>
+                    <a class="dropdown-item" href="{% url 'realtime-station-realtime' object.slug %}">Live</a>
+                    <a class="dropdown-item" href="{% url 'realtime-station-historic' object.slug %}">Storico</a>
+                </div>
+            </div>
         </nav>
         <div class="row">
             <div class="col-sm-12">
                 <p>Genera i grafici storici del periodo di tuo interesse!</p>
                 <div class="form-horizontal" method="post">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="from_date" class="col-lg-2 control-label">Da</label>
                                 <div class="col-lg-10">
                                     <div class='input-group date' id='datetimepicker_from'>
                                         <input type='text' class="form-control" id="from_date" name="from_date" value="{{ from_date }}" />
                                         <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
+                                            <span class="fa fa-calendar"></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="to_date" class="col-lg-2 control-label">A</label>
                                 <div class="col-lg-10">
                                     <div class='input-group date' id='datetimepicker_to'>
                                         <input type='text' class="form-control" id="to_date" name="to_date" value="{{ to_date }}" />
                                         <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
+                                            <span class="fa fa-calendar"></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xs-12">
-                            <p class="text-center"><button id="redraw" class="btn btn-primary">aggiorna</button></p>
+                            <p class="text-center" style="margin-top: 20px;"><button id="redraw" class="btn btn-primary">aggiorna</button></p>
                         </div>
                     </div>
                 </div>
