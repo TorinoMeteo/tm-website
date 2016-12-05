@@ -1,7 +1,6 @@
-{% extends 'base_site.html' %}
+{% extends 'base.html' %}
 {% load thumbnail %}
 {% load blog_tags %}
-{% load tagging_tags %}
 {% load disqus_tags %}
 {% load static %}
 
@@ -9,7 +8,7 @@
 
 {% block body_css %}page{% endblock %}
 {% block content %}
-<div class="container margin-top faded">
+<div class="container margin-top faded main-content">
      <div class="row">
         <div class="col-md-8">
             <section class="forecast">
@@ -63,9 +62,9 @@
                 </div>
                 <div class="panel-body">
                     <p><b>TorinoMeteo</b> ha sviluppato una libreria javascript (<strong>tmforecast</strong>) che permette di inserire facilmente le nostre previsioni all'interno di siti esterni, utilizzando dei semplici tag!</p>
-                    <p>Per non fare torto a nessuno, abbiamo creato una versione per jQuery ed una per MooTools, se non ci credete date un'occhiata al nostro account su<br />
-                        <a class="btn btn-info" href="https://github.com/TorinoMeteo/tm-forecast" target="_blank">github »</a><br />
-                        e troverete le istruzioni, demo ed ogni informazione utile all'utilizzo, ovviamente tutto open!</p>
+                    <p>Per non fare torto a nessuno, abbiamo creato una versione per jQuery ed una per MooTools, se non ci credete date un'occhiata al nostro account su</p>
+                    <p><a class="btn btn-info" href="https://github.com/TorinoMeteo/tm-forecast" target="_blank"><i class="fa fa-github"></i> github</a></p>
+                    <p>e troverete le istruzioni, demo ed ogni informazione utile all'utilizzo, ovviamente tutto open!</p>
                     <p><strong>Forniamo tutto il codice gratuitamente, chiaramente sarebbe gradita una citazione con link della fonte.</strong></p>
                 </div>
             </section>
