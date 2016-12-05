@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^webcam/', include('webcam.urls')),
     url(r'^treenav/', include('treenav.urls')),
 
-    # API
+    # REST API
     url(r'^api/v1/auth/login/$', LoginView.as_view(),
         name='torinometeo-api-auth-login'),
     url(r'^api/v1/auth/logout/$', LogoutView.as_view(),
