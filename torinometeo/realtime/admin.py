@@ -35,7 +35,7 @@ class StationAdmin(admin.ModelAdmin):
             'fields': ('nation', 'region', 'province', 'address', 'city', 'cap', 'lat', 'lng', 'elevation',)
         }),
         ('Stazione', {
-            'fields': ('station_model', 'software_model', 'installation_type', 'installation_position', 'elevation_ground', 'cap', 'lat', 'lng', 'elevation',)
+            'fields': ('station_model', 'software_model', 'installation_type', 'installation_position', 'elevation_ground',)
         }),
         ('Dati', {
             'fields': ('data_url', 'data_type', 'data_date_regexp', 'data_time_regexp', 'forecast_url',)
