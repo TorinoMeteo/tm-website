@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+
 from realtime.models.geo import Nation, Region, Province
 from realtime.models.stations import Station, Data, NetRequest, DataFormat
 
@@ -24,7 +26,7 @@ admin.site.register(Province, ProvinceAdmin)
 # stations
 
 class StationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nation', 'region', 'city', 'data_type', 'data_url', 'webcam',]
+    list_display = ['id', 'name', 'nation', 'region', 'city', 'data_type', 'data_url', 'webcam', 'test_fetch', ]
     list_filter = ('region', 'data_type', )
 
     fieldsets = (
@@ -44,6 +46,9 @@ class StationAdmin(admin.ModelAdmin):
             'fields': ('active',)
         }),
     )
+
+    def test_fetch(self, obj):
+        return mark_safe('<a href="/realtime/fetch/%d" target="_blank">test</a>' % obj.id)
 
 admin.site.register(Station, StationAdmin)
 

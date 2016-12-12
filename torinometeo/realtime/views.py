@@ -9,6 +9,8 @@ from django.views.generic.edit import FormView, CreateView
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.core.urlresolvers import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
 
 from realtime.models.stations import Station, Data
 from realtime.forms import NetRequestForm
@@ -401,6 +403,11 @@ class NetRequestSentView(TemplateView):
 
 
 class FetchView(View):
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FetchView, self).dispatch(request, *args, **kwargs)
+
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
 
