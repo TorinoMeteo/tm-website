@@ -8,10 +8,10 @@ class Parser(object):
         - parse: parses the given content and returns a python dict of data
     """
 
-    non_decimal = re.compile(r'[^\d.]+')
+    non_decimal = re.compile(r'[^\d.,]+')
 
     def __init__(self, **kwargs):
-        self.time_format = kwargs.get('time_format') or '%H:%M %p'
+        self.time_format = kwargs.get('time_format') or '%H:%M'
         self.date_format = kwargs.get('date_format') or '%d/%m/%Y'
 
     def parse(self, content):
