@@ -60,8 +60,8 @@ class Station(models.Model):
     elevation_ground = models.IntegerField('elevazione dal suolo')
     data_url = models.URLField('url dati', max_length=255)
     data_type = models.ForeignKey(DataFormat, verbose_name='tipologia dati')
-    data_date_regexp = models.CharField('espressione regolare data', max_length=128, null=True, blank=True)
-    data_time_regexp = models.CharField('espressione regolare ora', max_length=128, null=True, blank=True)
+    data_date_format = models.CharField('formato data (python)', max_length=128, null=True, blank=True)
+    data_time_format = models.CharField('formato ora (python)', max_length=128, null=True, blank=True)
     forecast_url = models.URLField('url sito previsionale', max_length=255, null=True, blank=True)
     active = models.BooleanField('attiva', default=True)
 

@@ -14,5 +14,6 @@ urlpatterns = patterns('realtime.views',
     url(r'^(?P<slug>[A-Za-z0-9_\-]+)/grafici/dati/$', views.StationGraphJSONDataView.as_view(), name='realtime-station-graph-json-data'),
     url(r'^(?P<slug>[A-Za-z0-9_\-]+)/grafici/?$', views.StationGraphView.as_view(), name='realtime-station-graph'),
     url(r'^(?P<slug>[A-Za-z0-9_\-]+)/?$', views.StationView.as_view(), name='realtime-station'),
+    url(r'^fetch/(?P<pk>[0-9]+)/?$', views.FetchView.as_view(), name='realtime-station-fetch'),
 
 )

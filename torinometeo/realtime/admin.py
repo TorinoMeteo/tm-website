@@ -1,6 +1,6 @@
 from django.contrib import admin
 from realtime.models.geo import Nation, Region, Province
-from realtime.models.stations import Station, Data, NetRequest
+from realtime.models.stations import Station, Data, NetRequest, DataFormat
 
 # geo
 
@@ -24,8 +24,8 @@ admin.site.register(Province, ProvinceAdmin)
 # stations
 
 class StationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nation', 'region', 'province', 'city', 'data_url', 'webcam',]
-    list_filter = ('region', )
+    list_display = ['id', 'name', 'nation', 'region', 'city', 'data_type', 'data_url', 'webcam',]
+    list_filter = ('region', 'data_type', )
 
     fieldsets = (
         ('Denominazione/Informazioni', {
@@ -38,7 +38,7 @@ class StationAdmin(admin.ModelAdmin):
             'fields': ('station_model', 'software_model', 'installation_type', 'installation_position', 'elevation_ground',)
         }),
         ('Dati', {
-            'fields': ('data_url', 'data_type', 'data_date_regexp', 'data_time_regexp', 'forecast_url',)
+            'fields': ('data_url', 'data_type', 'data_date_format', 'data_time_format', 'forecast_url',)
         }),
         ('Stato', {
             'fields': ('active',)
@@ -57,3 +57,9 @@ class NetRequestAdmin(admin.ModelAdmin):
     list_display = ['date', 'firstname', 'lastname', 'city',]
 
 admin.site.register(NetRequest, NetRequestAdmin)
+
+
+class DataFormatAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+
+admin.site.register(DataFormat, DataFormatAdmin)

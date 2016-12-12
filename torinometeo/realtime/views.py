@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from realtime.models.stations import Station, Data
 from realtime.forms import NetRequestForm
+from realtime.fetch.shortcuts import fetch_data
 
 class JumbotronStationJsonView(View):
     """ Json used in jumbotron component
@@ -392,7 +393,27 @@ class NetRequestView(CreateView):
         form.send_request_mail()
         return super(NetRequestView, self).form_valid(form)
 
+
 class NetRequestSentView(TemplateView):
     """ Net entrance request sent view
     """
     template_name = 'realtime/net_request_sent.html'
+
+
+class FetchView(View):
+    def get(self, request, pk):
+        station = Station.objects.get(pk=pk)
+
+        data = fetch_data(
+            station.data_url,
+            station.data_type.name,
+            time_format=station.data_time_format,
+            date_format=station.data_date_format,
+        )
+        json_data = data.as_json()
+
+        return render(
+            request,
+            'realtime/fetch.html',
+            {'station': station, 'data': data, 'json_data': json_data}
+        )
