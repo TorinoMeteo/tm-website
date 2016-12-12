@@ -72,6 +72,8 @@ class Parser(object):
         try:
             aux = self._to_float(value)
         except:
+            # some files may be html
+            value = re.sub('<[^<]+?>', '', value)
             try:
                 aux = EX['WIND_DIR']['TEXT'].index(str(value).rstrip()) * 22.5
             except:
