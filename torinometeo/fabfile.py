@@ -70,7 +70,7 @@ def get_release_filepath():
 @task
 def create_release_archive(head='HEAD'):
     """ Creates a local release archive """
-    local('git-archive-all --worktree-attributes --format=tar.gz %s > %s' % (
+    local('git-archive-all > %s' % (
         head,
         get_release_filepath()
     ))
