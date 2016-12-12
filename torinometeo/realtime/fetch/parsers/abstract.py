@@ -8,7 +8,7 @@ class Parser(object):
         - parse: parses the given content and returns a python dict of data
     """
 
-    non_decimal = re.compile(r'[^\d.,]+')
+    non_decimal = re.compile(r'[^\d.]+')
 
     def __init__(self, **kwargs):
         self.time_format = kwargs.get('time_format') or '%H:%M'
@@ -17,100 +17,72 @@ class Parser(object):
     def parse(self, content):
         raise NotImplementedError("Should have implemented this")
 
-    def _clean_float(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-        except:
-            aux = None
+    def _to_float(self, value, precision=2):
+        """ String to float rounded with precision
+            Add here logic to support internalization
+        """
+        value = value.replace(',', '.')
+        return round(float(self.non_decimal.sub('', value)), precision)
+
+    def _to_float_extremes(self, value, var, precision=2):
+        """ Checks float value agains extremes
+        """
+        aux = self._to_float(value)
+        if aux > EX[var.upper()]['MAX'] or aux < EX[var.upper()]['MIN']:
+            raise ValueError('wrong %s detected' % var)
         return aux
+
+    def _clean(self, value, var):
+        """ Clean data
+            Entry point for cleaning data, just to avoid try catch repetition
+            @TODO something more specific with exceptions?
+        """
+        try:
+            value = getattr(self, '_clean_%s' % var)(value)
+            return value
+        except:
+            # @TODO do something more specific with value errors?
+            return None
+
+    def _clean_float(self, value):
+        return self._to_float(value)
 
     def _clean_temp(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['TEMP']['MAX']) or (aux < EX['TEMP']['MIN']):
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'temp')
 
     def _clean_time(self, value):
-        try:
-            aux = datetime.datetime.strptime(value.strip(), self.time_format).time() # noqa
-        except:
-            aux = None
-        return aux
+        return datetime.datetime.strptime(value.strip(), self.time_format).time() # noqa
 
     def _clean_date(self, value):
-        try:
-            aux = datetime.datetime.strptime(value.strip(), self.date_format).date() # noqa
-        except:
-            aux = None
-        return aux
+        return datetime.datetime.strptime(value.strip(), self.date_format).date() # noqa
 
     def _clean_humidity(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['HUMIDITY']['MAX']) or (aux < EX['HUMIDITY']['MIN']):
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'humidity')
 
     def _clean_dew(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['DEW']['MAX']) or (aux < EX['DEW']['MIN']):
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'dew')
 
     def _clean_pressure(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['PRESSURE']['MAX']) or (aux < EX['PRESSURE']['MIN']):
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'pressure')
 
     def _clean_wind(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['WIND']['MAX']) or (aux < EX['WIND']['MIN']):
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'wind')
 
     def _clean_wind_dir(self, value):
         try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
+            aux = self._to_float(value)
         except:
             try:
                 aux = EX['WIND_DIR']['TEXT'].index(str(value).rstrip()) * 22.5
             except:
-                pass
-            try:
-                aux = EX['WIND_DIR']['TEXT_I'].index(str(value).rstrip()) * 22.5 # noqa
-            except:
-                aux = None
+                try:
+                    aux = EX['WIND_DIR']['TEXT_I'].index(str(value).rstrip()) * 22.5 # noqa
+                except:
+                    raise ValueError('wrong wind direction detected')
         return aux
 
     def _clean_rain(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['RAIN']['MAX']) or (aux < EX['RAIN']['MIN']):
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'rain')
 
     def _clean_rain_rate(self, value):
-        try:
-            aux = round(float(self.non_decimal.sub('', value)), 2)
-            if (aux > EX['RAIN_RATE']['MAX']) or (aux < EX['RAIN_RATE']['MIN']): # noqa
-                aux = None
-        except:
-            aux = None
-        return aux
+        return self._to_float_extremes(value, 'rain_rate')

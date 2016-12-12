@@ -36,6 +36,6 @@ class SintpiParser(Parser):
         data = {}
         for k, i in self.data_map.iteritems():
             value = str(jsondata[k])
-            value = getattr(self, '_clean_%s' % i[1].lower())(value)
+            value = self._clean(value, i[1])
             data[i[0]] = value
         return data

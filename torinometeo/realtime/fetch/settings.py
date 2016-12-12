@@ -26,7 +26,7 @@ EXTREMES = {
         'MAX': 360.0,
         'MIN': 0.0,
         'TEXT': ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'], # noqa
-        'TEXT_I': ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'OOO', 'NO', 'NNO'] # noqa
+        'TEXT_I': ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO'] # noqa
     },
     'RAIN': {
         'MAX': 250.0,
