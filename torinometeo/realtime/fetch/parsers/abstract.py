@@ -73,12 +73,12 @@ class Parser(object):
             aux = self._to_float(value)
         except:
             # some files may be html
-            value = re.sub('<[^<]+?>', '', value)
+            value = re.sub('[^nNsSoOwWeE]', '', value).rstrip()
             try:
-                aux = EX['WIND_DIR']['TEXT'].index(str(value).rstrip()) * 22.5
+                aux = EX['WIND_DIR']['TEXT'].index(value) * 22.5
             except:
                 try:
-                    aux = EX['WIND_DIR']['TEXT_I'].index(str(value).rstrip()) * 22.5 # noqa
+                    aux = EX['WIND_DIR']['TEXT_I'].index(value) * 22.5
                 except:
                     raise ValueError('wrong wind direction detected')
         return aux
