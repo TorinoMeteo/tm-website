@@ -413,7 +413,7 @@ class FetchView(View):
 
         data = fetch_data(
             station.data_url,
-            station.data_type.name,
+            station.data_format.name,
             time_format=station.data_time_format,
             date_format=station.data_date_format,
         )

@@ -11,6 +11,6 @@ MEDIA_ROOTqiUUSE_I18NqjU"MEDIA_REALTIME_NET_REQUEST_IMG_RELqkUADMINSqlUDISQUS
 blog.admin]qqU
 EntryAdminqraU	core.urls]qs(UurlpatternsqtUrouterqueUrealtime.models.geo]qv(UProvinceqwURegionqxUNationqyeUrealtime.fetch]qz(Uparseq{Ufetchq|eUrealtime.managers]q}UStationManagerq~aUforecast.tests]qUForecastViewsetTestq€aUrealtime.fetch.utils]q(hheUblog.models]q‚(Uset_entry_image_folderqƒUEntryq„eUrealtime.fetch.core]q…(UDataq†UDateTimeEncoderq‡UparseqˆUfetchq‰eUrealtime.fetch.parsers.unito]qŠUUnitoParserq‹aUrealtime.models.stations]qŒ(U
 NetRequestqUset_station_image_folderqUHistoricDataqU
-DataFormatqUStationq‘Uset_net_request_image_folderq’UDataq“eU
-core.views]q”(U	LoginViewq•U
-LogoutViewq–eu.
+DataFormatqUStationq‘Uset_net_request_image_folderq’UDataq“eU"realtime.fetch.parsers.weatherlink]q”UWeatherlinkParserq•aU
+core.views]q–(U	LoginViewq—U
+LogoutViewq˜eu.
