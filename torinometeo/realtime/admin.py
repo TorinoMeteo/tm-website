@@ -26,8 +26,8 @@ admin.site.register(Province, ProvinceAdmin)
 # stations
 
 class StationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nation', 'region', 'city', 'data_type', 'data_url', 'webcam', 'test_fetch', ]
-    list_filter = ('region', 'data_type', )
+    list_display = ['id', 'name', 'nation', 'region', 'city', 'data_format', 'data_url', 'webcam', 'test_fetch', ]
+    list_filter = ('region', 'data_format', )
 
     fieldsets = (
         ('Denominazione/Informazioni', {
@@ -40,7 +40,7 @@ class StationAdmin(admin.ModelAdmin):
             'fields': ('station_model', 'software_model', 'installation_type', 'installation_position', 'elevation_ground',)
         }),
         ('Dati', {
-            'fields': ('data_url', 'data_type', 'data_date_format', 'data_time_format', 'forecast_url',)
+            'fields': ('data_url', 'data_format', 'data_date_format', 'data_time_format', 'forecast_url',)
         }),
         ('Stato', {
             'fields': ('active',)

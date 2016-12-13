@@ -59,7 +59,7 @@ class Station(models.Model):
     installation_position = models.CharField('posizionamento', max_length=255)
     elevation_ground = models.IntegerField('elevazione dal suolo')
     data_url = models.URLField('url dati', max_length=255)
-    data_type = models.ForeignKey(DataFormat, verbose_name='tipologia dati')
+    data_format = models.ForeignKey(DataFormat, verbose_name='formato dati')
     data_date_format = models.CharField('formato data (python)', max_length=128, null=True, blank=True)
     data_time_format = models.CharField('formato ora (python)', max_length=128, null=True, blank=True)
     forecast_url = models.URLField('url sito previsionale', max_length=255, null=True, blank=True)
@@ -169,7 +169,6 @@ class Data(models.Model):
     """
     station = models.ForeignKey(Station, verbose_name='stazione')
     datetime = models.DateTimeField('data e ora', auto_now=False, auto_now_add=False)
-    weather = models.CharField('tempo', max_length=10, blank=True, null=True)
     temperature = models.DecimalField('temperatura', max_digits=3, decimal_places=1, blank=True, null=True)
     temperature_max = models.DecimalField('temperatura massima', max_digits=3, decimal_places=1, blank=True, null=True)
     temperature_max_time = models.TimeField('ora temperatura massima', blank=True, null=True)
