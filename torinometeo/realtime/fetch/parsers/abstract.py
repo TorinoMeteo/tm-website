@@ -20,7 +20,7 @@ class Parser(object):
 
     def _to_float(self, value, precision=2):
         """ String to float rounded with precision
-            Add here logic to support localization
+            Add here logic to support internalization
         """
         value = value.replace(',', '.')
         return round(float(self.non_decimal.sub('', value)), precision)
@@ -57,17 +57,16 @@ class Parser(object):
 
         for fmt in self.time_format:
             try:
-                return datetime.datetime.strptime(value.strip(), fmt).time()
+                return datetime.datetime.strptime(value.strip(), fmt).time() # noqa
             except:
                 pass
 
     def _clean_date(self, value):
         if isinstance(self.date_format, basestring):
             self.date_format = (self.date_format,)
-
         for fmt in self.date_format:
             try:
-                return datetime.datetime.strptime(value.strip(), fmt).date()
+                return datetime.datetime.strptime(value.strip(), fmt).date() # noqa
             except:
                 pass
 
