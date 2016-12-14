@@ -24,7 +24,8 @@ class SintpiParser(Parser):
         'wind_dir': (DL['WIND_DIR'], 'wind_dir'),
         'winDayGustMax': (DL['WIND_MAX'], 'wind'),
         'wind_dir_ave': (DL['WIND_DIR_MAX'], 'wind_dir'),
-        'rain': (DL['RAIN'], 'rain'),
+        'today_rain': (DL['RAIN'], 'rain'),
+        'rain': (DL['RAIN_MONTH'], 'float'),
         'rain_rate_1h': (DL['RAIN_RATE'], 'rain_rate'),
     }
 
@@ -33,6 +34,9 @@ class SintpiParser(Parser):
         jsondata = json.loads(content)
         jsondata.update({'measure_time': jsondata['last_measure_time']})
         jsondata.update({'measure_date': jsondata['last_measure_time']})
+        jsondata.update({'today_rain': float(jsondata['rain_rate_24h'])*24.0})
+
+
         data = {}
         for k, i in self.data_map.iteritems():
             value = str(jsondata[k])
