@@ -26,7 +26,7 @@ admin.site.register(Province, ProvinceAdmin)
 # stations
 
 class StationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nation', 'city', 'data_format', 'get_data_url', 'webcam', 'test_fetch', ]
+    list_display = ['id', 'name', 'nation', 'city', 'data_format', 'get_data_url', 'get_webcam', 'test_fetch', ]
     list_filter = ('region', 'data_format', )
     search_fields = ('name', )
     prepopulated_fields = {'slug': ('name',)}
@@ -50,13 +50,13 @@ class StationAdmin(admin.ModelAdmin):
     )
 
     def get_data_url(self, obj):
-        return '<a href="%s" target="_blank">vedi</a>' % obj.data_url
+        return mark_safe('<a href="%s" target="_blank">vedi</a>' % obj.data_url)
     get_data_url.short_description = 'url dati'
 
     def get_webcam(self, obj):
         if not obj.webcam:
             return ''
-        return '<a href="%s" target="_blank">vedi</a>' % obj.webcam
+        return mark_safe('<a href="%s" target="_blank">vedi</a>' % obj.webcam)
     get_webcam.short_description = 'webcam'
 
     def test_fetch(self, obj):
