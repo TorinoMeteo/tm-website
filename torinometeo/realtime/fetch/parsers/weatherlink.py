@@ -54,7 +54,7 @@ class WeatherlinkParser(Parser):
 
         wind_dir = self.get_wind_dir()
         if wind_dir:
-            data[DL['WIND_DIR']] = self._clean(wind_dir[0], 'wind')
+            data[DL['WIND_DIR']] = self._clean(wind_dir[0], 'wind_dir')
             data[DL['WIND_DIR_MAX']] = None  # not provided
 
         rain = self.get_rain()
