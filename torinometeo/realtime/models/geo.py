@@ -1,6 +1,5 @@
 from django.db import models
 
-# Geography
 
 class Nation(models.Model):
     """ Nations
@@ -14,10 +13,11 @@ class Nation(models.Model):
     class Meta:
         verbose_name = 'nazione'
         verbose_name_plural = 'nazioni'
-        ordering = ('rank', 'name', )
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
+
 
 class Region(models.Model):
     """ Regions
@@ -29,10 +29,11 @@ class Region(models.Model):
     class Meta:
         verbose_name = 'regione'
         verbose_name_plural = 'regioni'
-        ordering = ('nation__rank', 'rank', 'name', )
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
+
 
 class Province(models.Model):
     """ Provinces
@@ -44,6 +45,7 @@ class Province(models.Model):
     class Meta:
         verbose_name = 'provincia'
         verbose_name_plural = 'province'
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name

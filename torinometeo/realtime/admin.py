@@ -28,6 +28,7 @@ admin.site.register(Province, ProvinceAdmin)
 class StationAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'nation', 'region', 'city', 'data_format', 'data_url', 'webcam', 'test_fetch', ]
     list_filter = ('region', 'data_format', )
+    prepopulated_fields = {'slug': ('name',)}
 
     fieldsets = (
         ('Denominazione/Informazioni', {

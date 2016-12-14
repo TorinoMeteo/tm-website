@@ -414,8 +414,8 @@ class FetchView(View):
         data = fetch_data(
             station.data_url,
             station.data_format.name,
-            time_format=station.data_time_format,
-            date_format=station.data_date_format,
+            time_format=station.data_time_format.split(','),
+            date_format=station.data_date_format.split(','),
         )
         json_data = data.as_json()
 
