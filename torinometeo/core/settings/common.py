@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     'taggit',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     'treenav',
     # tm
     'forecast',
@@ -183,6 +184,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     )
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'name': 'Authorization', # set 'Token token-hash' in authorize
+            'in': 'header'
+        }
+    },
+    'JSON_EDITOR': True
 }
 
 # CORS HEADERS
@@ -270,6 +283,12 @@ PIPELINE_CSS = {
             'core/src/scss/styles.scss',
         ),
         'output_filename': 'core/css/core.min.css',
+    },
+    'api': {  # api
+        'source_filenames': (
+            'core/src/scss/api/styles.scss',
+        ),
+        'output_filename': 'core/css/api.min.css',
     },
 }
 PIPELINE_JS = {

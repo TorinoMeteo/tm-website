@@ -2,15 +2,15 @@
 MEDIA_ROOTqUSESSION_COOKIE_SECUREqUSECURE_PROXY_SSL_HEADERqUSESSION_COOKIE_HTTPONLYqUDEBUGqUALLOWED_HOSTSq	eUrealtime.fetch.settings]q
 UEXTREMESqaU	shortcuts]qU
 fetch_dataqaUutils]q(UparseqUfetchqeU realtime.fetch.parsers.clientraw]qUClientrawParserqaUrealtime.fetch.parsers]Urealtime.fetch.factory]qUparser_factoryqaU
-blog.views]q(UCategoryListViewqUEntryDetailViewqUArchiveViewqeUrealtime.urls]qUurlpatternsqaUrealtime.views]q(UStationGraphJSONDataViewqU	FetchViewqUNetRequestViewqUStationViewqUStationIdViewq UNetViewq!UJumbotronStationJsonViewq"UStationRealtimeViewq#UStationHistoricViewq$UStationGraphViewq%UNetRequestSentViewq&UStationIdGraphViewq'eUrealtime.forms]q(UNetRequestFormq)aUrealtime.fetch.parsers.txtwd]q*UTxtwdParserq+aUrealtime.fetch.parsers.abstract]q,UParserq-aUrealtime.fetch.parsers.sintpi]q.USintpiParserq/aUblog.templatetags.blog_tags]q0(Uregisterq1Ublog_archiveq2Ublog_featuredq3eUrealtime.admin]q4(UDataFormatAdminq5URegionAdminq6UNetRequestAdminq7U	DataAdminq8UNationAdminq9UProvinceAdminq:UStationAdminq;eUcore.settings.common]q<(UPIPELINE_JS_COMPRESSORq=UMEDIA_BLOG_IMG_RELq>UPIPELINE_CSSq?UMEDIA_REALTIME_STATION_IMG_RELq@UCKEDITOR_CONFIGSqAUSUIT_CONFIGqBUMIDDLEWARE_CLASSESqCUSITE_IDqDUDEBUGqEULANGUAGE_CODEqFUROOT_URLCONFqGULOGGINGqHU
-SECRET_KEYqIUCKEDITOR_UPLOAD_PATHqJUDISQUS_API_KEYqKUBASE_DIRqLU	TEMPLATESqMUCKEDITOR_IMAGE_BACKENDqNUSTATIC_ROOTqOUCKEDITOR_JQUERY_URLqPU	TIME_ZONEqQUCORS_ORIGIN_ALLOW_ALLqRUMEDIA_WEBCAM_IMG_RELqSUMEDIA_FORECAST_IMG_RELqTUWSGI_APPLICATIONqUUNOREPLY_EMAILqVUALLOWED_HOSTSqWULOGGING_DEFAULTqXU
-EMAIL_HOSTqYUCORS_ALLOW_CREDENTIALSqZUSTATICFILES_FINDERSq[UPIPELINE_COMPILERSq\UTHUMBNAIL_PROCESSORSq]UPIPELINE_CSS_COMPRESSORq^Uhereq_UTHUMBNAIL_HIGH_RESOLUTIONq`UPIPELINE_JSqaU
-STATIC_URLqbU	DATABASESqcU
-EMAIL_PORTqdUUSE_TZqeUINSTALLED_APPSqfUUSE_L10NqgUdotenv_pathqhU
-MEDIA_ROOTqiUUSE_I18NqjU"MEDIA_REALTIME_NET_REQUEST_IMG_RELqkUADMINSqlUDISQUS_WEBSITE_SHORTNAMEqmUREST_FRAMEWORKqnUSTATICFILES_STORAGEqoU	MEDIA_URLqpeU
-blog.admin]qqU
-EntryAdminqraU	core.urls]qs(UurlpatternsqtUrouterqueUrealtime.models.geo]qv(UProvinceqwURegionqxUNationqyeUrealtime.fetch]qz(Uparseq{Ufetchq|eUrealtime.managers]q}UStationManagerq~aUforecast.tests]qUForecastViewsetTestqÄaUrealtime.fetch.utils]qÅ(hheUblog.models]qÇ(Uset_entry_image_folderqÉUEntryqÑeUrealtime.fetch.core]qÖ(UDataqÜUDateTimeEncoderqáUparseqàUfetchqâeUrealtime.fetch.parsers.unito]qäUUnitoParserqãaUrealtime.models.stations]qå(U
-NetRequestqçUset_station_image_folderqéUHistoricDataqèU
-DataFormatqêUStationqëUset_net_request_image_folderqíUDataqìeU"realtime.fetch.parsers.weatherlink]qîUWeatherlinkParserqïaU
-core.views]qñ(U	LoginViewqóU
-LogoutViewqòeu.
+blog.views]q(UCategoryListViewqUEntryDetailViewqUArchiveViewqeUrealtime.urls]qUurlpatternsqaUrealtime.views]q(UStationGraphJSONDataViewqU	FetchViewqUNetRequestViewqUStationViewqUStationIdViewq UNetViewq!UJumbotronStationJsonViewq"UStationRealtimeViewq#UStationHistoricViewq$UStationGraphViewq%UNetRequestSentViewq&UStationIdGraphViewq'eUrealtime.forms]q(UNetRequestFormq)aUrealtime.fetch.core]q*(UDataq+UDateTimeEncoderq,Uparseq-Ufetchq.eUrealtime.fetch.parsers.txtwd]q/UTxtwdParserq0aUrealtime.fetch.parsers.abstract]q1UParserq2aUrealtime.fetch.parsers.sintpi]q3USintpiParserq4aUblog.templatetags.blog_tags]q5(Uregisterq6Ublog_archiveq7Ublog_featuredq8eUrealtime.admin]q9(UDataFormatAdminq:URegionAdminq;UNetRequestAdminq<U	DataAdminq=UNationAdminq>UProvinceAdminq?UStationAdminq@eUcore.settings.common]qA(UPIPELINE_JS_COMPRESSORqBUMEDIA_BLOG_IMG_RELqCUPIPELINE_CSSqDUMEDIA_REALTIME_STATION_IMG_RELqEUCKEDITOR_CONFIGSqFUSUIT_CONFIGqGULANGUAGE_CODEqHUSITE_IDqIUDEBUGqJUMIDDLEWARE_CLASSESqKUROOT_URLCONFqLULOGGINGqMU
+SECRET_KEYqNUCKEDITOR_UPLOAD_PATHqOUDISQUS_API_KEYqPUBASE_DIRqQU	TEMPLATESqRUCKEDITOR_IMAGE_BACKENDqSUSTATIC_ROOTqTUCKEDITOR_JQUERY_URLqUU	TIME_ZONEqVUCORS_ORIGIN_ALLOW_ALLqWUMEDIA_WEBCAM_IMG_RELqXUMEDIA_FORECAST_IMG_RELqYUWSGI_APPLICATIONqZUNOREPLY_EMAILq[UALLOWED_HOSTSq\ULOGGING_DEFAULTq]U
+EMAIL_HOSTq^UCORS_ALLOW_CREDENTIALSq_USTATICFILES_FINDERSq`UPIPELINE_COMPILERSqaUTHUMBNAIL_PROCESSORSqbUPIPELINE_CSS_COMPRESSORqcUhereqdUTHUMBNAIL_HIGH_RESOLUTIONqeUPIPELINE_JSqfUSWAGGER_SETTINGSqgU
+STATIC_URLqhUHTTPSqiU	DATABASESqjU
+EMAIL_PORTqkUUSE_TZqlUINSTALLED_APPSqmUUSE_L10NqnUdotenv_pathqoU
+MEDIA_ROOTqpUUSE_I18NqqU"MEDIA_REALTIME_NET_REQUEST_IMG_RELqrUNET_REQUEST_EMAILqsUADMINSqtUDISQUS_WEBSITE_SHORTNAMEquUREST_FRAMEWORKqvUSTATICFILES_STORAGEqwU	MEDIA_URLqxeU
+blog.admin]qyU
+EntryAdminqzaU	core.urls]q{(Uurlpatternsq|Urouterq}Uschema_viewq~eUrealtime.models.geo]q(UProvinceqÄURegionqÅUNationqÇeUrealtime.fetch]qÉ(UparseqÑUfetchqÖeUrealtime.managers]qÜUStationManagerqáaUforecast.routers]qàUForecastRouterqâaUforecast.tests]qäUForecastViewsetTestqãaUrealtime.fetch.utils]qå(hheUblog.models]qç(Uset_entry_image_folderqéUEntryqèeUforecast.views.api]qê(UForecastViewSetqëUDayForecastViewSetqíeUrealtime.fetch.parsers.unito]qìUUnitoParserqîaUrealtime.models.stations]qï(U
+NetRequestqñUset_station_image_folderqóUHistoricDataqòU
+DataFormatqôUStationqöUset_net_request_image_folderqõUDataqúeU"realtime.fetch.parsers.weatherlink]qùUWeatherlinkParserqûaU
+core.views]qü(U	LoginViewq†U
+LogoutViewq°eu.

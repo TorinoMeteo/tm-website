@@ -1,0 +1,61 @@
+// scss-lint:disable all
+$bg-prettyprint: rgba(238, 238, 238, .95);
+
+body {
+  background-image: url('../../img/skyline.png'), url('/static/rest_framework/img/grid.png');
+  background-position: bottom center, top center;
+  background-repeat: no-repeat, fixed 0 0;
+  background-size: auto;
+}
+
+.prettyprint {
+  background: $bg-prettyprint;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+.swagger-section {
+  background-image: url('../../img/skyline.png');
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: auto;
+
+  #header {
+    height: 40px;
+  }
+
+  #header #logo .logo__title {
+    padding: 31px 0 0 16px;
+    color: #f7f7f7;
+  }
+
+  #auth_container {
+    width: auto;
+  }
+
+  small {
+    font-size: 0.9em;
+  }
+
+  .swagger-sub-header {
+    background: darken(#89BF04, 10%);
+    padding: 8px 0 0;
+    color: #fff;
+
+    a {
+      color: #eee;
+    }
+
+    .text-muted {
+      color: #eee !important;
+    }
+
+  }
+  #resources_container {
+    padding: 8px;
+    background: rgba(255, 255, 255, .9);
+  }
+}

@@ -1,0 +1,12 @@
+{% extends "rest_framework/base.html" %}
+{% load pipeline %}
+
+{% block style %}{{ block.super }}
+{% stylesheet 'api' %}
+{% endblock %}
+
+{% block branding %}
+    <a class='navbar-brand' rel="nofollow" href='http://ws.torinometeo.org/api/v1/'>
+        TorinoMeteo REST API
+    </a>
+{% endblock %}

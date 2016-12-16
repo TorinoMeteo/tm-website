@@ -18,13 +18,17 @@ from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
 
-from rest_framework.routers import DefaultRouter
+from rest_framework_swagger.views import get_swagger_view
+
+from forecast.routers import ForecastRouter
 
 from core.views import LoginView, LogoutView
 from forecast.views.api import ForecastViewSet, DayForecastViewSet
 
 # BEGIN API
-router = DefaultRouter()
+schema_view = get_swagger_view(title='TorinoMeteo REST API')
+# django rest default api view
+router = ForecastRouter()
 router.register(r'forecast/day', DayForecastViewSet)
 router.register(r'forecast', ForecastViewSet)
 # END API
@@ -46,6 +50,7 @@ urlpatterns = [
         name='torinometeo-api-auth-login'),
     url(r'^api/v1/auth/logout/$', LogoutView.as_view(),
         name='torinometeo-api-auth-logout'),
+    url(r'^api/doc/$', schema_view),
     url(r'^api/v1/', include(router.urls))
 ]
 
