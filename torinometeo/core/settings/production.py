@@ -9,9 +9,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['ws.torinometeo.org',]
 
-SESSION_COOKIE_SECURE=True
+#SESSION_COOKIE_SECURE=True
 SESSION_COOKIE_HTTPONLY=True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 STATIC_ROOT = '/home/torinometeo/www/torinometeo/static/'
 MEDIA_ROOT = '/home/torinometeo/www/torinometeo/media/'
