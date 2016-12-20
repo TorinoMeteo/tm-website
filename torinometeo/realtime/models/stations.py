@@ -70,6 +70,7 @@ class Station(models.Model):
     class Meta:
         verbose_name = 'stazione'
         verbose_name_plural = 'stazioni'
+        ordering = ('name', )
 
     def __unicode__(self):
         return '%s' % self.name
