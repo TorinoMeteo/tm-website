@@ -424,8 +424,6 @@ class FetchView(View):
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
 
-        fetch_realtime_data.delay()
-
         data = fetch_data(
             station.data_url,
             station.data_format.name,
