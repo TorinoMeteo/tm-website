@@ -1,9 +1,7 @@
 '''This module sets the configuration for a local development
 
 '''
-from .common import *
-
-import os
+from .common import * # noqa
 
 DEBUG = True
 
@@ -22,3 +20,9 @@ CKEDITOR_CONFIGS['default']['contentsCss'] = [
 
 # DEBUG_TOOLBAR
 JQUERY_URL = ''
+
+# CELERY
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERYD_HIJACK_ROOT_LOGGER = False

@@ -64,8 +64,9 @@ class StationAdmin(admin.ModelAdmin):
 
 admin.site.register(Station, StationAdmin)
 
+
 class DataAdmin(admin.ModelAdmin):
-    list_display = ['datetime', 'station', 'temperature',]
+    list_display = ['datetime', 'station', 'temperature', 'temperature_max', 'temperature_max_time', ] # noqa
     list_filter = ('station', 'datetime', )
 
 admin.site.register(Data, DataAdmin)

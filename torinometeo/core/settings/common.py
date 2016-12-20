@@ -155,7 +155,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -191,7 +191,7 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'api_key': {
             'type': 'apiKey',
-            'name': 'Authorization', # set 'Token token-hash' in authorize
+            'name': 'Authorization',  # set 'Token token-hash' in authorize
             'in': 'header'
         }
     },
@@ -274,7 +274,7 @@ PIPELINE_CSS = {
     'vendor': {
         'source_filenames': (
             'core/src/vendor/Font-Awesome/scss/font-awesome.scss',
-            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
+            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css', # noqa
         ),
         'output_filename': 'core/css/vendor.min.css',
     },
@@ -299,7 +299,7 @@ PIPELINE_JS = {
             'core/src/vendor/moment/moment-with-locales.min.js',
             'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
             'core/src/vendor/bootstrap-material-design/scripts/material.js',
-            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
+            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js', # noqa
         ),
         'output_filename': 'core/js/vendor.min.js'
     },
@@ -320,7 +320,7 @@ PIPELINE_JS_COMPRESSOR = None
 
 
 # Disqus
-DISQUS_API_KEY = 'kjNmaqKMTwg388VnEJicaYV1jdteFZYQLQcsvQwmQJth4V2LpW9lJ3sfgSsxN4YP'
+DISQUS_API_KEY = 'kjNmaqKMTwg388VnEJicaYV1jdteFZYQLQcsvQwmQJth4V2LpW9lJ3sfgSsxN4YP' # noqa
 DISQUS_WEBSITE_SHORTNAME = 'torinometeo'
 
 THUMBNAIL_HIGH_RESOLUTION = True
@@ -376,7 +376,22 @@ LOGGING = {
                              ),
             'when':     'midnight',
         },
-
+        'celery_logger': {
+            'level': 'DEBUG',
+            'filters': None,
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': here('..', '..', '..',
+                             os.path.join('logs', 'celery.log')),
+            'formatter': 'verbose'
+        },
+        'realtime_celery_logger': {
+            'level': 'DEBUG',
+            'filters': None,
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': here('..', '..', '..',
+                             os.path.join('logs', 'realtime.log')),
+            'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -399,6 +414,21 @@ LOGGING = {
             'handlers': ['null'],  # Quiet by default!
             'propagate': False,
             'level': 'DEBUG',
+        },
+        'celery': {
+            'handlers': ['celery_logger'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'celery.tasks': {
+            'handlers': ['celery_logger'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'realtime.tasks': {
+            'handlers': ['realtime_celery_logger', ],
+            'level': 'DEBUG',
+            'propagate': False,
         },
         'core': LOGGING_DEFAULT,
         '': LOGGING_DEFAULT,  # root logger

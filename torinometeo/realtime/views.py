@@ -1,26 +1,31 @@
 from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
 import simplejson
 import calendar
+import logging
 
 from django.shortcuts import render
 from django.views.generic import View, ListView, DetailView, TemplateView
-from django.views.generic.edit import FormView, CreateView
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.views.generic.edit import CreateView
+from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
-from realtime.models.stations import Station, Data
+from realtime.models.stations import Station
 from realtime.forms import NetRequestForm
 from realtime.fetch.shortcuts import fetch_data
+
+from .tasks import fetch_realtime_data
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 class JumbotronStationJsonView(View):
     """ Json used in jumbotron component
     """
     def get(self, request, id):
-        data = {};
+        data = {}
 
         try:
             station = Station.objects.get(pk=id)
@@ -41,7 +46,7 @@ class JumbotronStationJsonView(View):
             data['image_url'] = image_url
             data['day_data'] = day_data
             if realtime_data:
-                data['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M")
+                data['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M") # noqa
                 data['data'] = {
                     'temperature': realtime_data.temperature,
                     'pressure': realtime_data.pressure,
@@ -54,6 +59,7 @@ class JumbotronStationJsonView(View):
 
         return JsonResponse(data)
 
+
 class NetView(ListView):
     """ List of all weather stations
     """
@@ -61,12 +67,14 @@ class NetView(ListView):
     queryset = Station.objects.active().order_by('name')
     template_name = 'realtime/net.html'
 
+
 class StationView(DetailView):
     """ Station detail view
         main view
     """
     model = Station
     template_name = 'realtime/station.html'
+
 
 class StationIdView(DetailView):
     """ Station detail view
@@ -76,6 +84,7 @@ class StationIdView(DetailView):
     """
     model = Station
     template_name = 'realtime/station.html'
+
 
 class StationRealtimeView(DetailView):
     """ Station detail view
@@ -90,13 +99,14 @@ class StationRealtimeView(DetailView):
         # Add in a QuerySet of all the books
         realtime_data = context['object'].get_realtime_data()
         context['data'] = realtime_data
-        context['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M")
+        context['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M") # noqa
 
         day_data = context['object'].get_day_data()
 
         context['day_data'] = simplejson.dumps(day_data)
 
         return context
+
 
 class StationHistoricView(DetailView):
     """ Station detail view
@@ -105,7 +115,7 @@ class StationHistoricView(DetailView):
     model = Station
     template_name = 'realtime/station_historic.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs): # noqa
         # Call the base implementation first to get a context
         context = super(StationHistoricView, self).get_context_data(**kwargs)
 
@@ -119,7 +129,7 @@ class StationHistoricView(DetailView):
         context['first_date'] = first_date
         context['min_year'] = first_date.year
         context['min_month'] = first_date.month
-        context['range_years'] = [context['min_year'] + i for i in range(int(today.year + 1) - context['min_year'])]
+        context['range_years'] = [context['min_year'] + i for i in range(int(today.year + 1) - context['min_year'])] # noqa
 
         if(m > 0 and m < 13 and y >= first_date.year and y <= today.year):
             context['month'] = m
@@ -135,7 +145,7 @@ class StationHistoricView(DetailView):
             last_day_month = today.day
             d = today
 
-        context['data'] = context['object'].get_historic_data(first_month_day, d)
+        context['data'] = context['object'].get_historic_data(first_month_day, d) # noqa
 
         first_1d = True
         t_mean_max_1d = 0
@@ -306,9 +316,9 @@ class StationHistoricView(DetailView):
         context['rh_max_2d'] = rh_max_2d
         context['r_sum_2d'] = r_sum_2d
 
-        context['t_mean_max_3d'] = round(t_mean_max_3d/(last_day_month - 20), 2)
-        context['t_mean_min_3d'] = round(t_mean_min_3d/(last_day_month - 20), 2)
-        context['t_mean_mean_3d'] = round(t_mean_mean_3d/(last_day_month - 20), 2)
+        context['t_mean_max_3d'] = round(t_mean_max_3d/(last_day_month - 20), 2) # noqa
+        context['t_mean_min_3d'] = round(t_mean_min_3d/(last_day_month - 20), 2) # noqa
+        context['t_mean_mean_3d'] = round(t_mean_mean_3d/(last_day_month - 20), 2) # noqa
         context['t_min_3d'] = t_min_3d
         context['t_max_3d'] = t_max_3d
         context['p_min_3d'] = p_min_3d
@@ -330,6 +340,7 @@ class StationHistoricView(DetailView):
 
         return context
 
+
 class StationGraphView(DetailView):
     """ Station detail view
         graphs view
@@ -345,6 +356,7 @@ class StationGraphView(DetailView):
         context['to_date'] = today.strftime('%d/%m/%Y')
         context['from_date'] = first_month_day.strftime('%d/%m/%Y')
         return context
+
 
 class StationIdGraphView(DetailView):
     """ Station detail view
@@ -364,12 +376,13 @@ class StationIdGraphView(DetailView):
         context['from_date'] = first_month_day.strftime('%d/%m/%Y')
         return context
 
+
 class StationGraphJSONDataView(View):
     """ Historical data JSON
         called by ajax
     """
     def get(self, request, slug):
-        data = {};
+        data = {}
 
         try:
             station = Station.objects.get(slug=slug)
@@ -410,6 +423,8 @@ class FetchView(View):
 
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
+
+        fetch_realtime_data.delay()
 
         data = fetch_data(
             station.data_url,

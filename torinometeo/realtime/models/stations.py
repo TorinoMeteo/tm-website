@@ -77,7 +77,7 @@ class Station(models.Model):
     def now(self):
         """ Returns the current datetime, for debug and dev purposes
         """
-        #return timezone.now()
+        return timezone.now()
         datetime_obj = datetime.datetime(2015, 03, 11, 10, 40, 00)
         return timezone.make_aware(datetime_obj, timezone.get_current_timezone())
 
@@ -206,7 +206,7 @@ class Data(models.Model):
         verbose_name_plural = 'Dati realtime'
 
     def __unicode__(self):
-        return '%s - %s' % (self.station, self.datetime)
+        return '%s - %s' % (self.station.name, str(self.datetime) if self.datetime else '')
 
 class HistoricData(models.Model):
     """ Historic data model class

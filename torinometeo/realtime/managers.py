@@ -1,7 +1,8 @@
 from django.db import models
 
+
 class StationManager(models.Manager):
-
-    def active(self):
-        return self.filter(active=True)
-
+    """ Defines the active method to easily retrieve active stations
+    """
+    def active(self, **kwargs):
+        return self.filter(active=True, **kwargs)
