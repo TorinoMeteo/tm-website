@@ -23,6 +23,7 @@ CKEDITOR_CONFIGS['default']['contentsCss'] = [
 
 LOGGING['handlers']['file']['filename'] = here('..', '..', '..', '..', os.path.join('logs', 'debug.log')) # noqa
 LOGGING['handlers']['celery_logger']['filename'] = here('..', '..', '..', '..', os.path.join('logs', 'celery.log')) # noqa
+LOGGING['handlers']['realtime_celery_logger']['filename'] = here('..', '..', '..', '..', os.path.join('logs', 'realtime.log')) # noqa
 
 # CELERY
 CELERY_ACCEPT_CONTENT = ['json']
