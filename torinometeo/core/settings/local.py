@@ -1,6 +1,8 @@
 '''This module sets the configuration for a local development
 
 '''
+from datetime import timedelta
+
 from .common import * # noqa
 
 DEBUG = True
@@ -26,3 +28,11 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERYD_HIJACK_ROOT_LOGGER = False
+
+CELERYBEAT_SCHEDULE = {
+    'fetch-realtime-data': {
+        'task': 'realtime.tasks.fetch_realtime_data',
+        'schedule': timedelta(seconds=300),
+        'args': ()
+    },
+}

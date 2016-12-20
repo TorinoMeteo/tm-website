@@ -1,12 +1,13 @@
  // Core variables and mixins
-@import "../vendor/bootstrap/scss/bootstrap";
+@import '../vendor/bootstrap/scss/bootstrap';
+@import '../vendor/weather-icons/weather-icons';
 
-@import "variables";
-@import "main";
-@import "navbar";
-@import "forms";
-@import "footer";
-@import "content";
-@import "jumbotron";
-@import "tables";
+@import 'variables';
+@import 'main';
+@import 'navbar';
+@import 'forms';
+@import 'footer';
+@import 'content';
+@import 'jumbotron';
+@import 'tables';
 

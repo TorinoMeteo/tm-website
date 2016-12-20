@@ -86,12 +86,15 @@ class Station(models.Model):
             http://stackoverflow.com/questions/21918802/problems-filtering-django-datetime-field-by-month-and-day
         """
         date = self.now()
-        data = Data.objects.filter(station=self.id, datetime__year=date.year, datetime__month=date.month, datetime__day=date.day).order_by('-id')[:1].get()
-        time_difference = self.now() - data.datetime
-        if(time_difference.total_seconds() > Station.RT_RANGE_SECONDS):
-            return None
+        try:
+            data = Data.objects.filter(station=self.id, datetime__year=date.year, datetime__month=date.month, datetime__day=date.day).order_by('-id')[:1].get()
+            time_difference = self.now() - data.datetime
+            if(time_difference.total_seconds() > Station.RT_RANGE_SECONDS):
+                return None
 
-        return data
+            return data
+        except:
+            return None
 
     def get_day_data(self):
         """ All data of the current day, @see self.now

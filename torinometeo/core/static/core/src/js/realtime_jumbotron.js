@@ -174,7 +174,12 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         var geo_a = [data.nation, data.region];
         if(data.province) geo_a.push(data.province);
         this.$dom.geo.text(geo_a.join(' » '));
-        this.$dom.date.text(this.formatDate(data.data_date));
+        if(data.data_date) {
+            this.$dom.date.text(this.formatDate(data.data_date));
+        }
+        else {
+            this.$dom.date.html('<strong>Dati non disponibili</strong>');
+        }
         // graphs
         this.renderStationGraphs(data);
         // image
@@ -185,12 +190,22 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             'background-size': 'cover'
         });
         // raltime data
-        this.$dom.rt_data_temperature.html('<i class="wi wi-thermometer"></i> <span data-heat="' + this.heatClass(data.data.temperature) + '">' + data.data.temperature + '</span>' + ' <span>°C</span>');
-        this.$dom.rt_data_pressure.html('<i class="wi wi-barometer"></i> ' + '<span data-heat="">' + data.data.pressure + '</span>' + ' <span>hPa</span>');
-        this.$dom.rt_data_relative_humidity.html('<i class="wi wi-humidity"></i> ' + '<span data-heat="">' + data.data.relative_humidity + '</span>' + ' <span>%</span>');
-        this.$dom.rt_data_wind.html('<i class="wi wi-windy"></i> ' + '<span data-heat="">' + data.data.wind_strength + '</span>' + ' <span>Km/h</span>' + ' ' + '<span data-heat="">' + data.data.wind_dir + '</span>');
-        this.$dom.rt_data_rain_rate.html('<i class="wi wi-raindrops"></i> ' + '<span data-heat="">' + data.data.rain_rate + '</span>' + ' <span>mm/h</span>');
-        this.$dom.rt_data_rain.html('<i class="wi wi-umbrella"></i> ' + '<span data-heat="">' + data.data.rain + '</span>' + ' <span>mm</span>');
+        if(data.data) {
+            this.$dom.rt_data_temperature.html('<i class="wi wi-thermometer"></i> <span data-heat="' + this.heatClass(data.data.temperature) + '">' + data.data.temperature + '</span>' + ' <span>°C</span>');
+            this.$dom.rt_data_pressure.html('<i class="wi wi-barometer"></i> ' + '<span data-heat="">' + data.data.pressure + '</span>' + ' <span>hPa</span>');
+            this.$dom.rt_data_relative_humidity.html('<i class="wi wi-humidity"></i> ' + '<span data-heat="">' + data.data.relative_humidity + '</span>' + ' <span>%</span>');
+            this.$dom.rt_data_wind.html('<i class="wi wi-windy"></i> ' + '<span data-heat="">' + data.data.wind_strength + '</span>' + ' <span>Km/h</span>' + ' ' + '<span data-heat="">' + data.data.wind_dir + '</span>');
+            this.$dom.rt_data_rain_rate.html('<i class="wi wi-raindrops"></i> ' + '<span data-heat="">' + data.data.rain_rate + '</span>' + ' <span>mm/h</span>');
+            this.$dom.rt_data_rain.html('<i class="wi wi-umbrella"></i> ' + '<span data-heat="">' + data.data.rain + '</span>' + ' <span>mm</span>');
+        }
+        else {
+            this.$dom.rt_data_temperature.html('<i class="wi wi-thermometer"></i> ND')
+            this.$dom.rt_data_pressure.html('<i class="wi wi-barometer"></i> ND')
+            this.$dom.rt_data_relative_humidity.html('<i class="wi wi-humidity"></i> ND')
+            this.$dom.rt_data_wind.html('<i class="wi wi-windy"></i> ND')
+            this.$dom.rt_data_rain_rate.html('<i class="wi wi-raindrops"></i> ND')
+            this.$dom.rt_data_rain.html('<i class="wi wi-umbrella"></i> ND')
+        }
 
         this.$index == 0 ? this.$dom.prev_arrow.addClass('hidden') : this.$dom.prev_arrow.removeClass('hidden');
         this.$index == this.$last_index ? this.$dom.next_arrow.addClass('hidden') : this.$dom.next_arrow.removeClass('hidden');
