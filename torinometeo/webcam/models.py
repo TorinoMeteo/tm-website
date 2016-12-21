@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.crypto import get_random_string
 
 from ckeditor.fields import RichTextField
 
@@ -27,6 +28,10 @@ class Webcam(models.Model):
         return ('webcam-detail', None, {
             'slug': self.slug,
         })
+
+    def random_url(self):
+        unique_id = get_random_string(length=8)
+        return '%s?%s' % (self.url, unique_id)
 
 class BestShot(models.Model):
     webcam = models.ForeignKey(Webcam, verbose_name='webcam')
