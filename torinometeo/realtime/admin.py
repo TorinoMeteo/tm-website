@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from realtime.models.geo import Nation, Region, Province
-from realtime.models.stations import Station, Data, NetRequest, DataFormat
+from realtime.models.stations import Station, Data, NetRequest, DataFormat, HistoricData # noqa
 
 # geo
 
@@ -81,3 +81,9 @@ class DataFormatAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 admin.site.register(DataFormat, DataFormatAdmin)
+
+
+class HistoricDataAdmin(admin.ModelAdmin):
+    list_display = ('date', 'station', )
+
+admin.site.register(HistoricData, HistoricDataAdmin)

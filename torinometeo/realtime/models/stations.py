@@ -75,6 +75,12 @@ class Station(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('realtime-station', None, {
+            'slug': self.slug,
+        })
+
     def now(self):
         """ Returns the current datetime, for debug and dev purposes
         """

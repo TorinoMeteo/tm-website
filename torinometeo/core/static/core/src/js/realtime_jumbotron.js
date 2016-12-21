@@ -10,7 +10,7 @@ torinometeo.realtime = torinometeo.realtime || {};
  * @param array id_stations station ids array
  * @param array name_stations station name array
  */
-torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_stations, options)
+torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_stations, url_stations, options)
 {
     var opts = {
         'base_url': '/realtime/jumbotron/station/'
@@ -32,6 +32,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.container = jQuery('#' + container_id);
         this._id_stations = id_stations;
         this._name_stations = name_stations;
+        this._url_stations = url_stations;
         this.$last_index = id_stations.length - 1;
         this.options = jQuery.extend({}, opts, options);
 
@@ -40,7 +41,8 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.title = jQuery('<h1>', {'class': ''}).appendTo(this.$dom.title_container);
         this.$dom.title.on('click', jQuery.proxy(this.stationSelection, this));
         this.$dom.geo = jQuery('<p>', {'class': 'geo pull-left'}).appendTo(this.$dom.container);
-        this.$dom.date = jQuery('<time>').appendTo(jQuery('<p>', {'class': 'pull-left'}).appendTo(this.$dom.container));
+        this.$dom.date = jQuery('<time>').appendTo(jQuery('<p>', {'class': 'pull-left time'}).appendTo(this.$dom.container));
+        this.$dom.detail = jQuery('<p>', {'class': 'pull-left'}).appendTo(this.$dom.container);
         this.$dom.clear = jQuery('<div>', {'class': 'clearfix'}).appendTo(this.$dom.container);
         this.$dom.next_arrow = jQuery('<span>', {'class': 'arrow arrow-next fa fa-angle-double-right hidden'})
             .on('click', jQuery.proxy(this.goNext, this))
@@ -188,6 +190,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         else {
             this.$dom.date.html('<strong>Dati non disponibili</strong>');
         }
+        this.$dom.detail.html('<a href="' + this._url_stations[this.$index] + '"><i class="fa fa-plus-circle"></i></a>');
         // graphs
         this.renderStationGraphs(data);
         // image

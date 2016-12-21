@@ -1,9 +1,13 @@
 from __future__ import absolute_import
 
+import datetime
+
+from django.db.models import Max, Min, Avg
+
 from core.celery import app
 from celery.utils.log import get_task_logger
 
-from .models.stations import Station, Data
+from .models.stations import Station, Data, HistoricData
 from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
@@ -79,7 +83,7 @@ def data_exists(station, datetime):
     return True if count else False
 
 
-@app.task # noqa
+@app.task
 def fetch_realtime_data():
     """ Fetches all realtime data from external urls
         and populates the db
@@ -104,3 +108,67 @@ def fetch_realtime_data():
 
     logger.info('END -- running task: fetch_realtime_data')
     return True
+
+
+@app.task
+def store_historic_data():
+    """ Stores max min and avg values for yesterday
+    """
+    logger.info('BEGIN -- running task: store_historic_data')
+    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+
+    for station in Station.objects.active():
+        try:
+            # @CHECKME maybe data should be filtered date > yesterday 00:06:00
+            data = Data.objects.filter(
+                station=station,
+                datetime__year=yesterday.year,
+                datetime__month=yesterday.month,
+                datetime__day=yesterday.day,
+            )
+            # temperature
+            max_temp = data.aggregate(Max('temperature_max'))
+            min_temp = data.aggregate(Min('temperature_min'))
+            avg_temp = data.aggregate(Avg('temperature'))
+            # relative humidity
+            max_rh = data.aggregate(Max('relative_humidity_max'))
+            min_rh = data.aggregate(Min('relative_humidity_min'))
+            avg_rh = data.aggregate(Avg('relative_humidity'))
+            # temperature
+            max_press = data.aggregate(Max('pressure_max'))
+            min_press = data.aggregate(Min('pressure_min'))
+            avg_press = data.aggregate(Avg('pressure'))
+            # rain
+            max_rain = data.aggregate(Max('rain'))
+
+            history = HistoricData(
+                station=station,
+                date=yesterday.date(),
+                temperature_max=max_temp['temperature_max__max'],
+                temperature_min=min_temp['temperature_min__min'],
+                temperature_mean=avg_temp['temperature__avg'],
+                relative_humidity_max=max_rh['relative_humidity_max__max'],
+                relative_humidity_min=min_rh['relative_humidity_min__min'],
+                relative_humidity_mean=avg_rh['relative_humidity__avg'],
+                pressure_max=max_press['pressure_max__max'],
+                pressure_min=min_press['pressure_min__min'],
+                pressure_mean=avg_press['pressure__avg'],
+                rain=max_rain['rain__max'],
+            )
+            history.save()
+            logger.info('station %s history save successfull' % (station.name))
+        except Exception, e:
+            logger.warn('station %s history save failed: %s' % (station.name, str(e))) # noqa
+
+    logger.info('END -- running task: store_historic_data')
+
+
+@app.task
+def clean_realtime_data():
+    """ Deletes data older than 1 week
+    """
+    logger.info('BEGIN -- running task: clean_realtime_data')
+    date = datetime.datetime.now() - datetime.timedelta(days=7)
+    Data.objects.filter(datetime__lte=date).delete()
+    logger.info('delete realtime data older than 1 week successfull')
+    logger.info('END -- running task: clean_realtime_data')
