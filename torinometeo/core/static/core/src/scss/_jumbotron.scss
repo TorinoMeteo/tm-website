@@ -12,11 +12,19 @@
     position: relative;
     font-family: $font-family-sans-serif;
     padding: 40px 20px;
+
+    .station-title {
+      margin-top: 40px;
+
+      h1 {
+        float: left;
+      }
+    }
+
     h1 {
         position: relative;
         font-size: 30px !important;
         cursor: pointer;
-        margin-top: 40px;
 
         @media(max-width: map-get($grid-breakpoints, 'md')) {
           font-size: 40px;
@@ -49,7 +57,7 @@
         position: relative;
         height: 220px;
         width: 100%;
-        padding: 0 50px;
+        padding: 0px;
         float: left;
         margin-left: 0px;
         margin-top: 10px;
@@ -85,7 +93,7 @@
     }
     .rt-relative-humidity-label, .rt-rain-label {
         border-radius: 0 12px 0 0;
-        right: 5px;
+        right: -45px;
     }
     .rt-relative-humidity-label {
         top: 15px;
@@ -95,7 +103,7 @@
     }
     .rt-temperature-label, .rt-pressure-label {
         border-radius: 12px 0 0 0;
-        left: 5px;
+        left: -45px;
         transform: rotate(-90deg);
     }
     .rt-temperature-label {
@@ -119,10 +127,25 @@
     }
     .rt-data {
         float: left;
+        margin-top: 20px;
+
+        @media(min-width: map-get($grid-breakpoints, 'md')) {
+          margin-left: 20px;
+        }
+
+        div {
+          display: table-row;
+
+          i {
+            display: table-cell;
+            padding: 10px;
+          }
+        }
     }
     .rt-data2 {
       float: right;
       text-align: right;
+      margin-left: 0;
 
       @media(min-width: map-get($grid-breakpoints, 'lg')) {
         float: left;
@@ -153,22 +176,19 @@
     span[data-heat=vhot] { color: #ff0000; }
     // #rt-pressure-graph { background: yellow; } #rt-relative_humidity-graph { background: blue; }
     .arrow {
-        position: absolute;
         z-index:100;
-        top: 65%;
         font-size: 46px;
-        margin-top: -20px;
         cursor: pointer;
         &:hover {
             color: #fa5e11;
         }
+        float: right;
     }
 
     .arrow-next {
-        right: 5px;
+      margin-left: 18px;
     }
     .arrow-prev {
-        left: 5px;
     }
     .station-selection-layer {
         position: absolute;

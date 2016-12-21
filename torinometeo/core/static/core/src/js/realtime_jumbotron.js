@@ -36,17 +36,18 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.options = jQuery.extend({}, opts, options);
 
         /* LAYOUT */
-        this.$dom.title = jQuery('<h1>', {'class': ''}).appendTo(this.$dom.container);
+        this.$dom.title_container = jQuery('<div>', {'class': 'station-title clearfix'}).appendTo(this.$dom.container);
+        this.$dom.title = jQuery('<h1>', {'class': ''}).appendTo(this.$dom.title_container);
         this.$dom.title.on('click', jQuery.proxy(this.stationSelection, this));
         this.$dom.geo = jQuery('<p>', {'class': 'geo pull-left'}).appendTo(this.$dom.container);
         this.$dom.date = jQuery('<time>').appendTo(jQuery('<p>', {'class': 'pull-left'}).appendTo(this.$dom.container));
         this.$dom.clear = jQuery('<div>', {'class': 'clearfix'}).appendTo(this.$dom.container);
-        this.$dom.next_arrow = jQuery('<span>', {'class': 'arrow arrow-next fa fa-chevron-circle-right hidden'})
+        this.$dom.next_arrow = jQuery('<span>', {'class': 'arrow arrow-next fa fa-angle-double-right hidden'})
             .on('click', jQuery.proxy(this.goNext, this))
-            .appendTo(this.$dom.container);
-        this.$dom.prev_arrow = jQuery('<span>', {'class': 'arrow arrow-prev fa fa-chevron-circle-left hidden'})
+            .appendTo(this.$dom.title_container);
+        this.$dom.prev_arrow = jQuery('<span>', {'class': 'arrow arrow-prev fa fa-angle-double-left hidden'})
             .on('click', jQuery.proxy(this.goPrev, this))
-            .appendTo(this.$dom.container);
+            .appendTo(this.$dom.title_container);
 
         // columns
         this.$dom.col1 = jQuery('<div>', {'class': 'col-lg-3 col-md-6 hidden-sm-down'}).appendTo(this.$dom.container);

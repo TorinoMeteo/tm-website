@@ -15,8 +15,6 @@ from realtime.models.stations import Station
 from realtime.forms import NetRequestForm
 from realtime.fetch.shortcuts import fetch_data
 
-from .tasks import fetch_realtime_data
-
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -35,7 +33,7 @@ class JumbotronStationJsonView(View):
         if station:
 
             realtime_data = station.get_realtime_data()
-            day_data = station.get_day_data()
+            day_data = station.get_last24_data()
 
             image_url = station.image.url
 

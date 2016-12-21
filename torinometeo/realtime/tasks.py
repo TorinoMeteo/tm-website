@@ -31,6 +31,18 @@ def patch_min(station, datetime, variable):
     return (None, None)
 
 
+def patch_wind_max(station, datetime):
+    """ Retrieves and patches missing max wind
+    """
+    max = Data.objects.filter(
+        station=station,
+        datetime__gte=datetime.date()
+    ).order_by('-wind_strength').first()
+    if max:
+        return (max.wind_strength, max.wind_dir, max.datetime.time())
+    return (None, None, None)
+
+
 def adjust_data(station, data):
     """ Adjusts data to be eaten by model creator
     """
@@ -40,15 +52,20 @@ def adjust_data(station, data):
     data.pop('date', None)
     data.pop('time', None)
     # patch max and min
-    for var in ['temperature', 'pressure', 'dewpoint', 'relative_humidity']:
+    for var in ['temperature', 'pressure', 'dewpoint', 'relative_humidity', 'rain_rate']: # noqa
         if ('%s_max' % var) not in data or data['%s_max' % var] is None:
             (data['%s_max' % var], data['%s_max_time' % var]) = patch_max(
                 station, data['datetime'], var
             )
-        if ('%s_min' % var) not in data or data['%s_min' % var] is None:
-            (data['%s_min' % var], data['%s_min_time' % var]) = patch_min(
-                station, data['datetime'], var
-            )
+        if var != 'rain_rate':  # rain rate has no min
+            if ('%s_min' % var) not in data or data['%s_min' % var] is None:
+                (data['%s_min' % var], data['%s_min_time' % var]) = patch_min(
+                    station, data['datetime'], var
+                )
+    if 'wind_strength_max' not in data or data['wind_strength_max'] is None:
+        (data['wind_strength_max'], data['wind_dir_max'], data['wind_max_time']) = patch_wind_max( # noqa
+            station, data['datetime']
+        )
     return data
 
 

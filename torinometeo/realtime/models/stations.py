@@ -141,6 +141,51 @@ class Station(models.Model):
 
         return day_data
 
+    def get_last24_data(self):
+        """ All data of the last 24 hours, @see self.now
+        """
+        date = self.now()
+        day_data = {
+            'temperature': [],
+            'pressure': [],
+            'relative_humidity': [],
+            'rain_rate': [],
+            'rain': []
+        }
+
+        date_from = date - datetime.timedelta(days=1)
+        data = Data.objects.filter(station=self.id, datetime__gte=date_from).order_by('id').distinct()
+        for record in data:
+            datetime_data = {
+                'datetime_year': record.datetime.year,
+                'datetime_month': record.datetime.month,
+                'datetime_day': record.datetime.day,
+                'datetime_hour': record.datetime.hour,
+                'datetime_minute': record.datetime.minute,
+                'datetime_second': record.datetime.second,
+            }
+            temperature_data = datetime_data.copy()
+            temperature_data.update({ 'value': record.temperature })
+            day_data['temperature'].append(temperature_data)
+
+            pressure_data = datetime_data.copy()
+            pressure_data.update({ 'value': record.pressure })
+            day_data['pressure'].append(pressure_data)
+
+            relative_humidity_data = datetime_data.copy()
+            relative_humidity_data.update({ 'value': record.relative_humidity })
+            day_data['relative_humidity'].append(relative_humidity_data)
+
+            rain_rate_data = datetime_data.copy()
+            rain_rate_data.update({ 'value': record.rain_rate })
+            day_data['rain_rate'].append(rain_rate_data)
+
+            rain_data = datetime_data.copy()
+            rain_data.update({ 'value': record.rain })
+            day_data['rain'].append(rain_data)
+
+        return day_data
+
     def get_historic_data(self, from_date, to_date):
 
         historic_data = []
