@@ -205,6 +205,16 @@ h1, h2, h3 {
   }
 }
 
+/* webcams */
+.section-webcams {
+  background: rgba(218,240,254, .8);
+  padding: 40px 0;
+  border-top: 8px solid #fff;
+
+  h1 {
+    display: none;
+  }
+}
 /* webcam widget */
 .webcam-widget .panel {
   border: 1px solid #aaa;

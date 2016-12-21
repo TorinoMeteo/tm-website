@@ -206,7 +206,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             this.$dom.rt_data_relative_humidity.html(
                 '<i class="wi wi-humidity"></i> ' + '<span data-heat="">' + this.renderValue(data.data.relative_humidity) + '</span>' + ' <span>%</span>');
             this.$dom.rt_data_wind.html(
-                '<i class="wi wi-windy"></i> ' + '<span data-heat="">' + this.renderValue(data.data.wind_strength) + '</span>' + ' <span>Km/h</span>' + ' ' + '<span data-heat="">' + data.data.wind_dir + '°</span>');
+                '<i class="wi wi-windy"></i> ' + '<span data-heat="">' + this.renderValue(data.data.wind_strength) + '</span>' + ' <span>Km/h</span>' + ' ' + '<span data-heat="">' + this.renderValue(data.data.wind_dir) + '°</span>');
             this.$dom.rt_data_rain_rate.html(
                 '<i class="wi wi-raindrops"></i> ' + '<span data-heat="">' + this.renderValue(data.data.rain_rate) + '</span>' + ' <span>mm/h</span>');
             this.$dom.rt_data_rain.html(
