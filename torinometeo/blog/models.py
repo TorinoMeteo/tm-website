@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils import timezone
 
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 from taggit.managers import TaggableManager
 
@@ -19,7 +19,7 @@ class Entry(models.Model):
     last_edit_date = models.DateTimeField('ultima modifica', auto_now=True)
     title = models.CharField('titolo', max_length=128)
     slug = models.SlugField('slug', max_length=128)
-    text = RichTextField('testo')
+    text = RichTextUploadingField('testo')
     image = models.ImageField('immagine', upload_to=set_entry_image_folder, blank=True, null=True)
     index_words = models.IntegerField('numero parole home')
     tags = TaggableManager('tag', help_text='valori separati da virgole', blank=True)
