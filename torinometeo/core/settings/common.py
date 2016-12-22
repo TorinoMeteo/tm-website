@@ -266,6 +266,7 @@ CKEDITOR_CONFIGS = {
         'removePlugins': 'stylesheetparser',
         'allowedContent': True,
         'extraAllowedContent': 'iframe[*]',
+        'stylesSet': 'core_styles:/static/core/src/js/ckeditor_styles.js',
     }
 }
 

@@ -7,24 +7,21 @@ $spinner-bg: #333;
 $spinner-shadow: #fff;
 
 body {
-  font-size: 14px;
-
-  @include media-breakpoint-up(sm) {
-    font-size: 16px;
-  }
-}
-
-body {
   background-image: url('../img/skyline.png'), linear-gradient(0deg, $bg-body-1, $bg-body-2 60%);
   background-position: bottom center, top center;
   background-repeat: no-repeat, no-repeat;
   background-size: auto, auto;
   font-family: 'Roboto';
+  font-size: 14px;
   font-weight: 300;
   left: 0;
   padding-top: 67px;
   position: relative;
   transition: left .3s linear;
+
+  @include media-breakpoint-up(sm) {
+    font-size: 16px;
+  }
 }
 
 .page {
@@ -43,6 +40,21 @@ body {
 
 .hidden {
   display: none;
+}
+
+.video-wrapper {
+  height: 0;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  position: relative;
+
+  iframe {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 }
 
 // spinner

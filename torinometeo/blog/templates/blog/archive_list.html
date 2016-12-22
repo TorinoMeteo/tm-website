@@ -26,7 +26,7 @@
                                     {% if entry.tags.count %}
                                         <span class="fa fa-tags"></span> 
                                         {% for tag in entry.tags.all %}
-                                            <a class="serif" href="{% url 'blog-category-list' tag.name|iriencode %}">{{ tag.name }}</a> 	
+                                            <a class="serif" href="{% url 'blog-category-list' tag.name %}">{{ tag.name }}</a> 	
                                         {% endfor %}
                                     {% endif %}
                                     <span style="display: inline-block; margin-left: 16px;" class="fa fa-comment"></span> 
