@@ -82,14 +82,14 @@
                             <tr>
                                 <th>Precipitazione giornaliera</th>
                                 <th>Precipitazione mensile</th>
-                                <th>Precipitazione annua - media</th>
+                                <th>Precipitazione annuale / media</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td data-title="Precipitazione giornaliera">{% if data %}{{ data.rain }} mm{% else %}ND{% endif %}</td>
                                 <td data-title="Precipitazione mensile">{% if data %}{{ data.rain_month }} mm{% else %}ND{% endif %}</td>
-                                <td data-title="Precipitazione annua - media">{% if data %}{{ data.rain_year }} mm{% else %}ND{% endif %}</td>
+                                <td data-title="Precipitazione annuale / media">{% if data %}{{ data.rain_year }} mm{% else %}ND{% endif %} / {{ object.mean_year_rain }} mm</td>
                             </tr>
                         </tbody>
                     </table>
