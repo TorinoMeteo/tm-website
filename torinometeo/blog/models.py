@@ -15,10 +15,8 @@ def set_entry_image_folder(instance, filename):
 class Entry(models.Model):
 
     author = models.ForeignKey(User, verbose_name='autore', related_name='entries')
-    # creation_date = models.DateTimeField('creazione', auto_now_add=True)
-    creation_date = models.DateTimeField('creazione', default=timezone.now())
-    # last_edit_date = models.DateTimeField('ultima modifica', auto_now=True)
-    last_edit_date = models.DateTimeField('ultima modifica', default=timezone.now())
+    creation_date = models.DateTimeField('creazione', auto_now_add=True)
+    last_edit_date = models.DateTimeField('ultima modifica', auto_now=True)
     title = models.CharField('titolo', max_length=128)
     slug = models.SlugField('slug', max_length=128)
     text = RichTextField('testo')
