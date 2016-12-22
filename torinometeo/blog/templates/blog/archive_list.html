@@ -14,7 +14,6 @@
                 <h1>Blog</h1>
                 {% if object_list %}
                     {% for entry in object_list %}
-                    <!-- <article class="entry entry_list" style="background: url({{ entry.image.url }}) no-repeat center center; background-size: cover;"> -->
                     <article class="entry entry_list">
                             <header>
                                 <h1><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h1>
@@ -33,7 +32,9 @@
                                     <a href="{{ entry.get_http_absolute_url }}#disqus_thread" data-disqus-identifier="blogentry_{{ entry.id }}">view comments</a>
                                 </aside>
                             </header>
-                            <div class="blog-entry-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
+                            {% if entry.image %}
+                                <div class="blog-entry-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
+                            {% endif %}
                             {{ entry.text|truncatewords_html:50|safe }}
                             <p class="serif" style="margin-top: 20px;"><a href="{{ entry.get_absolute_url }}" class="read-all">leggi tutto <i class="fa fa-arrow-right"></i></a></p>
                         </article>
