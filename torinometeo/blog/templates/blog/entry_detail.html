@@ -2,6 +2,30 @@
 {% load thumbnail %}
 {% load blog_tags %}
 {% load disqus_tags %}
+{% load core_tags %}
+
+{% block title%}
+{{ object.title }} | {{ super }}
+{% endblock %}
+
+{% block meta_title %}{{ object.title }} | {{ block.super }}{% endblock %}
+{% block meta_description %}{% autoescape on %}{{ object.text|striptags|slice:":152" }}...{% endautoescape %}{% endblock %}
+{% block meta_keywords %}{% for tag in object.tags.all %}{{ tag.name }},{% endfor %}{% endblock %}
+{% block meta_og_title %}{{ object.title }} | {{ block.super }}{% endblock %}
+{% block meta_og_url %}{{ object.get_http_absolute_url }}{% endblock %}
+{% block meta_og_description %}{% autoescape on %}{{ object.text|striptags|slice:":297" }}...{% endautoescape %}{% endblock %}
+{% block meta_tw_url %}{{ object.get_http_absolute_url }}{% endblock %}
+{% block meta_tw_title %}{{ object.title }} | {{ block.super }}{% endblock %}
+{% block meta_tw_description %}{% autoescape on %}{{ object.text|striptags|slice:":197" }}...{% endautoescape %}{% endblock %}
+{% block meta_extra %}
+  {% if object.image %}
+    <meta property="og:image" content="https://www.torinometeo.org{{ object.image.url }}" />
+  {% endif %}
+  {% if object.image %}
+    <meta name="twitter:image" content="https//www.torinometeo.org{{ object.image.url }}" />
+  {% endif %}
+{% endblock %}
+
 
 {% block jumbotron %}{% endblock %}
 
@@ -14,25 +38,26 @@
                 <h1>{{ object.title }}</h1>
                 <aside class="blog-aside serif">
                     <i class="fa fa-clock-o"></i>
-                    <time style="margin-right: 20px;" class="left" content="{{ entry.creation_date|date:"Y-m-d" }}" datetime="{{ entry.get_time_attribute }}" pubdate="pubdate">
-                        {{ entry.creation_date }}
+                    <time style="margin-right: 20px;" class="left" content="{{ object.creation_date|date:"Y-m-d" }}" datetime="{{ object.get_time_attribute }}" pubdate="pubdate">
+                        {{ object.creation_date }}
                     </time>
-                    {% if entry.tags.count %}
+                    {% if object.tags.count %}
                         <span class="fa fa-tags"></span> 
-                        {% for tag in entry.tags.all %}
+                        {% for tag in object.tags.all %}
                             <a class="serif" href="{% url 'blog-category-list' tag.name|iriencode %}">{{ tag.name }}</a> 	
                         {% endfor %}
                     {% endif %}
                 </aside>
-                {% if entry.image %}
-                    <div class="blog-entry-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
+                {% if object.image %}
+                    <div class="blog-object-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ object.image.url }}" /></div>
                 {% endif %}
+                {% sharethis object.get_absolute_url object.title %}
                 {{ object.text|safe }}
 
                 <h2 class="">E tu, come la pensi?</h2>
 
-                {% set_disqus_url entry.get_http_absolute_url %}
-                {% set_disqus_identifier "blogentry_" entry.slug %}
+                {% set_disqus_url object.get_http_absolute_url %}
+                {% set_disqus_identifier "blogobject_" object.slug %}
                 {% disqus_show_comments %}
             </section>
         </div>

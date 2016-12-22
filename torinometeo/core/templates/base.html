@@ -8,21 +8,22 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <title>{% block title %}TorinoMeteo{% endblock %}</title>
         {% block meta %}
-            <meta name="title" content="TorinoMeteo" />
-            <meta name="description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
-            <meta name="keywords" content="" />
+            <meta name="title" content="{% block meta_title %}TorinoMeteo{% endblock %}" />
+            <meta name="description" content="{% block meta_description %}Associazione culturale per lo studio dei fenomeni meteorologici{% endblock %}" />
+            <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
 
-            <meta property="og:title" content="TorinoMeteo" />
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content="https://ws.torinometeo.org" />
-            <meta property="og:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
+            <meta property="og:title" content="{% block meta_og_title %}TorinoMeteo{% endblock %}" />
+            <meta property="og:type" content="{% block meta_og_type %}website{% endblock %}" />
+            <meta property="og:url" content="{% block meta_og_url %}https://www.torinometeo.org{% endblock %}" />
+            <meta property="og:description" content="{% block meta_og_description %}Associazione culturale per lo studio dei fenomeni meteorologici{% endblock %}" />
 
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:url" content="https://ws.torinometeo.org" />
-            <meta name="twitter:title" content="TorinoMeteo" />
-            <meta name="twitter:description" content="Associazione culturale per lo studio dei fenomeni meteorologici" />
-            <meta name="twitter:creator" content="@abidibo" />
+            <meta name="twitter:url" content="{% block meta_tw_url %}https://www.torinometeo.org{% endblock %}" />
+            <meta name="twitter:title" content="{% block meta_tw_title %}TorinoMeteo{% endblock %}" />
+            <meta name="twitter:description" content="{% block meta_tw_description %}Associazione culturale per lo studio dei fenomeni meteorologici{% endblock %}" />
+            <meta name="twitter:creator" content="@torinometeoweb" />
         {% endblock %}
+        {% block meta_extra %}{% endblock %}
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,300italic,400italic,500,700,900' rel='stylesheet' type='text/css'>
         {% stylesheet 'vendor' %}
         {% stylesheet 'torinometeo' %}

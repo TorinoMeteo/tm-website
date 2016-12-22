@@ -52,7 +52,7 @@ class Entry(models.Model):
     def get_http_absolute_url(self):
         current_site = get_current_site(None)
         return ''.join([
-            'https' if settings.HTTPS else 'http',
+            'https://' if settings.HTTPS else 'http://',
             current_site.domain,
             self.get_absolute_url()
         ])

@@ -18,5 +18,5 @@ def absurl(url):
 
 
 @register.inclusion_tag('core/sharethis.html')
-def sharethis(relative_url):
-    return {'url': relative_url}
+def sharethis(relative_url, title=''):
+    return {'url': relative_url, 'title': title}
