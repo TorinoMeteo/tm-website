@@ -26,7 +26,13 @@
         </nav>
         <div class="row">
             <div class="col-md-8">
-                <p class="alert alert-info"><i class="fa fa-clock-o"></i> <strong>Ultima rilevazione</strong>: <strong>{{ data_date }}</strong></p>
+                {% if data_date %}
+                    <p class="alert alert-info"><i class="fa fa-clock-o"></i> <strong>Ultima rilevazione</strong>: <strong>{{ data_date }}</strong></p>
+                {% else %}
+                    <p class="alert alert-danger">
+                        <i class="fa fa-exclamation-triangle"></i> Stazione offline da più di {{ offline_limit }} secondi
+                    </p>
+                {% endif %}
                 <div class="table-responsive-vertical">
                     <table class="table table-bordered realtime-data">
                         <thead>
@@ -38,19 +44,19 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td data-title="Temperatura">{{ data.temperature }} °C</td>
-                                <td data-title="Umidità relativa">{{ data.relative_humidity }} %</td>
-                                <td data-title="Punto di rugiada">{{ data.dewpoint }} °C</td>
+                                <td data-title="Temperatura">{% if data %}{{ data.temperature }} °C{% else %}ND{% endif %}</td>
+                                <td data-title="Umidità relativa">{% if data %}{{ data.relative_humidity }} %{% else %}ND{% endif %}</td>
+                                <td data-title="Punto di rugiada">{% if data %}{{ data.dewpoint }} °C{% else %}ND{% endif %}</td>
                             </tr>
                             <tr>
-                                <td data-title="Temperatura max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.temperature_max }} °C alle {{ data.temperature_max_time }}</td>
-                                <td data-title="Umidità relativa max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.relative_humidity_max }} % alle {{ data.relative_humidity_max_time }}</td>
-                                <td data-title="Punto di rugiada max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.dewpoint_max }} °C alle {{ data.dewpoint_max_time }}</td>
+                                <td data-title="Temperatura max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.temperature_max }} °C alle {{ data.temperature_max_time }}{% else %}ND{% endif %}</td>
+                                <td data-title="Umidità relativa max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.relative_humidity_max }} % alle {{ data.relative_humidity_max_time }}{% else %}ND{% endif %}</td>
+                                <td data-title="Punto di rugiada max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.dewpoint_max }} °C alle {{ data.dewpoint_max_time }}{% else %}ND{% endif %}</td>
                             </tr>
                             <tr>
-                                <td data-title="Temperatura min"><span class="visible-sm-inline visible-md-inline visible-lg-inline">min: </span>{{ data.temperature_min }} °C alle {{ data.temperature_min_time }}</td>
-                                <td data-title="Umidità relativa min"><span class="visible-sm-inline visible-md-inline visible-lg-inline">min: </span>{{ data.relative_humidity_min }} % alle {{ data.relative_humidity_min_time }}</td>
-                                <td data-title="Punto di rugiada min"><span class="visible-sm-inline visible-md-inline visible-lg-inline">min: </span>{{ data.dewpoint_min }} °C alle {{ data.dewpoint_min_time }}</td>
+                                <td data-title="Temperatura min">{% if data %}<span class="hidden-sm-down">min: </span>{{ data.temperature_min }} °C alle {{ data.temperature_min_time }}{% else %}ND{% endif %}</td>
+                                <td data-title="Umidità relativa min">{% if data %}<span class="hidden-sm-down">min: </span>{{ data.relative_humidity_min }} % alle {{ data.relative_humidity_min_time }}{% else %}ND{% endif %}</td>
+                                <td data-title="Punto di rugiada min">{% if data %}<span class="hidden-sm-down">min: </span>{{ data.dewpoint_min }} °C alle {{ data.dewpoint_min_time }}{% else %}ND{% endif %}</td>
                             </tr>
                         </tbody>
                         <thead>
@@ -62,14 +68,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td data-title="Vento">{{ data.wind_strength }} Km/h {{ data.wind_dir }}</td>
-                                <td data-title="Pressione">{{ data.pressure }} hPa</td>
-                                <td data-title="Precipitazioni">{{ data.rain_rate }} mm/h</td>
+                                <td data-title="Vento">{% if data %}{{ data.wind_strength }} Km/h {{ data.wind_dir }}{% else %}ND{% endif %}</td>
+                                <td data-title="Pressione">{% if data %}{{ data.pressure }} hPa{% else %}ND{% endif %}</td>
+                                <td data-title="Precipitazioni">{% if data %}{{ data.rain_rate }} mm/h{% else %}ND{% endif %}</td>
                             </tr>
                             <tr>
-                                <td data-title="Vento max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.wind_strength_max }} Km/h {{ data.wind_dir_max }} alle {{ data.wind_max_time }}</td>
-                                <td data-title="Pressione max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.pressure_max }} hPa alle {{ data.pressure_max_time }}</td>
-                                <td data-title="Precipitazioni max"><span class="visible-sm-inline visible-md-inline visible-lg-inline">max: </span>{{ data.rain_rate_max }} mm/h alle {{ data.rain_rate_max_time }}</td>
+                                <td data-title="Vento max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.wind_strength_max }} Km/h {{ data.wind_dir_max }} alle {{ data.wind_max_time }}{% else %}ND{% endif %}</td>
+                                <td data-title="Pressione max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.pressure_max }} hPa alle {{ data.pressure_max_time }}{% else %}ND{% endif %}</td>
+                                <td data-title="Precipitazioni max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.rain_rate_max }} mm/h alle {{ data.rain_rate_max_time }}{% else %}ND{% endif %}</td>
                             </tr>
                         </tbody>
                         <thead>
@@ -81,9 +87,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td data-title="Precipitazione giornaliera">{{ data.rain }} mm</td>
-                                <td data-title="Precipitazione mensile">{{ data.rain_month }} mm</td>
-                                <td data-title="Precipitazione annua - media">{{ data.rain_year }} mm</td>
+                                <td data-title="Precipitazione giornaliera">{% if data %}{{ data.rain }} mm{% else %}ND{% endif %}</td>
+                                <td data-title="Precipitazione mensile">{% if data %}{{ data.rain_month }} mm{% else %}ND{% endif %}</td>
+                                <td data-title="Precipitazione annua - media">{% if data %}{{ data.rain_year }} mm{% else %}ND{% endif %}</td>
                             </tr>
                         </tbody>
                     </table>

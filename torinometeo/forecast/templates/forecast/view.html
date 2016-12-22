@@ -18,9 +18,10 @@
                 <h2>Situazione</h2>
                 {{ forecast.pattern | safe }}
                 {% for fd in forecast.dayforecast_set.all %}
+                    <hr />
                     <h2>{{ fd.date }}</h2>
                     <p><i class="fa fa-check-circle fa-2x" style="color: green"></i> <span style="font-size: 24px; display: inline-block; margin-left: 10px; font-weight: bold;">{{ fd.reliability }}%</span></p>
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: 20px;" class="clearfix">
                         <div class="col-xs-6">
                             <img class="forecast-img img-responsive" src="{{ fd.image12.url }}" alt="previsioni 00-12"/>
                         </div>
@@ -56,9 +57,9 @@
             </section><!-- /.modal -->
         </div>
         <div class="col-md-4">
-            <section class="panel panel-primary" style="margin-top: 20px;">
+            <section class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Open Source</h3>
+                    <h1 class="panel-title">Open Source</h1>
                 </div>
                 <div class="panel-body">
                     <p><b>TorinoMeteo</b> ha sviluppato una libreria javascript (<strong>tmforecast</strong>) che permette di inserire facilmente le nostre previsioni all'interno di siti esterni, utilizzando dei semplici tag!</p>

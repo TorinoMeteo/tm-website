@@ -7,6 +7,14 @@ $spinner-bg: #333;
 $spinner-shadow: #fff;
 
 body {
+  font-size: 14px;
+
+  @include media-breakpoint-up(sm) {
+    font-size: 16px;
+  }
+}
+
+body {
   background-image: url('../img/skyline.png'), linear-gradient(0deg, $bg-body-1, $bg-body-2 60%);
   background-position: bottom center, top center;
   background-repeat: no-repeat, no-repeat;

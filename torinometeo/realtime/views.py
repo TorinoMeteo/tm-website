@@ -92,12 +92,15 @@ class StationRealtimeView(DetailView):
     template_name = 'realtime/station_realtime.html'
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super(StationRealtimeView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
         realtime_data = context['object'].get_realtime_data()
-        context['data'] = realtime_data
-        context['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M") # noqa
+        if realtime_data is not None:
+            context['data'] = realtime_data
+            context['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M") # noqa
+        else:
+            context['data'] = None
+            context['data_date'] = None
+            context['offline_limit'] = Station.RT_RANGE_SECONDS
 
         day_data = context['object'].get_day_data()
 
