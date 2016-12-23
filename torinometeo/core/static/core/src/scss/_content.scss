@@ -214,14 +214,19 @@ h1, h2, h3 {
 }
 
 /* webcams */
-.section-webcams {
+.section-webcams-widgets {
   background: rgba(218,240,254, .8);
   padding: 40px 0;
-  border-top: 8px solid #fff;
 
   h1 {
     display: none;
   }
+}
+.section-webcams {
+  background: rgba(253, 199, 3, .8);
+  padding: 20px;
+  border-bottom: 8px solid #fff;
+  border-top: 8px solid #fff;
 }
 /* webcam widget */
 .webcam-widget .panel {

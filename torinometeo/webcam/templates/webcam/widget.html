@@ -1,4 +1,3 @@
-{% load sorl_thumbnail %}
 <section class="webcam-widget" ng-controller="webcam.showcaseController" ng-cloak>
     <h1>Webcam</h1>
     <div class="row">
@@ -10,10 +9,16 @@
                         <h4 class="card-title">{{ webcam.name }}</h4>
                         <h6 class="card-subtitle text-muted">{{ webcam.technology }}</h6>
                     </div>
-
-                    {% sorl_thumbnail webcam.random_url "706x530" crop="center" format="PNG" as im %}
-                        <img class="card-img-top img-responsive" src="{{ im.url }}" alt="{{ webcam.name }}">
-                    {% endthumbnail %}
+                    <div id="webcam-placeholder-{{ webcam.id }}" style="position: relative; height: 140px;">
+                        <div class="spinner"></div>
+                        <script type="text/javascript">
+                            (function() {
+                                $.get('{% url 'webcam-async' webcam.slug %}', function (data) {
+                                    $('#webcam-placeholder-{{ webcam.id }}').replaceWith(data);
+                                })
+                            })()
+                        </script>
+                    </div>
                     <div class="card-block">
                         <a href="{% url 'webcam-detail' webcam.slug %}" class="card-link">Scopri di più</a>
                     </div>
