@@ -5,7 +5,7 @@
 {% load core_tags %}
 
 {% block title%}
-{{ object.title }} | {{ super }}
+{{ object.title }} | {{ block.super }}
 {% endblock %}
 
 {% block meta_title %}{{ object.title }} | {{ block.super }}{% endblock %}

@@ -3,6 +3,10 @@
 {% load blog_tags %}
 {% load disqus_tags %}
 
+{% block title%}
+Blog | {{ block.super }}
+{% endblock %}
+
 {% block jumbotron %}{% endblock %}
 
 {% block body_css %}page{% endblock %}
