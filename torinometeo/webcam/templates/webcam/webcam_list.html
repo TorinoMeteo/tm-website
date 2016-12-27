@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block content %}
+<div class="container margin-top faded main-content">
+    <h1>Webcam TorinoMeteo</h1>
+    <p>Migliaia di webcam nel mondo trasmettono giornalmente immagini di ogni genere, laghi, parchi, immagini di località turistiche, piazze e monumenti. Le statistiche dimostrano che le pagine popolate dalle webcam sono tra le più consultate nel web perchè offrono un contenuto sempre aggiornato.Le webcam di ultima generazione <strong>offrono colori brillanti, alta definizione e qualità dell'immagine</strong> senza precedenti. In molti ci chiedono il perchè installare una webcam: la vista delle condizioni meteo e della realtà che vi contorna, sono elementi che influenzano decisamente le scelte del turista</p>
+
+    <ul>
+        <li>una <strong>fitta nevicata</strong> sulle montagne che vi circondano è una visione molto apprezzata dagli sciatori</li>
+        <li>le <strong>strade e il centro del paese</strong> intorno a voi sono motivo di interesse per gli amanti dello shopping e dei monumenti storici,</li>
+        <li>Una splendida <strong>giornata di sole in una località balneare</strong> stimola indubbiamente chiunque</li>
+        <li>&nbsp;un bel <strong>paesaggio verde e fiorito</strong> stimola spesso ogni genere di persona che voglia trascorrere una giornata di pace e relax</li>
+    </ul>
+
+    <p><strong>Con il nostro sistema webcam con fotocamera reflex</strong>, le vecchie&nbsp; telecamere convenzionali webcam IP risultano ormai sorpassate da una tecnologia più moderna. <strong>Le webcam IP </strong>non sono progettate per la fotografia di un paesaggio, ma per l'uso come telecamere di sorveglianza. Non è una sorpresa, che i risultati attuamente siano superati da qualsiasi fotocamera del cellulare. Tutte le telecamere IP convenzionali risultano molto obsolete in termini di <strong>intensità di luce, gamma dinamica, fedeltà dei colori e nitidezza</strong>. La differenza più grande, tuttavia, si presenta nelle immagini notturne dove una telecamera Ip spesso offre immagini sgranate con scarsa intensità di luce. <strong>Lo sviluppo di questo progetto è interamente open source</strong>, tutto il materiale verrà pubblicamente documentato nelle sue parti essenziali, a vantaggio di tutti coloro che lo richiedano. <strong>La nostra Associazione è in grado di offrire una soluzione professionale</strong> e affidabile, usufruibile a tutti gli interessati, con anni di esperienza e alcuni progetti di successo. <strong>Se disponi di una vista panoramica, di un accesso ad un vicino punto luce ed un collegamento wifi affidabile, possiedi interamente tutti i requisiti per installare una webcam ad alta risoluzione o&nbsp; tramite modulo Raspberry</strong>. <span style="color:#FF0000;">Al momento abbiamo una fotocamera Reflex che attende solo di essere installata</span>. Chi volesse maggiori informazioni non esiti a contattarci: info@torinometeo.org.</p>
+
+    <p>Di seguito sono elencate le webcam che hanno condiviso il progetto <a href="/progetti/webcam-pi/" target="_blank"><strong>Webcam Economica</strong></a> basata sul celebre minicomputer Raspberry. Alcune immagini provengono da scatti forniti da fotocamere digitali o Reflex, altri dal semplice modulo cam del Raspberry. Per i neofiti, lo sviluppo è stato incentrato sulla <strong>semplicità di configurazione e installazione</strong> in modo da permettere a tutti di creare una webcam in maniera semplice.</p>
+
+    <div class="row">
+        {% for webcam in object_list %}
+            <div class="col-sm-6">
+                <div class="card">
+                    <img class="card-img-top img-responsive" src="{{ webcam.random_url }}" alt="Webcam Live">
+                    <div class="card-block clearfix">
+                        <h4 class="card-title">{{ webcam.name }}</h4>
+                        <p class="card-text">{{ webcam.technology }}</p>
+                        <a href="{{ webcam.get_absolute_url }}" class="pull-left btn btn-primary">Dettaglio</a>
+                        <a href="{{ webcam.web }}" class="pull-right btn btn-primary">Pagina dedicata</a>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter == 2%}
+                <div class="clearfix visible-sm-up"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

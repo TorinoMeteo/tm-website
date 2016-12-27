@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import DetailView, View
+from django.views.generic import DetailView, View, ListView
 # from django.shortcuts import get_object_or_404
 
 from .models import Webcam
@@ -18,3 +18,10 @@ class WebcamAsyncView(View):
             'webcam/async.html',
             {'webcam': w}
         )
+
+
+class WebcamIndexView(ListView):
+    model = Webcam
+
+    def get_queryset(self):
+        return Webcam.objects.active()
