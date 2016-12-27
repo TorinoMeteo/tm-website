@@ -28,11 +28,13 @@
                         <h4 class="card-title">{{ webcam.name }}</h4>
                         <p class="card-text">{{ webcam.technology }}</p>
                         <a href="{{ webcam.get_absolute_url }}" class="pull-left btn btn-primary">Dettaglio</a>
-                        <a href="{{ webcam.web }}" class="pull-right btn btn-primary">Pagina dedicata</a>
+                        {% if webcam.web %}
+                            <a href="{{ webcam.web }}" class="pull-right btn btn-primary">Pagina dedicata</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            {% if forloop.counter == 2%}
+            {% if forloop.counter|divisibleby:"2" %}
                 <div class="clearfix visible-sm-up"></div>
             {% endif %}
         {% endfor %}
