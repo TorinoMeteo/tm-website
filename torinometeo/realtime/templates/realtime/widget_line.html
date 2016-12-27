@@ -1,10 +1,11 @@
+{% load l10n %}
 <section>
     <h1 class="hidden">Temperature</h1>
     <div class="rwl-container">
         <div class="rwl-rail">
             {% for station in stations %}
             &#160;<span class="fa fa-star"></span>&#160;
-            <i><b>{{ station.name }}</b></i>: T: {% if station.get_realtime_data.temperature %}{{ station.get_realtime_data.temperature }} °C{% else %}N.D.{% endif %}, Tmax: {% if station.get_realtime_data.temperature_max %}{{ station.get_realtime_data.temperature_max }} °C{% else %}N.D.{% endif %}, Tmin: {% if station.get_realtime_data.temperature_min %}{{ station.get_realtime_data.temperature_min }} °C{% else %}N.D.{% endif %}
+            <i><b>{{ station.name }}</b></i>: T: {% if station.get_realtime_data.temperature %}{{ station.get_realtime_data.temperature|unlocalize }} °C{% else %}N.D.{% endif %} &#8226; Tmax: {% if station.get_realtime_data.temperature_max %}{{ station.get_realtime_data.temperature_max|unlocalize }} °C{% else %}N.D.{% endif %} &#8226; Tmin: {% if station.get_realtime_data.temperature_min %}{{ station.get_realtime_data.temperature_min|unlocalize }} °C{% else %}N.D.{% endif %}
             {% endfor %}
         </div>
     </div>
