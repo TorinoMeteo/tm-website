@@ -4,7 +4,7 @@
         <div class="rwl-rail">
             {% for station in stations %}
             &#160;<span class="fa fa-star"></span>&#160;
-            <i><b>{{ station.name }}</b></i>: T: {{ station.get_realtime_data.temperature }} °C, Tmax: {{ station.get_realtime_data.temperature_max }} °C, Tmin: {{ station.get_realtime_data.temperature_min }} °C
+            <i><b>{{ station.name }}</b></i>: T: {% if station.get_realtime_data.temperature %}{{ station.get_realtime_data.temperature }} °C{% else %}N.D.{% endif %}, Tmax: {% if station.get_realtime_data.temperature_max %}{{ station.get_realtime_data.temperature_max }} °C{% else %}N.D.{% endif %}, Tmin: {% if station.get_realtime_data.temperature_min %}{{ station.get_realtime_data.temperature_min }} °C{% else %}N.D.{% endif %}
             {% endfor %}
         </div>
     </div>

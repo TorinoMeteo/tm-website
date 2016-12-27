@@ -51,6 +51,7 @@ class JumbotronStationJsonView(View):
                     'relative_humidity': realtime_data.relative_humidity,
                     'wind_strength': realtime_data.wind_strength,
                     'wind_dir': realtime_data.wind_dir,
+                    'wind_dir_text': realtime_data.wind_dir_text,
                     'rain_rate': realtime_data.rain_rate,
                     'rain': realtime_data.rain,
                 }

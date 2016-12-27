@@ -10,6 +10,47 @@ from realtime.managers import StationManager
 
 import datetime
 
+
+def wind_dir_text_base(value):
+    value = float(value)
+    if value < 11:
+        return 'N'
+    elif value < 34:
+        return 'NNE'
+    elif value < 56:
+        return 'NE'
+    elif value < 79:
+        return 'ENE'
+    elif value < 101:
+        return 'E'
+    elif value < 124:
+        return 'ESE'
+    elif value < 146:
+        return 'SE'
+    elif value < 169:
+        return 'SSE'
+    elif value < 191:
+        return 'S'
+    elif value < 214:
+        return 'SSO'
+    elif value < 236:
+        return 'SO'
+    elif value < 259:
+        return 'OSO'
+    elif value < 281:
+        return 'O'
+    elif value < 304:
+        return 'ONO'
+    elif value < 326:
+        return 'NO'
+    elif value < 349:
+        return 'NNO'
+    elif value < 360:
+        return 'N'
+    else:
+        return None
+
+
 class DataFormat(models.Model):
     """ Data formats provided by stations
     """
@@ -262,6 +303,14 @@ class Data(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.station.name, str(self.datetime) if self.datetime else '')
+
+    @property
+    def wind_dir_text(self):
+        return wind_dir_text_base(self.wind_dir)
+
+    @property
+    def wind_dir_max_text(self):
+        return wind_dir_text_base(self.wind_dir_max)
 
 class HistoricData(models.Model):
     """ Historic data model class
