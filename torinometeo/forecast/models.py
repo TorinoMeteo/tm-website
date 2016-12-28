@@ -2,14 +2,14 @@
 from django.db import models
 from django.conf import settings
 
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class Forecast(models.Model):
     """ Forecast
     A Forecast includes n DayForecast models, each one is a prevision for one day
     """
     date = models.DateField('data', auto_now=False, auto_now_add=False, unique=True)
-    pattern = RichTextField('situazione')
+    pattern = RichTextUploadingField('situazione')
 
     class Meta:
         verbose_name = 'previsione'
@@ -31,9 +31,9 @@ class DayForecast(models.Model):
     date = models.DateField('data', auto_now=False, auto_now_add=False, unique=True)
     image12 = models.ImageField(verbose_name='immagine 0-12', upload_to=set_forecast_image_folder, blank=False, null=False)
     image24 = models.ImageField(verbose_name='immagine 12-24', upload_to=set_forecast_image_folder, blank=False, null=False)
-    text = RichTextField('tempo previsto')
-    temperatures = RichTextField('temperature')
-    winds = RichTextField('venti')
+    text = RichTextUploadingField('tempo previsto')
+    temperatures = RichTextUploadingField('temperature')
+    winds = RichTextUploadingField('venti')
     reliability = models.IntegerField('attendibilità')
 
     class Meta:
