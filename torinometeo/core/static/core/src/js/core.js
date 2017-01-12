@@ -1,6 +1,7 @@
 "use strict";
 
 window.tm = {};
+window.tm.tmp = {};
 
 /**
  * Format string function
@@ -15,6 +16,23 @@ window.tm.format = function() {
         ;
     });
 };
+
+tm.sameHeightColumns = function() {
+    var columns = [];
+    for(var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        $(arg).each(function () {
+            columns.push($(this).height());
+        })
+    }
+    var min = Math.min.apply(null, columns);
+    for(var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        $(arg).each(function () {
+            $(this).height(min - parseInt($(this).css('margin-top'), 10));
+        })
+    }
+}
 
 /**
  * Renders station h24 graphs
@@ -238,6 +256,7 @@ tm.render24Graphs = function(container, data, opts) {
 
 
 /*
+Uncomment this to get an opacity animation for the navbar element when scrolling
 (function($) {
     $(window).on('scroll', function() {
         if(window.scrollY > 40) {

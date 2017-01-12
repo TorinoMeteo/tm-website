@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 from realtime.models.geo import Nation, Region, Province
 from realtime.managers import StationManager
@@ -79,8 +79,8 @@ class Station(models.Model):
     name = models.CharField('nome', max_length=128)
     slug = models.SlugField('slug', max_length=128)
     short_name = models.CharField('nome abbreviato', max_length=64, null=True, blank=True)
-    description = RichTextField('descrizione')
-    climate = RichTextField('clima', blank=True, null=True)
+    description = RichTextUploadingField('descrizione')
+    climate = RichTextUploadingField('clima', blank=True, null=True)
     web = models.URLField('sito web', max_length=255, blank=True, null=True)
     webcam = models.URLField('webcam url', max_length=255, blank=True, null=True)
     image = models.ImageField(upload_to=set_station_image_folder, blank=True, null=True)
@@ -104,6 +104,7 @@ class Station(models.Model):
     data_date_format = models.CharField('formato data (python)', max_length=128, null=True, blank=True)
     data_time_format = models.CharField('formato ora (python)', max_length=128, null=True, blank=True)
     forecast_url = models.URLField('url sito previsionale', max_length=255, null=True, blank=True)
+    ranking = models.IntegerField('ranking', default=1)
     active = models.BooleanField('attiva', default=True)
 
     objects = StationManager()

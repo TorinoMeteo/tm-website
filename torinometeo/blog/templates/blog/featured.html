@@ -3,7 +3,7 @@
 <section class="blog-featured">
     <h1 class="hidden">Blog</h1>
     {% for entry in entries %}
-    <article class="col-md-12 col-lg-6{% if forloop.counter0 %} hidden-md-down{% endif %}">
+    <article class="blog-featured-article col-md-12 col-lg-6{% if forloop.counter0 %} hidden-md-down{% endif %}">
         <div class="content">
             <h1>{{ entry.title }}</h1>
             {% tags_bar entry.tags.all 'blog' %}

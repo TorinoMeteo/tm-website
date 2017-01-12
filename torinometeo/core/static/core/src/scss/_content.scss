@@ -3,6 +3,10 @@ h1, h2, h3 {
   font-family: $font-family-sans-serif;
 }
 
+.blog-featured-article, .forecast-wrapper {
+  transition: all .2s linear;
+}
+
 .img-overlay {
   // background: url(../img/test_bkg.jpg) no-repeat center top;
   background-size: 100% 730px;

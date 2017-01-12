@@ -23,7 +23,7 @@
                 <div class=" col-sm-12 col-md-6 col-lg-4 home-col-3">
                     <section style="background: #FDFBE3;" class="forecast-wrapper">
                         <div class="content">
-                            <tmdayforecast tm-date="{% now "Y-m-d" %}">
+                            <tmdayforecast tm-date="{% now "Y-m-d" %}" tm-oncomplete="">
                                 <h1>Previsioni del tempo</h1>
                             </tmdayforecast>
                             <p><a href="{% url 'forecast-view' %}">BOLLETTINO COMPLETO <i class="fa fa-arrow-right"></i></a></p>
@@ -31,6 +31,7 @@
                     </section>
                 </div>
             </div>
+            <!-- <script>window.tm.tmp = function() { tm.sameHeightColumns('.blog-featured-article', '.forecast-wrapper'); }</script> -->
         </div>
     </div>
     <div class="section-webcams">
