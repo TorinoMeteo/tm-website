@@ -26,8 +26,8 @@ admin.site.register(Province, ProvinceAdmin)
 # stations
 
 class StationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nation', 'city', 'data_format', 'get_data_url', 'get_webcam', 'test_fetch', ]
-    list_filter = ('region', 'data_format', )
+    list_display = ['id', 'name', 'nation', 'city', 'ranking', 'data_format', 'get_data_url', 'get_webcam', 'test_fetch', ]
+    list_filter = ('region', 'data_format', 'ranking', )
     search_fields = ('name', )
     prepopulated_fields = {'slug': ('name',)}
 
@@ -45,7 +45,7 @@ class StationAdmin(admin.ModelAdmin):
             'fields': ('data_url', 'data_format', 'data_date_format', 'data_time_format', 'forecast_url',)
         }),
         ('Stato', {
-            'fields': ('active',)
+            'fields': ('ranking', 'active',)
         }),
     )
 
