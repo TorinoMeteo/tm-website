@@ -5,7 +5,7 @@
         <div class="rwl-rail">
             {% for station in stations %}
             &#160;<span class="fa fa-star"></span>&#160;
-            <i><b>{{ station.name }}</b></i>: T: {{ station.get_realtime_data.temperature|unlocalize }} °C &#8226; Tmax: {{ station.get_realtime_data.temperature_max|unlocalize }} °C &#8226; Tmin: {{ station.get_realtime_data.temperature_min|unlocalize }} °C
+            <i><b>{{ station.name }}</b></i>: T: {{ station.temperature|unlocalize }} °C &#8226; Tmax: {{ station.temperature_max|unlocalize }} °C &#8226; Tmin: {{ station.temperature_min|unlocalize }} °C
             {% endfor %}
         </div>
     </div>
