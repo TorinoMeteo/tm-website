@@ -40,7 +40,7 @@ class JumbotronStationJsonView(View):
             data['name'] = station.name
             data['nation'] = station.nation.name
             data['region'] = station.region.name
-            data['province'] = station.province.name
+            data['province'] = station.province.name if station.province else ''
             data['image_url'] = image_url
             data['day_data'] = day_data
             if realtime_data:

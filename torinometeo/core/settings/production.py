@@ -4,6 +4,8 @@
 import os
 from datetime import timedelta
 
+from celery.schedules import crontab
+
 from .common import * # noqa
 
 DEBUG = False
@@ -36,6 +38,11 @@ CELERYBEAT_SCHEDULE = {
     'fetch-realtime-data': {
         'task': 'realtime.tasks.fetch_realtime_data',
         'schedule': timedelta(seconds=300),
+        'args': ()
+    },
+    'clean-realtime-data': {
+        'task': 'realtime.tasks.clean_realtime_data',
+        'schedule': crontab(hour=0, minute=1, day_of_week=1),  # every monday morning # noqa
         'args': ()
     },
 }

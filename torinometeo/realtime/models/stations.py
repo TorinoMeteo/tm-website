@@ -136,7 +136,7 @@ class Station(models.Model):
         """
         date = self.now()
         try:
-            data = Data.objects.filter(station=self.id, datetime__year=date.year, datetime__month=date.month, datetime__day=date.day).order_by('-id')[:1].get()
+            data = Data.objects.filter(station=self.id, datetime__year=date.year, datetime__month=date.month, datetime__day=date.day).order_by('-id').first()
             time_difference = self.now() - data.datetime
             if(time_difference.total_seconds() > Station.RT_RANGE_SECONDS):
                 return None
