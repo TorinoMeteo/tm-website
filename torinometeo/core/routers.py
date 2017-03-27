@@ -39,8 +39,6 @@ class ApiRouter(DefaultRouter):
                     except NoReverseMatch:
                         continue
 
-                ret['realtime-last'] = '%s%s' % (ret['realtime/data'], 'get-last/') # noqa
-
                 return Response(ret)
 
         return APIRoot.as_view()

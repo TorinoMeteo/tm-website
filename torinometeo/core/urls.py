@@ -24,15 +24,15 @@ from core.routers import ApiRouter
 
 from core.views import LoginView, LogoutView
 from forecast.views.api import ForecastViewSet, DayForecastViewSet
-from realtime.views.api import RealtimeDataReadOnlyViewSet
+from realtime.views.api import LastRealtimeData
 
 # BEGIN API
 schema_view = get_swagger_view(title='TorinoMeteo REST API')
 # django rest default api view
 router = ApiRouter()
-router.register(r'forecast/day', DayForecastViewSet)
+router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
 router.register(r'forecast', ForecastViewSet)
-router.register(r'realtime/data', RealtimeDataReadOnlyViewSet)
+router.register(r'realtime/data', LastRealtimeData, 'last realtime data')
 # END API
 
 urlpatterns = [
