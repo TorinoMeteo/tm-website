@@ -20,17 +20,19 @@ from django.views.generic import TemplateView
 
 from rest_framework_swagger.views import get_swagger_view
 
-from forecast.routers import ForecastRouter
+from core.routers import ApiRouter
 
 from core.views import LoginView, LogoutView
 from forecast.views.api import ForecastViewSet, DayForecastViewSet
+from realtime.views.api import RealtimeDataReadOnlyViewSet
 
 # BEGIN API
 schema_view = get_swagger_view(title='TorinoMeteo REST API')
 # django rest default api view
-router = ForecastRouter()
+router = ApiRouter()
 router.register(r'forecast/day', DayForecastViewSet)
 router.register(r'forecast', ForecastViewSet)
+router.register(r'realtime/data', RealtimeDataReadOnlyViewSet)
 # END API
 
 urlpatterns = [

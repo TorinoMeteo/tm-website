@@ -7,7 +7,7 @@ from django.core.urlresolvers import NoReverseMatch
 from collections import OrderedDict
 
 
-class ForecastRouter(DefaultRouter):
+class ApiRouter(DefaultRouter):
     def get_api_root_view(self, api_urls=None):
         """
         Return a view to use as the API root.
@@ -34,10 +34,12 @@ class ForecastRouter(DefaultRouter):
                             request=request,
                             format=kwargs.get('format', None)
                         )
+                        if key == 'forecast':
+                            ret['forecast-last'] = '%s%s' % (ret['forecast'], 'get-last/') # noqa
                     except NoReverseMatch:
                         continue
 
-                ret['forecast-last'] = '%s%s' % (ret['forecast'], 'get-last/') # noqa
+                ret['realtime-last'] = '%s%s' % (ret['realtime/data'], 'get-last/') # noqa
 
                 return Response(ret)
 

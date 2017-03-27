@@ -1,5 +1,5 @@
 from django.conf.urls import patterns,url
-from realtime import views
+from realtime.views import views
 
 urlpatterns = patterns('realtime.views',
 
