@@ -86,7 +86,7 @@ launched inside the root/repo\_name folder. This command does the following thin
 
 When performing the first deploy you can create a superuser account using the shell which the script leaves open at the end.
 
-###Other useful fab commands
+### Other useful fab commands
 
 #### rollback
 
