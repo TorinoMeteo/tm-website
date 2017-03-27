@@ -8,6 +8,9 @@ from blog.models import Entry
 class EntryDetailView(DetailView):
     model = Entry
 
+    def get_queryset(self):
+        return Entry.objects.filter(published=True)
+
 class CategoryListView(ListView):
     model = Entry
     template_name = 'blog/category_list.html'
@@ -28,3 +31,6 @@ class ArchiveView(ListView):
     model = Entry
     template_name = 'blog/archive_list.html'
     paginate_by = 5
+
+    def get_queryset(self):
+        return Entry.objects.filter(published=True).order_by('-last_edit_date')

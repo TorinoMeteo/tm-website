@@ -11,3 +11,4 @@ provisioning/playbooks/roles/webapp/templates/env
 releases
 logs
 backups
+supervisord.conf.production

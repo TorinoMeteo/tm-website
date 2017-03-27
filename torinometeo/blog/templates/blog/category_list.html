@@ -32,7 +32,9 @@
                                     <a href="{{ entry.get_http_absolute_url }}#disqus_thread" data-disqus-identifier="blogentry_{{ entry.id }}">view comments</a>
                                 </aside>
                             </header>
-                            <div class="blog-entry-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
+                            {% if entry.image %}
+                                <div class="blog-entry-img"><img class="img-responsive" style="margin: auto" alt="immagine" src="{{ entry.image.url }}" /></div>
+                            {% endif %}
                             {{ entry.text|truncatewords_html:50|safe }}
                             <p class="serif" style="margin-top: 20px;"><a href="{{ entry.get_absolute_url }}" class="read-all">leggi tutto <i class="fa fa-arrow-right"></i></a></p>
                         </article>
