@@ -6,7 +6,7 @@ $border-li-color: #eee;
 $bg-subvoices: #f7f7f7;
 $white: #fff;
 $light-gray: #eee;
-$link-color: #ff9800;
+$link-color: #fb730f;
 
 .navbar-fixed-top {
   background: $bg-navbar;
@@ -125,6 +125,7 @@ $link-color: #ff9800;
 
       a {
         color: $link-color;
+        font-weight: 400;
       }
     }
   }
