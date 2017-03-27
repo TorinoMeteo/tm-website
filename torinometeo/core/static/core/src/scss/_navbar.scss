@@ -14,23 +14,29 @@ $link-color: #ff9800;
 
 .navbar-toggler {
   color: $toggler-color;
+  position: relative;
+  top: 9px;
 }
 
 .navbar-brand {
   background: $bg-navbar url('../img/logoTM.png') no-repeat center center;
+  background-size: 100px;
   border-radius: 0 0 10px 10px;
   box-sizing: content-box;
   color: transparent;
   display: block;
   font-size: 0;
-  height: 80px;
+  height: 50px;
+  left: 0;
   padding: 10px;
   position: absolute;
-  top: -10px;
+  top: 0;
   width: 152px;
   z-index: 10;
 
   @include media-breakpoint-up(lg) {
+    background-size: auto;
+    height: 80px;
     left: 50%;
     margin-left: -76px;
   }
