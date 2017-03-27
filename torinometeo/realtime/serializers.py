@@ -12,6 +12,7 @@ class StationSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'nation',
+            'region',
             'province',
             'city',
         )
