@@ -64,6 +64,10 @@
                     </div>
                 </div>
 
+                <div class="text-center">
+                    <p>Esporta il grafico png con dimensioni:</p>
+                    <p><input type="number" id="export-graph-width"/> px <input type="button" value="vai" id="export-graph" /></p>
+                </div>
                 <div style="overflow: auto; width: 100%;">
                     <div id="chart" style="width: 100%; min-width: 600px;"></div>
                 </div>
@@ -75,7 +79,7 @@
                             format: 'DD/MM/YYYY'
                         });
 
-                        var chart = new tm.StationChart(
+                        var tmchart = new tm.StationChart(
                             '#chart', 
                             '#from_date', 
                             '#to_date', 
@@ -83,6 +87,19 @@
                             '{% url 'realtime-station-graph-json-data' object.slug %}',
                             { station_name: '{{ object.name | escapejs }}' }
                         );
+
+                        $('#export-graph').on('click', function () {
+                            var exportWidth = $('#export-graph-width').val();
+                            if (!exportWidth) {
+                                alert('Inserire le dimensioni!');
+                            } else {
+                                $('#chart').css('width', exportWidth + 'px');
+                                tmchart.chart.reflow();
+                                tmchart.chart.exportChart();
+                                $('#chart').css('width', '100%');
+                                tmchart.chart.reflow();
+                            }
+                        })
 
                     });
                 </script>

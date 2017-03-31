@@ -59,7 +59,7 @@
                 indexes[utc] = i;
             }
 
-            var chart = new Highcharts.Chart({
+            this.chart = new Highcharts.Chart({
                 chart: {
                     renderTo: this.render_to.attr('id'),
                     zoomType: 'x',
