@@ -66,7 +66,10 @@
 
                 <div class="text-center">
                     <p>Esporta il grafico png con dimensioni:</p>
-                    <p><input type="number" id="export-graph-width"/> px <input type="button" value="vai" id="export-graph" /></p>
+                    <p>
+                        <input type="number" style="width: 80px;" id="export-graph-width" placeholder="larghezza"/> px
+                        <input type="number" style="width: 80px;" placeholder="altezza" id="export-graph-height"/>
+                        <input type="button" value="vai" id="export-graph" /></p>
                 </div>
                 <div style="overflow: auto; width: 100%;">
                     <div id="chart" style="width: 100%; min-width: 600px;"></div>
@@ -89,14 +92,20 @@
                         );
 
                         $('#export-graph').on('click', function () {
+                            var defaultGraphHeight = $('#chart').height();
                             var exportWidth = $('#export-graph-width').val();
+                            var exportHeight = $('#export-graph-height').val();
                             if (!exportWidth) {
-                                alert('Inserire le dimensioni!');
+                                alert('Inserire almeno la larghezza!');
                             } else {
                                 $('#chart').css('width', exportWidth + 'px');
+                                if (exportHeight) {
+                                    $('#chart').css('height', exportHeight + 'px');
+                                }
                                 tmchart.chart.reflow();
                                 tmchart.chart.exportChart();
                                 $('#chart').css('width', '100%');
+                                $('#chart').css('height', defaultGraphHeight + 'px');
                                 tmchart.chart.reflow();
                             }
                         })
