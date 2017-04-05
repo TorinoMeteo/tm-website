@@ -9,7 +9,7 @@ def parser_factory(type):
         To avoid auto import of modules, security is serius business.
     """
     path = '.parsers.%s'
-    whitelist = ['txtwd', 'sintpi', 'clientraw', 'unito', 'weatherlink', 'aprs', 'realtime', 'txtmp']
+    whitelist = ['txtwd', 'sintpi', 'clientraw', 'unito', 'weatherlink', 'aprs', 'realtime', 'txtmp', 'tm']
     if type in whitelist:
         mod = importlib.import_module(
             path % type, __name__.rsplit('.', 1)[0]
