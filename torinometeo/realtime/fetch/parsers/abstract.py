@@ -63,7 +63,7 @@ class Parser(object):
             except:
 		if i == len(self.time_format) -1:
 		    try:
-			aux = dateutil.parser.parse(value.strip()).time()
+			aux = dateutil.parser.parse(value.strip(), dayfirst=True).time()
 #			print aux
 			return aux
 		    except:
@@ -82,7 +82,7 @@ class Parser(object):
             except:
 		if i == len(self.date_format) -1:
 		    try:
-			aux = dateutil.parser.parse(value.strip()).date()
+			aux = dateutil.parser.parse(value.strip(), dayfirst=True).date()
 #			print aux
 			return aux
 		    except:
