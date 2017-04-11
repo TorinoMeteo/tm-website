@@ -4,7 +4,7 @@ from django.db.models import Max
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from realtime.models.stations import Data
+from realtime.models.stations import Station, Data
 from realtime.serializers import RealtimeDataSerializer
 
 
@@ -24,4 +24,17 @@ class LastRealtimeData(viewsets.ViewSet):
             serializer = RealtimeDataSerializer(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Data.DoesNotExist:
+            raise Http404()
+
+    def retrieve(self, request, pk=None):
+        """
+        Gets the last fetched data for the given station
+        """
+        try:
+            station = Station.objects.get(active=True, slug=pk)
+            data = Data.objects.filter(
+                station=station).order_by('-datetime').first()
+            serializer = RealtimeDataSerializer(data, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Station.DoesNotExist:
             raise Http404()
