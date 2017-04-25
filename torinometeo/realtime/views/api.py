@@ -21,7 +21,8 @@ class LastRealtimeData(viewsets.ViewSet):
                 latest_id=Max('id'))
             ids = [d.get('latest_id') for d in last_data]
             data = Data.objects.filter(id__in=ids)
-            serializer = RealtimeDataSerializer(data, many=True)
+            serializer = RealtimeDataSerializer(data, many=True,
+                                                context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Data.DoesNotExist:
             raise Http404()
@@ -34,7 +35,8 @@ class LastRealtimeData(viewsets.ViewSet):
             station = Station.objects.get(active=True, slug=pk)
             data = Data.objects.filter(
                 station=station).order_by('-datetime').first()
-            serializer = RealtimeDataSerializer(data, many=False)
+            serializer = RealtimeDataSerializer(data, many=False,
+                                                context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Station.DoesNotExist:
             raise Http404()

@@ -6,6 +6,8 @@ from .models.stations import Data, Station
 class StationSerializer(serializers.ModelSerializer):
     """ Realtime Station Serializer
     """
+    image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Station
         fields = (
@@ -15,8 +17,15 @@ class StationSerializer(serializers.ModelSerializer):
             'region',
             'province',
             'city',
+            'image_url',
+            'webcam',
         )
         depth = 1
+
+    def get_image_url(self, station):
+        request = self.context.get('request')
+        image_url = station.image.url
+        return request.build_absolute_uri(image_url)
 
 
 class RealtimeDataSerializer(serializers.ModelSerializer):
