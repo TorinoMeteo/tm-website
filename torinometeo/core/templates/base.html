@@ -1,6 +1,7 @@
 {% load static %}
 {% load pipeline %}
 {% load treenav_tags %}
+{% load social_auth_tags %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -63,6 +64,7 @@
                         </div>
                         <div class="menu-container menu-container-dx">
                             {% show_treenav 'menu-principale-dx' full_tree="True" %}
+                            {% social_auth_signin_btn %}
                         </div>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
@@ -124,6 +126,24 @@
                 </div>
             </div>
         </footer>
+        <div id="dynamicModal" class="modal fade">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                        <button type="button" class="btn btn-primary btn-action">Salva</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
         {% if not DEBUG %}
             <script type="text/javascript" charset="UTF-8" src="//cookie-script.com/s/e5bd0b720e0b68a04271fbddb5197032.js"></script>
         {% endif %}

@@ -1,0 +1,31 @@
+<div class="row">
+    {% if info %}
+        <p class="alert alert-info">{{ info }}</p>
+    {% endif %}
+    <div class="col-sm-6">
+        <p>
+            Accedi con il tuo nome utente e password
+        </p>
+        <form action="/account/login/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            <p><input type="text" class="form-control" value="" name="username" placeholder="username" /></p>
+            <p><input type="password" class="form-control" value="" name="password" placeholder="password" /></p>
+            <p><input type="submit" class="btn btn-primary" value="login" name="submit-login"></p>
+        </form>
+        <hr />
+        <p><a href="{% url 'social:begin' 'email'%}">Non sei ancora registrato?</a></p>
+    </div>
+    <div class="col-sm-6">
+        <p>
+            Accedi con un tuo account social
+        </p>
+        <p>
+            <!-- requires tw email which is not given by default -->
+            <!-- <a href="/account/login/twitter/" class="fa fa-2x fa-twitter" style="margin-right: 10px;"></a> -->
+            <a href="/account/login/facebook/?next={{ next }}" class="fa fa-2x fa-facebook" style="margin-right: 10px;"></a>
+            <a href="/account/login/google-oauth2/?next={{ next }}" class="fa fa-2x fa-google"></a>
+        </p>
+        <p class="alert alert-info">Registrandoti con un account social dichiari di accettare i <a href="/cookie-policy/">termini e le condizioni del servizio</a></p>
+    </div>
+</div>

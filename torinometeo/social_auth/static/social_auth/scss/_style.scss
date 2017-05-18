@@ -1,0 +1,26 @@
+.account-registration {
+    .form-group {
+        position: relative;
+    }
+    .available {
+        &:after {
+            content: "";
+            font-family: 'FontAwesome';
+            position: absolute;
+            right: 10px;
+            bottom: 7px;
+            color: green;
+        }
+    }
+
+    .unavailable {
+        &:after {
+            content: "";
+            font-family: 'FontAwesome';
+            position: absolute;
+            right: 10px;
+            bottom: 7px;
+            color: red;
+        }
+    }
+}

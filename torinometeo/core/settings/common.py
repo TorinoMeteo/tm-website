@@ -86,8 +86,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'social.apps.django_app.default',
+    'social_auth',
     'ckeditor',
     'ckeditor_uploader',
+    'widget_tweaks',
     'pipeline',
     'corsheaders',
     'filer',
@@ -120,6 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'core.urls'
@@ -138,6 +142,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.debug',
                 'treenav.context_processors.treenav_active',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
             ],
         },
     },
@@ -337,6 +343,71 @@ THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.filters',
 )
 
+# SOCIAL AUTH
+
+USERS_GROUP_NAME = 'users' # group associated to new registrations
+
+SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = False
+SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/#login'
+LOGIN_ERROR_URL = '/account/errors/'
+# SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/account/email-sent/'
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.open_id.OpenIdAuth',
+    'social.backends.google.GoogleOpenId',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.google.GoogleOAuth',
+    'social.backends.google.GooglePlusAuth',
+    'social.backends.twitter.TwitterOAuth',
+    'social.backends.yahoo.YahooOpenId',
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.email.EmailAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_auth.pipeline.check_details',                      # check user inputs (only email backend)
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',              # return the social user (is_new is defined here)
+    'social.pipeline.user.get_username',
+    'social_auth.pipeline.require_email',                      # cut the pipeline to check if email is present
+    # 'social.pipeline.mail.mail_validation',                 # cut the pipeline to validate the account using a mail
+    'social.pipeline.social_auth.associate_by_email',
+    'social.pipeline.user.create_user',
+    'social_auth.pipeline.set_password',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+    'social_auth.pipeline.add_user_to_correct_group',          # users must belong to "utenti"
+)
+
+SOCIAL_AUTH_EMAIL_FORM_HTML = 'social_auth/registration.html'
+# SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'social_auth.pipeline.email_validation'
+
+
+# twitter
+SOCIAL_AUTH_TWITTER_KEY = 'HRDVxN1i59Aw6VEr3Pco83Sss'
+SOCIAL_AUTH_TWITTER_SECRET = 'dXaUYYFMQs1MvYySpSjXkxGIXR6csGXNR7QnTRw9T9M2C6FV7C'
+
+# facebook
+SOCIAL_AUTH_FACEBOOK_SECRET = 'a784e278078f8102e536484de36e03e2'
+SOCIAL_AUTH_FACEBOOK_KEY = '133317480065442'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
+#http://stackoverflow.com/questions/32024327/facebook-doesnt-return-email-python-social-auth
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
+
+# google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '128805411620-q30fpveccb2qrr4rpopvlccbnlvsgkml.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '3bcdRfz4DmoNRHM8H7jsQw4I'
+
+EMAIL_FROM = 'noreply@torinometeo.org'
 
 # LOGGING
 

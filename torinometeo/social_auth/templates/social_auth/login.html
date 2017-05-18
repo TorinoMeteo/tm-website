@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title%}
+Registrazione | {{ block.super }}
+{% endblock %}
+
+{% block body_css %}page{% endblock %}
+
+{% block content %}
+<div class="container margin-top faded main-content">
+    <section>
+        <h1>Signin</h1>
+        <p class="alert alert-danger">Il nome utente o password inseriti non corrispondono ad alcun utente.</p>
+        <p>
+            <a href="#" onclick="var modal = new tm.Modal({ url: '{% url 'account-signin' %}', title:'Sign In/Up', show_action_btn: false }).open();" class="btn btn-primary">Riprova</a>
+            <a href="{% url 'password_reset' %}" class="btn btn-primary">Password dimenticata?</a>
+        </p>
+    </section>
+</div>
+{% endblock %}

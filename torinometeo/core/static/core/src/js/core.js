@@ -255,6 +255,73 @@ tm.render24Graphs = function(container, data, opts) {
 }
 
 
+tm.Modal = function(params) {
+
+    var opts = {
+        show_action_btn: false,
+        action_btn_label: 'salva',
+        action_btn_cb: function () {},
+        on_url_loaded: function() {}
+    }
+
+    this.init = function(params) {
+        this.modal = $('#dynamicModal');
+        this.options = $.extend({}, opts, params);
+        this.setStyle();
+        this.setTitle();
+        this.setContent();
+        this.setButtons();
+    };
+
+    this.setStyle = function() {
+
+        if(typeof this.options.style != 'undefined') {
+            this.modal.addClass(this.options.style);
+        }
+
+    };
+
+    this.setTitle = function() {
+
+        if(typeof this.options.title != 'undefined') {
+            this.modal.find('.modal-title').html(this.options.title);
+        }
+
+    };
+
+    this.setContent = function() {
+        var self = this;
+        if(typeof this.options.url != 'undefined') {
+            this.method = 'request';
+            $.get(this.options.url, function(response) {
+                self.modal.find('.modal-body').html(response);
+                self.options.on_url_loaded(self);
+            })
+        }
+        else if(typeof this.options.content != 'undefined') {
+            self.modal.find('.modal-body').html(this.options.content);
+        }
+    };
+
+    this.setButtons = function() {
+
+        var action_btn = this.modal.find('.btn-action').unbind('click');
+        if(typeof this.options.show_action_btn != 'undefined' && this.options.show_action_btn ) {
+            action_btn.html(this.options.action_btn_label).on('click', this.options.action_btn_cb);
+        }
+        else {
+            this.modal.find('.btn-action').hide();
+        }
+    };
+
+    this.open = function() {
+        this.modal.modal();
+    };
+
+    this.init(params);
+}
+
+
 /*
 Uncomment this to get an opacity animation for the navbar element when scrolling
 (function($) {

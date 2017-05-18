@@ -1,0 +1,27 @@
+{% if not request.user.id %}
+<div class="dropdown signin-btns">
+    <a class="btn btn-primary" 
+        onclick="var modal = new tm.Modal({ url: '{% url 'account-signin' %}', title:'Sign In/Up', show_action_btn: false }).open();">
+        <i class="fa fa-sign-in"></i> Accedi
+    </a>
+</div>
+<script>
+    (function($) {
+        $(window).on('load', function() {
+            if(location.hash == '#login') {
+                var modal = new tm.Modal({ url: '{% url 'account-signin' %}', title:'Sign In/Up', show_action_btn: false }).open();
+            }
+        });
+     })(jQuery);
+</script>
+{% else %}
+<div class="dropdown signin-btns">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuUser" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-sign-out"></i> {{ request.user.username }}
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuUser">
+        {% if profile_url %}<a class="dropdown-item" href="{% url 'profile' %}">Profilo</a>{% endif %}
+        <a class="dropdown-item" href="{% url 'account-logout' %}">Logout</a>
+    </div>
+</div>
+{% endif %}

@@ -46,6 +46,8 @@ urlpatterns = [
     url(r'^captcha/', include('captcha.urls')),
     url(r'^webcam/', include('webcam.urls')),
     url(r'^treenav/', include('treenav.urls')),
+    # login / registration
+    url(r'^account/', include('social_auth.urls')),
 
     # REST API
     url(r'^api/v1/auth/login/$', LoginView.as_view(),

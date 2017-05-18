@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title%}
+Registrazione | {{ block.super }}
+{% endblock %}
+
+{% block body_css %}page{% endblock %}
+
+{% block content %}
+<div class="container margin-top faded main-content">
+    <section class="box">
+        <h1>Registratione</h1>
+        <p class="alert alert-danger">Si è verificato un errore durante il processo di registrazione.</p>
+        <p>E' obbligatorio inserire un indirizzo e-mail valido per registrarsi.</p>
+    </section>
+</div>
+{% endblock %}

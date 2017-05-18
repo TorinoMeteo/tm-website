@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title%}
+Registrazione | {{ block.super }}
+{% endblock %}
+
+{% block body_css %}page{% endblock %}
+
+{% block content %}
+<div class="container margin-top faded main-content">
+    <section>
+        <h1>Registrazione</h1>
+        <p><strong>Perché registrarsi su TorinoMeteo?</strong></p>
+        <p>Forse al momento non trarrete grossi vantaggi dalla registrazione, ma le novità sono dietro l'angolo!
+            Ad esempio, se implementassimo una sorta di "preferiti" per le stazioni meteo, di modo che ciascun utente possa
+            scegliere quali stazioni visualizzare direttamente in home page?</p>
+        <p>Molti tipi di servizi per poter funzionare richiedono di legare informazioni (settings) ad un'utenza, quindi registrandovi
+            potrete sempre utilizzare tutte le novità targate TorinoMeteo!</p>
+        <p class="alert alert-danger">TorinoMeteo non raccoglie dati sensibili, a parte l'e-mail necessaria per la registrazione, e TorinoMeteo NON fornisce dati a
+            nessuna altra persona/associazione/ente...</p>
+        <form action="{% url 'social:complete' 'email' %}" method="post" class="account-registration">{% csrf_token %}
+            <fieldset class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" class="form-control" value="" name="username" id="id_username" required />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="id_email">E-mail</label>
+                <input type="email" class="form-control" value="" name="email" id="id_email" required />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="id_email2">Ripeti e-mail</label>
+                <input type="email" class="form-control" value="" name="email2" id="id_email2" required />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" class="form-control" value="" name="password" id="id_password" required />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="id_password2">Ripeti password</label>
+                <input type="password" class="form-control" value="" name="password2" id="id_password2" required />
+            </fieldset>
+            <fieldset class="form-group">
+                <!-- <label class="c-input c-checkbox" for="id_check_privacy"> -->
+                <label for="id_check_privacy">
+                    <!-- <input type="checkbox" value="1" name="check_privacy" id="id_check_privacy"> -->
+                    <!-- <span class="c-indicator"></span> -->
+                    <input type="checkbox" value="1" name="check_privacy" id="id_check_privacy">
+                    Ho letto ed accetto i <a href="/cookie-policy/">termini e condizioni del servizio</a>
+                </label>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="id_submit_registration"></label>
+                <input type="submit" class="btn btn-primary" value="registrami" name="submit_registration" id="id_submit_registration">
+            </fieldset>
+        </form>
+        <script type="text/javascript">
+            // check username
+            $('#id_username').on('blur', function() {
+                var self = this;
+                $.get('{% url 'account-check-username'  %}?username=' + $(this).val(), function(response) {
+                    if($(self).val() == '' || !response.available) {
+                        $(self).parent('.form-group').addClass('unavailable');
+                        $(self).parent('.form-group').removeClass('available');
+                    }
+                    else {
+                        $(self).parent('.form-group').addClass('available');
+                        $(self).parent('.form-group').removeClass('unavailable');
+                    }
+                });
+            });
+        </script>
+    </section>
+</div>
+{% endblock %}
