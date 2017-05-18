@@ -1,3 +1,4 @@
+// scss-lint:disable ImportantRule
 $bg-body-1: #fff;
 $bg-body-2: #102b62;
 $bg-page: #f8f8f8;
@@ -15,6 +16,7 @@ body {
   font-size: 14px;
   font-weight: 300;
   left: 0;
+  padding-right: 0 !important;
   padding-top: 67px;
   position: relative;
   transition: left .3s linear;
