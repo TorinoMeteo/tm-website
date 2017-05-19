@@ -86,12 +86,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
-    'social.apps.django_app.default',
-    'social_auth',
     'ckeditor',
     'ckeditor_uploader',
     'widget_tweaks',
     'pipeline',
+    'social.apps.django_app.default',
     'corsheaders',
     'filer',
     'mptt',
@@ -105,6 +104,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'treenav',
+    'social_auth',
     # tm
     'forecast',
     'realtime',
@@ -297,6 +297,7 @@ PIPELINE_CSS = {
     'torinometeo': {  # bootstrap + custom
         'source_filenames': (
             'core/src/scss/styles.scss',
+            'social_auth/scss/_style.scss'
         ),
         'output_filename': 'core/css/core.min.css',
     },

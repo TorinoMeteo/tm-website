@@ -68,7 +68,8 @@ def set_password(strategy, backend, user, response, is_new=False,
                  *args, **kwargs):
 
     if backend.name in ('email', 'username') and is_new and response.get('password'):
-        user.set_password(response.get('password')[0])
+        print response.get('password')[0]
+        user.set_password(response.get('password'))
         user.save()
 
 def add_user_to_correct_group(strategy, backend, user, response, is_new=False, **kwargs):
@@ -88,7 +89,6 @@ def email_validation(strategy, backend, code):
 
     # force session save
     strategy.request.session.save()
-    print 'DIOPORCOOOOOO'
     print strategy.session.session_key
     signature = signing.dumps({"session_key": strategy.session.session_key, "email": code.email},
                               key=settings.EMAIL_SECRET_KEY)
