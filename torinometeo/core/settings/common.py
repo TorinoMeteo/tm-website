@@ -55,6 +55,7 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 NOREPLY_EMAIL = 'noreply@torinometeo.org'
 NET_REQUEST_EMAIL = 'info@torinometeo.org'
+DEFAULT_FROM_EMAIL = 'noreply@torinometeo.org'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
