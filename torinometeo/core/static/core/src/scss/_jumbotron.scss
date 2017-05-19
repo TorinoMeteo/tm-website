@@ -38,11 +38,11 @@
         }
     }
 
-    .fa-bookmark-o,
-    .fa-bookmark {
+    .fa-star-o,
+    .fa-star {
       font-size: 43px;
       margin-left: 20px;
-      color: #000;
+      color: #0275d8;
       cursor: pointer;
       text-decoration: none;
     }
@@ -187,6 +187,10 @@
     span[data-heat=hot] { color: #ff3300; }
     span[data-heat=vhot] { color: #ff0000; }
     // #rt-pressure-graph { background: yellow; } #rt-relative_humidity-graph { background: blue; }
+    .arrow-container {
+      float: right;
+      white-space: nowrap;
+    }
     .arrow {
         z-index:100;
         font-size: 46px;

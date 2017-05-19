@@ -15,7 +15,18 @@
      })(jQuery);
 </script>
 {% else %}
-<div class="dropdown signin-btns">
+<ul class="nav navbar-nav menu depth-0 hidden-lg-up">
+    <li class="nav-item inactive-menu-item top-level">
+        <a class="nav-link inactive-menu-item-link top-level-link dropdown-toggle" data-toggle="dropdown" href="" title="{{ request.user.username }}">{{ request.user.username }}</a>
+        <ul class="depth-1 dropdown-menu">
+            <li class="nav-item inactive-menu-item risorse-child">
+                <a class="nav-link inactive-menu-item-link risorse-child-link" href="{% url 'account-logout' %}" title="Logout">Logout</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<div class="dropdown signin-btns hidden-lg-down">
     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuUser" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-sign-out"></i> {{ request.user.username }}
     </button>

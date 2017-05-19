@@ -33,6 +33,11 @@
         <script src="{% static 'core/src/vendor/jquery/jquery.js' %}"></script>
         {% javascript 'vendor' %}
         {% javascript 'torinometeo' %}
+        <script>
+            jQuery(function () {
+                jQuery('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
         {% block extra_js %}{% endblock %}
         {% if not DEBUG %}
         <script>

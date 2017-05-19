@@ -44,13 +44,19 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.date = jQuery('<time>').appendTo(jQuery('<p>', {'class': 'pull-left time'}).appendTo(this.$dom.container));
         this.$dom.detail = jQuery('<p>', {'class': 'pull-left'}).appendTo(this.$dom.container);
         this.$dom.clear = jQuery('<div>', {'class': 'clearfix'}).appendTo(this.$dom.container);
-        this.$dom.bookmark = jQuery('<a>', {'class': 'fa fa-bookmark-o'}).appendTo(this.$dom.title_container);
+        this.$dom.bookmark = jQuery('<a>', {
+            'class': 'fa fa-star-o',
+            'data-toggle': 'tooltip',
+            'data-placement': 'bottom',
+            'title': 'Puoi aggiungere le stazioni ai tuoi preferiti, così la prossima volta che entrerai in home page, verranno mostrate per prime!'
+        }).appendTo(this.$dom.title_container);
+        this.$dom.arrow_container = jQuery('<span>', {'class': 'arrow-container'}).appendTo(this.$dom.title_container);
         this.$dom.next_arrow = jQuery('<span>', {'class': 'arrow arrow-next fa fa-angle-double-right hidden'})
             .on('click', jQuery.proxy(this.goNext, this))
-            .appendTo(this.$dom.title_container);
+            .appendTo(this.$dom.arrow_container);
         this.$dom.prev_arrow = jQuery('<span>', {'class': 'arrow arrow-prev fa fa-angle-double-left hidden'})
             .on('click', jQuery.proxy(this.goPrev, this))
-            .appendTo(this.$dom.title_container);
+            .appendTo(this.$dom.arrow_container);
 
         // columns
         this.$dom.col1 = jQuery('<div>', {'class': 'col-lg-3 col-md-6 hidden-sm-down'}).appendTo(this.$dom.container);
@@ -201,7 +207,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             $.getJSON('/preferiti/aggiungi/stazione/' + data.id, function (data) {
                 if (data.status === 'ok') {
                     self.$cache[self.$index]['bookmarked'] = true;
-                    self.$dom.bookmark.removeClass('fa-bookmark-o').addClass('fa-bookmark')
+                    self.$dom.bookmark.removeClass('fa-star-o').addClass('fa-star')
                     self.$dom.bookmark.off('click');
                     self.$dom.bookmark.on('click', clickRemoveFn)
                 }
@@ -211,18 +217,18 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             $.getJSON('/preferiti/rimuovi/stazione/' + data.id, function (data) {
                 if (data.status === 'ok') {
                     self.$cache[self.$index]['bookmarked'] = false;
-                    self.$dom.bookmark.removeClass('fa-bookmark').addClass('fa-bookmark-o')
+                    self.$dom.bookmark.removeClass('fa-star').addClass('fa-star-o')
                     self.$dom.bookmark.off('click');
                     self.$dom.bookmark.on('click', clickAddFn)
                 }
             })
         }
         if(data.bookmarked) {
-            this.$dom.bookmark.removeClass('fa-bookmark-o').addClass('fa-bookmark').off('click');
+            this.$dom.bookmark.removeClass('fa-star-o').addClass('fa-star').off('click');
             this.$dom.bookmark.on('click', data.authenticated ? clickRemoveFn : clickNoAuthFn)
         }
         else {
-            this.$dom.bookmark.removeClass('fa-bookmark').addClass('fa-bookmark-o').off('click');
+            this.$dom.bookmark.removeClass('fa-star').addClass('fa-star-o').off('click');
             this.$dom.bookmark.on('click', data.authenticated ? clickAddFn : clickNoAuthFn)
         }
 
