@@ -36,11 +36,15 @@ class JumbotronStationJsonView(View):
             day_data = station.get_last24_data()
 
             image_url = station.image.url
+            bookmarked = station.bookmarks.filter(user=request.user).exists() if request.user.is_authenticated() else False # noqa
 
+            data['id'] = station.id
             data['name'] = station.name
+            data['bookmarked'] = bookmarked
+            data['authenticated'] = request.user.is_authenticated()
             data['nation'] = station.nation.name
             data['region'] = station.region.name
-            data['province'] = station.province.name if station.province else ''
+            data['province'] = station.province.name if station.province else '' # noqa
             data['image_url'] = image_url
             data['day_data'] = day_data
             if realtime_data:

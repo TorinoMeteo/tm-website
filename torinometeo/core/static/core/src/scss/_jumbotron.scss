@@ -37,6 +37,16 @@
             font-weight: 100;
         }
     }
+
+    .fa-bookmark-o,
+    .fa-bookmark {
+      font-size: 43px;
+      margin-left: 20px;
+      color: #000;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
     time {
         line-height: 1.4;
         &:before {

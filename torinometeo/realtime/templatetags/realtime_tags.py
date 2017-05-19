@@ -1,13 +1,24 @@
+from itertools import chain
 from django import template
 
 from realtime.models.stations import Station
 
 register = template.Library()
 
+
 @register.inclusion_tag('realtime/jumbotron.html', takes_context=True)
 def realtime_jumbotron(context):
-    stations = Station.objects.filter(active=True)
+    user = context['request'].user
+    if user.is_authenticated():
+        ids = [b.station.id for b in user.station_bookmarks.all()]
+        stations = list(chain(
+            Station.objects.filter(active=True, id__in=ids),
+            Station.objects.filter(active=True).exclude(id__in=ids)
+        ))
+    else:
+        stations = Station.objects.filter(active=True)
     return {'stations': stations}
+
 
 @register.inclusion_tag('realtime/widget_line.html', takes_context=True)
 def realtime_line(context):

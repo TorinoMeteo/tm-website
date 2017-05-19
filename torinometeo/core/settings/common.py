@@ -110,6 +110,7 @@ INSTALLED_APPS = (
     'realtime',
     'blog',
     'webcam',
+    'bookmarks',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -245,6 +246,10 @@ SUIT_CONFIG = {
         {'app': 'forecast', 'label': 'Previsioni', 'icon': 'fa fa-globe'},
         {'app': 'webcam', 'label': 'Webcam', 'icon': 'fa fa-camera'},
 
+        '-',
+
+        {'app': 'bookmarks', 'label': 'Bookmarks', 'icon': 'fa fa-bookmark'},
+
     )
 }
 
@@ -349,6 +354,10 @@ USERS_GROUP_NAME = 'users' # group associated to new registrations
 
 SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = False
 SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
+
+# action query string param traduced into alert, like
+# Hey you son of a bitch, in order to do this you must be authenticated
+SOCIAL_AUTH_ACTION_BOOKMARK = 'Devi essere loggato per salvare un preferito'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/#login'

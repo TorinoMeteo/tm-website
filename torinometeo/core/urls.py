@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^realtime/', include('realtime.urls')),
     url(r'^blog/', include('blog.urls')),
     url(r'^previsioni/', include('forecast.urls')),
+    url(r'^preferiti/', include('bookmarks.urls')),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^webcam/', include('webcam.urls')),
     url(r'^treenav/', include('treenav.urls')),

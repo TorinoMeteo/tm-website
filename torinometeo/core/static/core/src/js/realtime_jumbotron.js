@@ -44,6 +44,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.date = jQuery('<time>').appendTo(jQuery('<p>', {'class': 'pull-left time'}).appendTo(this.$dom.container));
         this.$dom.detail = jQuery('<p>', {'class': 'pull-left'}).appendTo(this.$dom.container);
         this.$dom.clear = jQuery('<div>', {'class': 'clearfix'}).appendTo(this.$dom.container);
+        this.$dom.bookmark = jQuery('<a>', {'class': 'fa fa-bookmark-o'}).appendTo(this.$dom.title_container);
         this.$dom.next_arrow = jQuery('<span>', {'class': 'arrow arrow-next fa fa-angle-double-right hidden'})
             .on('click', jQuery.proxy(this.goNext, this))
             .appendTo(this.$dom.title_container);
@@ -191,6 +192,40 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             this.$dom.date.html('<strong>Dati non disponibili</strong>');
         }
         this.$dom.detail.html('<a href="' + this._url_stations[this.$index] + '"><i class="fa fa-plus-circle"></i></a>');
+        // bookmarks
+        clickNoAuthFn = function () {
+            new tm.Modal({ url: '/account/?action=bookmark', title:'Sign In/Up', show_action_btn: false }).open();
+        }
+        var self = this
+        var clickAddFn = function () {
+            $.getJSON('/preferiti/aggiungi/stazione/' + data.id, function (data) {
+                if (data.status === 'ok') {
+                    self.$cache[self.$index]['bookmarked'] = true;
+                    self.$dom.bookmark.removeClass('fa-bookmark-o').addClass('fa-bookmark')
+                    self.$dom.bookmark.off('click');
+                    self.$dom.bookmark.on('click', clickRemoveFn)
+                }
+            })
+        }
+        var clickRemoveFn = function () {
+            $.getJSON('/preferiti/rimuovi/stazione/' + data.id, function (data) {
+                if (data.status === 'ok') {
+                    self.$cache[self.$index]['bookmarked'] = false;
+                    self.$dom.bookmark.removeClass('fa-bookmark').addClass('fa-bookmark-o')
+                    self.$dom.bookmark.off('click');
+                    self.$dom.bookmark.on('click', clickAddFn)
+                }
+            })
+        }
+        if(data.bookmarked) {
+            this.$dom.bookmark.removeClass('fa-bookmark-o').addClass('fa-bookmark').off('click');
+            this.$dom.bookmark.on('click', data.authenticated ? clickRemoveFn : clickNoAuthFn)
+        }
+        else {
+            this.$dom.bookmark.removeClass('fa-bookmark').addClass('fa-bookmark-o').off('click');
+            this.$dom.bookmark.on('click', data.authenticated ? clickAddFn : clickNoAuthFn)
+        }
+
         // graphs
         this.renderStationGraphs(data);
         // image
