@@ -193,7 +193,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         }
         this.$dom.detail.html('<a href="' + this._url_stations[this.$index] + '"><i class="fa fa-plus-circle"></i></a>');
         // bookmarks
-        clickNoAuthFn = function () {
+        var clickNoAuthFn = function () {
             new tm.Modal({ url: '/account/?action=bookmark', title:'Sign In/Up', show_action_btn: false }).open();
         }
         var self = this
