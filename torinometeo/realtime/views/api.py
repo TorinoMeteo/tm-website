@@ -20,7 +20,7 @@ class LastRealtimeData(viewsets.ViewSet):
             last_data = Data.objects.values('station').annotate(
                 latest_id=Max('id'))
             ids = [d.get('latest_id') for d in last_data]
-            data = Data.objects.filter(id__in=ids)
+            data = Data.objects.filter(id__in=ids).order_by('station__name')
             serializer = RealtimeDataSerializer(data, many=True,
                                                 context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
