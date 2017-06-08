@@ -13,10 +13,14 @@ class StationSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'description',
+            'climate',
             'nation',
             'region',
             'province',
             'city',
+            'lat',
+            'lng',
             'image_url',
             'webcam',
         )
