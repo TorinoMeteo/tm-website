@@ -29,6 +29,8 @@ class StationSerializer(serializers.ModelSerializer):
         depth = 1
 
     def get_image_url(self, station):
+        if not station.image:
+            return None
         request = self.context.get('request')
         image_url = station.image.url
         return request.build_absolute_uri(image_url)
@@ -36,7 +38,9 @@ class StationSerializer(serializers.ModelSerializer):
     def get_webcam_url(self, station):
         if not station.webcam:
             return None
-        return 'https://www.torinometeo.org/realtime/webcam/' + station.id
+        request = self.context.get('request')
+        image_url = '/realtime/webcam/%d' % station.id
+        return request.build_absolute_uri(image_url)
 
 
 class RealtimeDataSerializer(serializers.ModelSerializer):
