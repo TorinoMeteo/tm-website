@@ -2,6 +2,9 @@ from datetime import date, datetime
 import simplejson
 import calendar
 import logging
+import random
+import string
+
 
 from django.shortcuts import render
 from django.views.generic import View, ListView, DetailView, TemplateView
@@ -19,6 +22,10 @@ from realtime.fetch.shortcuts import fetch_data
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+
+def randomword(length):
+    return ''.join(random.choice(string.lowercase) for i in range(length))
 
 
 class JumbotronStationJsonView(View):
@@ -451,7 +458,8 @@ class WebcamView(View):
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
         if station.webcam:
-            im = get_thumbnail(station.webcam, '800', quality=50) # noqa
+            url = station.webcam + '?' + randomword(10)
+            im = get_thumbnail(url, '800', quality=50) # noqa
             return HttpResponse(im.read(), content_type="image/jpg")
         else:
             raise Http404("Station does not have a webcam associated")
