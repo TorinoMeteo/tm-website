@@ -6,10 +6,12 @@ import logging
 from django.shortcuts import render
 from django.views.generic import View, ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.http import Http404
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
+from sorl.thumbnail import get_thumbnail
 
 from realtime.models.stations import Station
 from realtime.forms import NetRequestForm
@@ -443,3 +445,13 @@ class FetchView(View):
             'realtime/fetch.html',
             {'station': station, 'data': data, 'json_data': json_data}
         )
+
+
+class WebcamView(View):
+    def get(self, request, pk):
+        station = Station.objects.get(pk=pk)
+        if station.webcam:
+            im = get_thumbnail(station.webcam, '800', quality=50) # noqa
+            return HttpResponse(im.read(), content_type="image/jpg")
+        else:
+            raise Http404("Station does not have a webcam associated")

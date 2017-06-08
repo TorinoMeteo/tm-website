@@ -7,6 +7,7 @@ class StationSerializer(serializers.ModelSerializer):
     """ Realtime Station Serializer
     """
     image_url = serializers.SerializerMethodField()
+    webcam_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Station
@@ -23,6 +24,7 @@ class StationSerializer(serializers.ModelSerializer):
             'lng',
             'image_url',
             'webcam',
+            'webcam_url',
         )
         depth = 1
 
@@ -30,6 +32,11 @@ class StationSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         image_url = station.image.url
         return request.build_absolute_uri(image_url)
+
+    def get_webcam_url(self, station):
+        if not station.webcam:
+            return None
+        return 'https://www.torinometeo.org/realtime/webcam/' + station.id
 
 
 class RealtimeDataSerializer(serializers.ModelSerializer):
