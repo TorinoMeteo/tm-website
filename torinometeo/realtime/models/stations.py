@@ -385,11 +385,21 @@ class Data(models.Model):
 
     @property
     def wind_dir_text(self):
-        return wind_dir_text_base(self.wind_dir)
+        if self.wind_dir:
+            try:
+                return wind_dir_text_base(self.wind_dir)
+            except:
+                pass
+        return ''
 
     @property
     def wind_dir_max_text(self):
-        return wind_dir_text_base(self.wind_dir_max)
+        if self.wind_dir_max:
+            try:
+                return wind_dir_text_base(self.wind_dir_max)
+            except:
+                pass
+        return ''
 
 
 class HistoricData(models.Model):
