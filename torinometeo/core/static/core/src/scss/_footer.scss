@@ -7,6 +7,10 @@ body > footer {
     color: #fff;
     a {
         color: #ECA900;
+
+        &:hover {
+          color: lighten(#eca900, 10%);
+        }
     }
     h1 {
         font-size: 24px;
