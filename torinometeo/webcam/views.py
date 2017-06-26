@@ -1,8 +1,12 @@
 from django.shortcuts import render
+from django.http import Http404
 from django.views.generic import DetailView, View, ListView
-# from django.shortcuts import get_object_or_404
+
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 
 from .models import Webcam
+from .serializers import WebcamSerializer
 
 
 class WebcamDetailView(DetailView):
@@ -25,3 +29,29 @@ class WebcamIndexView(ListView):
 
     def get_queryset(self):
         return Webcam.objects.active()
+
+
+# API
+class Webcams(viewsets.ViewSet):
+    """ Webcams list
+    """
+    def list(self, request):
+        """
+        Gets the webcams list
+        """
+        data = Webcam.objects.all()
+        serializer = WebcamSerializer(data, many=True,
+                                      context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None):
+        """
+        Gets single webcam data
+        """
+        try:
+            webcam = Webcam.objects.get(slug=pk)
+            serializer = WebcamSerializer(webcam, many=False,
+                                          context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Webcam.DoesNotExist:
+            raise Http404()
