@@ -19,7 +19,15 @@
         this.update = function() {
             var from_date = this.input_from.val();
             var to_date = this.input_to.val();
-            var data = this.fetchData( from_date, to_date, this.renderChart );
+            if (!from_date || !to_date) {
+                var alert_div = $('<div />', {
+                    'class': 'alert alert-danger text-center'
+                }).text('Inserire le date Da A');
+                this.redraw_button.parent().after(alert_div);
+                setTimeout(function () { alert_div.remove() }, 2000);
+            } else {
+                var data = this.fetchData( from_date, to_date, this.renderChart );
+            }
         };
 
         this.fetchData = function(from_date, to_date, callback) {
