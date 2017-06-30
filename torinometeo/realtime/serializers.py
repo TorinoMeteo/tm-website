@@ -78,6 +78,7 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
             'wind_dir_text',
             'wind_strength_max',
             'wind_dir_max',
+            'wind_dir_max_text',
             'wind_max_time',
             'rain',
             'rain_rate',
