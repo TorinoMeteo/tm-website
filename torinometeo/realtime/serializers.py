@@ -99,7 +99,7 @@ class HistoricDataSerializer(serializers.ModelSerializer):
         fields = (
             'station',
             'date',
-            'temperature_emain',
+            'temperature_mean',
             'temperature_max',
             'temperature_min',
             'relative_humidity_mean',
