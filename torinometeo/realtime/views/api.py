@@ -54,7 +54,12 @@ class HistoricDataViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         try:
-            date = datetime.datetime(year=self.kwargs['year'], month=self.kwargs['month'], day=self.kwargs['day']) # noqa
+            date = datetime.datetime(
+                year=int(self.kwargs['year']),
+                month=int(self.kwargs['month']),
+                day=int(self.kwargs['day'])
+            )
         except:
             date = datetime.date.fromordinal(datetime.date.today().toordinal() - 1) # noqa
+
         return HistoricData.objects.filter(date=date).order_by('station__name')
