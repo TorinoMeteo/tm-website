@@ -24,7 +24,7 @@ from core.routers import ApiRouter
 
 from core.views import LoginView, LogoutView
 from forecast.views.api import ForecastViewSet, DayForecastViewSet
-from realtime.views.api import LastRealtimeData
+from realtime.views.api import LastRealtimeDataViewSet, HistoricDataViewSet
 from webcam.views import Webcams
 
 # BEGIN API
@@ -33,7 +33,8 @@ schema_view = get_swagger_view(title='TorinoMeteo REST API')
 router = ApiRouter()
 router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
 router.register(r'forecast', ForecastViewSet)
-router.register(r'realtime/data', LastRealtimeData, 'last realtime data')
+router.register(r'realtime/data', LastRealtimeDataViewSet, 'last realtime data') # noqa
+router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', HistoricDataViewSet, 'history data') # noqa
 router.register(r'webcam', Webcams, 'webcams')
 # END API
 

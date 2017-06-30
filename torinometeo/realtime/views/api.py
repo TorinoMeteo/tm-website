@@ -1,14 +1,16 @@
+import datetime
+
 from django.http import Http404
 from django.db.models import Max
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 
-from realtime.models.stations import Station, Data
-from realtime.serializers import RealtimeDataSerializer
+from realtime.models.stations import Station, Data, HistoricData
+from realtime.serializers import RealtimeDataSerializer, HistoricDataSerializer
 
 
-class LastRealtimeData(viewsets.ViewSet):
+class LastRealtimeDataViewSet(viewsets.ViewSet):
     """ Realtime last data
         Fetches only the last measured data of each station
     """
@@ -40,3 +42,19 @@ class LastRealtimeData(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Station.DoesNotExist:
             raise Http404()
+
+
+class HistoricDataViewSet(mixins.ListModelMixin,
+                          viewsets.GenericViewSet):
+    """ HistoricData
+        Fetches historic data for a given date, if no date is given
+        it fetches last
+    """
+    serializer_class = HistoricDataSerializer
+
+    def get_queryset(self):
+        try:
+            date = datetime.datetime(year=self.kwargs['year'], month=self.kwargs['month'], day=self.kwargs['day']) # noqa
+        except:
+            date = datetime.date.fromordinal(datetime.date.today().toordinal() - 1) # noqa
+        return HistoricData.objects.filter(date=date).order_by('station__name')

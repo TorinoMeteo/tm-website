@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models.stations import Data, Station
+from .models.stations import Data, Station, HistoricData
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -86,4 +86,27 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
             'rain_rate_max_time',
             'rain_month',
             'rain_year'
+        )
+
+
+class HistoricDataSerializer(serializers.ModelSerializer):
+    """ Realtime Data Serializer
+    """
+    station = StationSerializer()
+
+    class Meta:
+        model = HistoricData
+        fields = (
+            'station',
+            'date',
+            'temperature_emain',
+            'temperature_max',
+            'temperature_min',
+            'relative_humidity_mean',
+            'relative_humidity_max',
+            'relative_humidity_min',
+            'pressure_mean',
+            'pressure_max',
+            'pressure_min',
+            'rain'
         )
