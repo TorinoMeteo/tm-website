@@ -16,6 +16,8 @@ class WebcamSerializer(serializers.ModelSerializer):
             'slug',
             'technology',
             'description',
+            'latitude',
+            'longitude',
             'url',
             'web',
             'active',

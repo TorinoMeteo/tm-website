@@ -10,11 +10,13 @@ class DayForecastInline(admin.StackedInline):
 class ForecastAdmin(admin.ModelAdmin):
     list_display = ['id', 'date',]
     inlines = [DayForecastInline, ]
+    list_filter = ('date', )
+    search_fields = ('note', )
 
     fieldsets = (
         (None, {
             'classes': ('suit-tab', 'suit-tab-main',),
-            'fields': ['date', 'pattern', ],
+            'fields': ['date', 'pattern', 'note', ],
         }),
     )
 
@@ -29,5 +31,7 @@ admin.site.register(Forecast, ForecastAdmin)
 
 class DayForecastAdmin(admin.ModelAdmin):
     list_display = ['id', 'forecast', 'date',]
+    list_filter = ('date', )
+    search_fields = ('note', )
 
 admin.site.register(DayForecast, DayForecastAdmin)

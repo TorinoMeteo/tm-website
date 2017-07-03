@@ -17,6 +17,8 @@ class Webcam(models.Model):
     slug = models.SlugField(max_length=128, unique=True)
     technology = models.CharField('tecnologia', max_length=128)
     description = RichTextField('descrizione', blank=True, null=True)
+    latitude = models.CharField('latitudine', max_length=50)
+    longitude = models.CharField('longitudine', max_length=50)
     url = models.URLField('url')
     web = models.URLField('pagina dedicata', blank=True, null=True)
     featured = models.BooleanField('featured', default=False)

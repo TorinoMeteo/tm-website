@@ -10,6 +10,7 @@ class Forecast(models.Model):
     """
     date = models.DateField('data', auto_now=False, auto_now_add=False, unique=True)
     pattern = RichTextUploadingField('situazione')
+    note = models.TextField('note', blank=True, null=True)
 
     class Meta:
         verbose_name = 'previsione'
@@ -35,6 +36,7 @@ class DayForecast(models.Model):
     temperatures = RichTextUploadingField('temperature')
     winds = RichTextUploadingField('venti')
     reliability = models.IntegerField('attendibilità')
+    note = models.TextField('note', blank=True, null=True)
 
     class Meta:
         verbose_name = 'previsioni giornata'
