@@ -271,7 +271,7 @@ def fetch_radar_images():
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
     color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
     src = '/tmp/'
-    dst = '/home/abidibo/Junk/'
+    dst = '/var/www/radar/images/'
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
     return result
