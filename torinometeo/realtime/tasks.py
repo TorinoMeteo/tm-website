@@ -214,9 +214,9 @@ def fetch_radar_image(dt, src):
 
 
 # Execute external script to change image color based on Color Replacement List
-def change_colors(img_data, conversions, cmd_path):
+def change_colors(img_path, conversions, cmd_path):
     for conversion in conversions:
-        cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_data[0] + " " + img_data[0] # noqa
+        cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_path + " " + img_path # noqa
         os.system(cmd)
 
 
@@ -239,15 +239,14 @@ def fetch_radar(dt, colors, color_script_path, src, dst):
     try:
         logger.info(reset_tor_circuit())
     except:
-        logger.error('Cannot reset tor')
-
+        logger.error('cannot reset tor')
     time.sleep(2)
     image_data = fetch_radar_image(dt, src)
     if (image_data):
         (ip, filename, datetime) = image_data
         if filename:
             logger.info('%s downloaded with IP %s' % (filename, ip))
-            change_colors(image_data, colors, color_script_path)
+            change_colors(os.path.join(src, filename), colors, color_script_path) # noqa
             try:
                 shutil.move(os.path.join(src, filename), os.path.join(dst, filename)) # noqa
             except Exception, e:
@@ -277,15 +276,17 @@ def fetch_radar_images():
     except:
         pass
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
-    color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
+    # color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
+    color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
     src = '/tmp/'
-    dst = '/var/www/radar/images/'
+    # dst = '/var/www/radar/images/'
+    dst = '/home/abidibo/Junk/'
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
     if result:
         snapshot = RadarSnapshot(
-            datetime=result.datetime,
-            filename=result.filename
+            datetime=result.get('datetime'),
+            filename=result.get('filename')
         )
         snapshot.save()
     logger.info('END -- running task: fetch_radar_images')

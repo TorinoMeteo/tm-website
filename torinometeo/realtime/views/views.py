@@ -487,7 +487,7 @@ def fetch_radar(request):
     print 'DIO'
     print res
     if res:
-        out = '%s, %s' % (res.get('filename', 'OPS'), res.get('datetime', 'OPS'))
+        out = '%s, %s, %s' % (res.get('filename', 'OPS'), res.get('datetime', 'OPS'), res.get('ip', 'OPS'))
     else:
         out = 'no fetch'
     return HttpResponse(out)
