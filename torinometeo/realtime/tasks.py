@@ -24,6 +24,9 @@ from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
 
+socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
+socket.socket = socks.socksocket
+
 
 def patch_max(station, datetime, variable):
     max = Data.objects.filter(
@@ -188,38 +191,37 @@ def clean_realtime_data():
 
 # radar
 # Get Radar Image Based On Input timestamp if availale
-def GetRadarImage(InDT):
-    LastDT = datetime.datetime.fromtimestamp(int(InDT))
-    remainderDT = int(LastDT.minute) % 10
-    NextDT = LastDT + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainderDT) # noqa
-    RemoteImage = 'radar_'+NextDT.strftime("%Y%m%d_%H%M")
-    LocalImage = NextDT.strftime("%Y%m%d%H%M")+".png"
-    OutTimestamp = datetime.datetime.strptime(NextDT.strftime("%Y%m%d%H%M"), "%Y%m%d%H%M") # noqa
-    socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
-    socket.socket = socks.socksocket
+def fetch_radar_image(dt, src):
+    remainder_dt = int(dt.minute) % 10
+    next_dt = dt + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainder_dt) # noqa
+    remote_filename = 'radar_%s' % next_dt.strftime("%Y%m%d_%H%M")
+    local_filename = '%s.png' % next_dt.strftime("%Y%m%d%H%M")
+    local_path = os.path.join(src, local_filename)
+    image_dt = next_dt
     try:
-        r = requests.get('http://media.meteonews.net/radar/chComMET_800x618_c2/'+RemoteImage+'.png') # noqa
-        r.raise_for_status()
-        res = urllib.urlretrieve('http://media.meteonews.net/radar/chComMET_800x618_c2/'+RemoteImage+'.png', LocalImage) # noqa
+        ip = get_ip()
+        r = requests.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
+        with open(local_path, 'wb') as out_file:
+            shutil.copyfileobj(r.raw, out_file)
+        del r
+        return (ip, local_filename, image_dt)
     except HTTPError:
-        logger.error('Could not download %s.png' % RemoteImage)
-        LocalImage = None
+        logger.error('Could not download %s.png' % remote_filename)
+        return False
     except Exception, e:
         logger.error(e)
-        LocalImage = None
-    return LocalImage, GetIP(), OutTimestamp
+        return False
 
 
 # Execute external script to change image color based on Color Replacement List
-def ChangeColors(ImgData, Params, CmdPath):
-    for Param in Params:
-        cmd = CmdPath+" -i \""+Param[0]+"\" -f "+str(Param[2])+" -o \""+Param[1]+"\" "+ImgData[0]+" "+ImgData[0] # noqa
-        print cmd
+def change_colors(img_data, conversions, cmd_path):
+    for conversion in conversions:
+        cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_data[0] + " " + img_data[0] # noqa
         os.system(cmd)
 
 
 # Reset Tor circuit to get ne ip address
-def ResetTorCircuit():
+def reset_tor_circuit():
     with Controller.from_port(port=9051) as controller:
         controller.authenticate('ri3313co')
         controller.signal(Signal.NEWNYM)
@@ -227,41 +229,49 @@ def ResetTorCircuit():
 
 
 # Get Current Ip - Just for debug
-def GetIP():
+def get_ip():
     ip = get('https://api.ipify.org').text
     return ip
 
 
 # Fetch Radar Image
-def FetchRadar(TS, Colors, ColorScript, Src, Dst):
-    print ResetTorCircuit()
-    Image = GetRadarImage(TS)
-    if Image[0] is not None:
-        logger.info('%s downloaded with IP %s' % (Image[0], Image[1]))
-        ChangeColors(Image, Colors, ColorScript)
+def fetch_radar(dt, colors, color_script_path, src, dst):
+    print reset_tor_circuit
+    image_data = fetch_radar_image(dt, src)
+    if (image_data):
+        (ip, filename, datetime) = image_data
+        if filename:
+            logger.info('%s downloaded with IP %s' % (filename, ip))
+            change_colors(image_data, colors, color_script_path)
+            try:
+                shutil.move(os.path.join(src, filename), os.path.join(dst, filename)) # noqa
+            except Exception, e:
+                print e
+        else:
+            logger.error('Image download Error with IP %s' % ip)
+
         try:
-            shutil.move(Src+Image[0], Dst)
-        except Exception, e:
-            print e
+            os.remove(os.path.join(src, filename))
+        except:
+            pass
+
+        return {'filename': filename, 'datetime': datetime, 'ip': ip}
     else:
-        logger.error('Image download Error with IP %s' % Image[1])
-
-    os.system("rm "+Src+"*.png")
-
-    return {'filename': Image[0], 'datetime': Image[2]}
+        return False
 
 
 def fetch_radar_images():
+    dt = datetime.datetime(2017, 7, 4, 13, 40, 0)
     try:
         last_radar_image = RadarSnapshot.objects.last()
         if last_radar_image:
-            ts = last_radar_image.datetime
+            dt = last_radar_image.datetime
     except:
-        ts = datetime.datetime.now()
+        pass
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
     color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
-    src = '/tmp'
-    dst = '/var/www/radar/images/'
+    src = '/tmp/'
+    dst = '/home/abidibo/Junk/'
 
-    result = FetchRadar(ts, colors, color_script_path, src, dst)
+    result = fetch_radar(dt, colors, color_script_path, src, dst)
     return result

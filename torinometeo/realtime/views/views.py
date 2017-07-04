@@ -482,6 +482,12 @@ class WebcamView(View):
             raise Http404("Station does not have a webcam associated")
 
 
-def fetch_radar(self, request):
+def fetch_radar(request):
     res = fetch_radar_images()
-    return HttpResponse(res)
+    print 'DIO'
+    print res
+    if res:
+        out = '%s, %s' % (res.get('filename', 'OPS'), res.get('datetime', 'OPS'))
+    else:
+        out = 'no fetch'
+    return HttpResponse(out)
