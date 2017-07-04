@@ -20,6 +20,8 @@ from realtime.models.stations import Station
 from realtime.forms import NetRequestForm
 from realtime.fetch.shortcuts import fetch_data
 
+from realtime.tasks import fetch_radar_images
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -478,3 +480,8 @@ class WebcamView(View):
             return HttpResponse(im.read(), content_type="image/jpg")
         else:
             raise Http404("Station does not have a webcam associated")
+
+
+def fetch_radar(self, request):
+    res = fetch_radar_images()
+    return HttpResponse(res)

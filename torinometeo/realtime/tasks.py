@@ -18,7 +18,8 @@ from django.db.models import Max, Min, Avg
 from core.celery import app
 from celery.utils.log import get_task_logger
 
-from .models.stations import Station, Data, HistoricData
+from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
+    RadarColorConversion
 from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
@@ -186,22 +187,6 @@ def clean_realtime_data():
 
 
 # radar
-# Color replacement List (OLD, NEW, FUZZ)
-Colors = [
-    ("#C7FFFF", "#d5def5", 10),
-    ("#83BCF7", "#92e9a8", 10),
-    ("#4273E6", "#43f54d", 10),
-    ("#41B556", "#00ff00", 10),
-    ("#9DDC47", "#00d629", 10),
-    ("#FFFF00", "#00827d", 10),
-    ("#FFC600", "#0039c6", 10),
-    ("#FF6800", "#0000ff", 10),
-    ("#EF1C00", "#4c00b3", 10),
-    ("#8214FF", "#7d0082", 10),
-    ("#D176FF", "#ff0000", 10)
-]
-
-
 # Get Radar Image Based On Input timestamp if availale
 def GetRadarImage(InDT):
     LastDT = datetime.datetime.fromtimestamp(int(InDT))
@@ -209,8 +194,7 @@ def GetRadarImage(InDT):
     NextDT = LastDT + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainderDT) # noqa
     RemoteImage = 'radar_'+NextDT.strftime("%Y%m%d_%H%M")
     LocalImage = NextDT.strftime("%Y%m%d%H%M")+".png"
-    print LocalImage
-    print RemoteImage
+    OutTimestamp = datetime.datetime.strptime(NextDT.strftime("%Y%m%d%H%M"), "%Y%m%d%H%M") # noqa
     socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
     socket.socket = socks.socksocket
     try:
@@ -218,12 +202,12 @@ def GetRadarImage(InDT):
         r.raise_for_status()
         res = urllib.urlretrieve('http://media.meteonews.net/radar/chComMET_800x618_c2/'+RemoteImage+'.png', LocalImage) # noqa
     except HTTPError:
-        print 'Could not download '+RemoteImage+'.png'
+        logger.error('Could not download %s.png' % RemoteImage)
         LocalImage = None
     except Exception, e:
-        print e
+        logger.error(e)
         LocalImage = None
-    return LocalImage, GetIP()
+    return LocalImage, GetIP(), OutTimestamp
 
 
 # Execute external script to change image color based on Color Replacement List
@@ -249,17 +233,35 @@ def GetIP():
 
 
 # Fetch Radar Image
-def FetchRadar(TS, ColorScript, Src, Dst):
+def FetchRadar(TS, Colors, ColorScript, Src, Dst):
     print ResetTorCircuit()
     Image = GetRadarImage(TS)
     if Image[0] is not None:
-        print Image[0] + " downloaded with IP " + Image[1]
+        logger.info('%s downloaded with IP %s' % (Image[0], Image[1]))
         ChangeColors(Image, Colors, ColorScript)
         try:
             shutil.move(Src+Image[0], Dst)
         except Exception, e:
             print e
     else:
-        print "Image download Error with IP " + Image[1]
+        logger.error('Image download Error with IP %s' % Image[1])
 
-    return Image[0]
+    os.system("rm "+Src+"*.png")
+
+    return {'filename': Image[0], 'datetime': Image[2]}
+
+
+def fetch_radar_images():
+    try:
+        last_radar_image = RadarSnapshot.objects.last()
+        if last_radar_image:
+            ts = last_radar_image.datetime
+    except:
+        ts = datetime.datetime.now()
+    colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
+    color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
+    src = '/tmp'
+    dst = '/var/www/radar/images/'
+
+    result = FetchRadar(ts, colors, color_script_path, src, dst)
+    return result
