@@ -5,6 +5,7 @@ import datetime
 import socks
 import socket
 import shutil
+import time
 
 import requests
 from requests import get
@@ -23,9 +24,6 @@ from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
 from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
-
-socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
-socket.socket = socks.socksocket
 
 
 def patch_max(station, datetime, variable):
@@ -199,6 +197,8 @@ def fetch_radar_image(dt, src):
     local_path = os.path.join(src, local_filename)
     image_dt = next_dt
     try:
+        socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
+        socket.socket = socks.socksocket
         ip = get_ip()
         r = requests.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
         with open(local_path, 'wb') as out_file:
@@ -236,7 +236,12 @@ def get_ip():
 
 # Fetch Radar Image
 def fetch_radar(dt, colors, color_script_path, src, dst):
-    print reset_tor_circuit
+    try:
+        logger.info(reset_tor_circuit())
+    except:
+        logger.error('Cannot reset tor')
+
+    time.sleep(2)
     image_data = fetch_radar_image(dt, src)
     if (image_data):
         (ip, filename, datetime) = image_data
@@ -246,10 +251,11 @@ def fetch_radar(dt, colors, color_script_path, src, dst):
             try:
                 shutil.move(os.path.join(src, filename), os.path.join(dst, filename)) # noqa
             except Exception, e:
-                print e
+                logger.error('cannot move the image %s' % e)
+                return False
         else:
             logger.error('Image download Error with IP %s' % ip)
-
+            return False
         try:
             os.remove(os.path.join(src, filename))
         except:
@@ -260,7 +266,9 @@ def fetch_radar(dt, colors, color_script_path, src, dst):
         return False
 
 
+@app.task
 def fetch_radar_images():
+    logger.info('BEGIN -- running task: fetch_radar_images')
     dt = datetime.datetime(2017, 7, 4, 13, 40, 0)
     try:
         last_radar_image = RadarSnapshot.objects.last()
@@ -274,4 +282,11 @@ def fetch_radar_images():
     dst = '/var/www/radar/images/'
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
+    if result:
+        snapshot = RadarSnapshot(
+            datetime=result.datetime,
+            filename=result.filename
+        )
+        snapshot.save()
+    logger.info('END -- running task: fetch_radar_images')
     return result

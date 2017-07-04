@@ -2,6 +2,7 @@
 *.pyc
 torinometeo/.ropeproject
 torinometeo/.env
+torinometeo/realtime/tasks.py
 .virtualenv
 torinometeo/media
 torinometeo/static

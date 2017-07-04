@@ -10,7 +10,7 @@ from .common import * # noqa
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['ws.torinometeo.org', 'torinometeo.org', 'www.torinometeo.org', ]
+ALLOWED_HOSTS = ['ws.torinometeo.org', 'torinometeo.org', 'www.torinometeo.org', ] # noqa
 
 HTTPS = True
 SESSION_COOKIE_SECURE = True
@@ -48,6 +48,11 @@ CELERYBEAT_SCHEDULE = {
     'store-historic-data': {
         'task': 'realtime.tasks.store_historic_data',
         'schedule': crontab(minute=10, hour=0),  # every day 00:10
+        'args': ()
+    },
+    'fetch-radar-images': {
+        'task': 'realtime.tasks.fetch_radar_images',
+        'schedule': timedelta(seconds=240),
         'args': ()
     },
 }
