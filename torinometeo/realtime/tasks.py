@@ -2,13 +2,9 @@ from __future__ import absolute_import
 
 import os
 import datetime
-import socks
-import socket
 import shutil
-import time
 
 import requests
-from requests import get
 from requests.exceptions import HTTPError
 
 from stem import Signal
@@ -197,10 +193,12 @@ def fetch_radar_image(dt, src):
     local_path = os.path.join(src, local_filename)
     image_dt = next_dt
     try:
-        socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
-        socket.socket = socks.socksocket
-        ip = get_ip()
-        r = requests.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
+        session = requests.session()
+        # Tor uses the 9050 port as the default socks port
+        session.proxies = {'http':  'socks5://127.0.0.1:9050',
+                           'https': 'socks5://127.0.0.1:9050'}
+        ip = get_ip(session)
+        r = session.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
         with open(local_path, 'wb') as out_file:
             shutil.copyfileobj(r.raw, out_file)
         del r
@@ -229,8 +227,8 @@ def reset_tor_circuit():
 
 
 # Get Current Ip - Just for debug
-def get_ip():
-    ip = get('https://api.ipify.org').text
+def get_ip(session):
+    ip = session.get('https://api.ipify.org').text
     return ip
 
 
@@ -240,7 +238,6 @@ def fetch_radar(dt, colors, color_script_path, src, dst):
         logger.info(reset_tor_circuit())
     except:
         logger.error('cannot reset tor')
-    time.sleep(2)
     image_data = fetch_radar_image(dt, src)
     if (image_data):
         (ip, filename, datetime) = image_data
@@ -276,11 +273,11 @@ def fetch_radar_images():
     except:
         pass
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
-    # color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
-    color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
+    color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
+    # color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
     src = '/tmp/'
-    # dst = '/var/www/radar/images/'
-    dst = '/home/abidibo/Junk/'
+    dst = '/var/www/radar/images/'
+    # dst = '/home/abidibo/Junk/'
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
     if result:
