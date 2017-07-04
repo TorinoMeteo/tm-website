@@ -318,9 +318,9 @@ class StationHistoricView(DetailView):
 
         context['last_day_month'] = last_day_month
 
-        context['t_mean_max_1d'] = round(t_mean_max_1d/range_1d, 2)
-        context['t_mean_min_1d'] = round(t_mean_min_1d/range_1d, 2)
-        context['t_mean_mean_1d'] = round(t_mean_mean_1d/range_1d, 2)
+        context['t_mean_max_1d'] = round(t_mean_max_1d/range_1d, 2) if range_1d != 0 else 'N.D.'# noqa
+        context['t_mean_min_1d'] = round(t_mean_min_1d/range_1d, 2) if range_1d != 0 else 'N.D.'# noqa
+        context['t_mean_mean_1d'] = round(t_mean_mean_1d/range_1d, 2) if range_1d != 0 else 'N.D.'# noqa
         context['t_min_1d'] = t_min_1d
         context['t_max_1d'] = t_max_1d
         context['p_min_1d'] = p_min_1d
@@ -329,9 +329,9 @@ class StationHistoricView(DetailView):
         context['rh_max_1d'] = rh_max_1d
         context['r_sum_1d'] = r_sum_1d
 
-        context['t_mean_max_2d'] = round(t_mean_max_2d/range_2d, 2)
-        context['t_mean_min_2d'] = round(t_mean_min_2d/range_2d, 2)
-        context['t_mean_mean_2d'] = round(t_mean_mean_2d/range_2d, 2)
+        context['t_mean_max_2d'] = round(t_mean_max_2d/range_2d, 2) if range_2d != 0 else 'N.D.'# noqa
+        context['t_mean_min_2d'] = round(t_mean_min_2d/range_2d, 2) if range_2d != 0 else 'N.D.'# noqa
+        context['t_mean_mean_2d'] = round(t_mean_mean_2d/range_2d, 2) if range_2d != 0 else 'N.D.'# noqa
         context['t_min_2d'] = t_min_2d
         context['t_max_2d'] = t_max_2d
         context['p_min_2d'] = p_min_2d
@@ -340,9 +340,9 @@ class StationHistoricView(DetailView):
         context['rh_max_2d'] = rh_max_2d
         context['r_sum_2d'] = r_sum_2d
 
-        context['t_mean_max_3d'] = round(t_mean_max_3d/range_3d, 2)
-        context['t_mean_min_3d'] = round(t_mean_min_3d/range_3d, 2)
-        context['t_mean_mean_3d'] = round(t_mean_mean_3d/range_3d, 2)
+        context['t_mean_max_3d'] = round(t_mean_max_3d/range_3d, 2) if range_3d != 0 else 'N.D.'# noqa
+        context['t_mean_min_3d'] = round(t_mean_min_3d/range_3d, 2) if range_3d != 0 else 'N.D.'# noqa
+        context['t_mean_mean_3d'] = round(t_mean_mean_3d/range_3d, 2) if range_3d != 0 else 'N.D.'# noqa
         context['t_min_3d'] = t_min_3d
         context['t_max_3d'] = t_max_3d
         context['p_min_3d'] = p_min_3d
@@ -351,9 +351,9 @@ class StationHistoricView(DetailView):
         context['rh_max_3d'] = rh_max_3d
         context['r_sum_3d'] = r_sum_3d
 
-        context['t_mean_max_m'] = round(t_mean_max_m/range_m, 2)
-        context['t_mean_min_m'] = round(t_mean_min_m/range_m, 2)
-        context['t_mean_mean_m'] = round(t_mean_mean_m/range_m, 2)
+        context['t_mean_max_m'] = round(t_mean_max_m/range_m, 2) if range_m != 0 else 'N.D.'# noqa
+        context['t_mean_min_m'] = round(t_mean_min_m/range_m, 2) if range_m != 0 else 'N.D.'# noqa
+        context['t_mean_mean_m'] = round(t_mean_mean_m/range_m, 2) if range_m != 0 else 'N.D.'# noqa
         context['t_min_m'] = t_min_m
         context['t_max_m'] = t_max_m
         context['p_min_m'] = p_min_m
@@ -414,8 +414,14 @@ class StationGraphJSONDataView(View):
             station = None
 
         if station:
-            from_date = datetime.strptime(request.GET['from_date'], '%d/%m/%Y')
-            to_date = datetime.strptime(request.GET['to_date'], '%d/%m/%Y')
+            try:
+                from_date = datetime.strptime(request.GET['from_date'], '%d/%m/%Y') # noqa
+                to_date = datetime.strptime(request.GET['to_date'], '%d/%m/%Y')
+            except:
+                today = date.today()
+                first_month_day = date(today.year, today.month, 1)
+                from_date = first_month_day
+                to_date = today
             data = station.get_historic_data(from_date, to_date)
 
         return JsonResponse(data, safe=False)

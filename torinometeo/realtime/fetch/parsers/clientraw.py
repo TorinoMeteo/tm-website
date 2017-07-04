@@ -23,7 +23,9 @@ class ClientrawParser(Parser):
         117: (DL['WIND_DIR_MAX'], 'wind_dir'),
         7: (DL['RAIN'], 'rain'),
         10: (DL['RAIN_RATE'], 'rain_rate'),
-        11: (DL['RAIN_RATE_MAX'], 'rain_rate')
+        11: (DL['RAIN_RATE_MAX'], 'rain_rate'),
+        8: (DL['RAIN_MONTH'], 'rain_month'),
+        9: (DL['RAIN_YEAR'], 'rain_year')
     }
 
     def parse(self, content):
