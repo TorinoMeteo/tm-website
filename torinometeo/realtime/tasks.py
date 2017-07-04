@@ -1,6 +1,17 @@
 from __future__ import absolute_import
 
+import os
 import datetime
+import socks
+import socket
+import shutil
+
+import requests
+from requests import get
+from requests.exceptions import HTTPError
+
+from stem import Signal
+from stem.control import Controller
 
 from django.db.models import Max, Min, Avg
 
@@ -172,3 +183,83 @@ def clean_realtime_data():
     Data.objects.filter(datetime__lte=date).delete()
     logger.info('delete realtime data older than 1 week successfull')
     logger.info('END -- running task: clean_realtime_data')
+
+
+# radar
+# Color replacement List (OLD, NEW, FUZZ)
+Colors = [
+    ("#C7FFFF", "#d5def5", 10),
+    ("#83BCF7", "#92e9a8", 10),
+    ("#4273E6", "#43f54d", 10),
+    ("#41B556", "#00ff00", 10),
+    ("#9DDC47", "#00d629", 10),
+    ("#FFFF00", "#00827d", 10),
+    ("#FFC600", "#0039c6", 10),
+    ("#FF6800", "#0000ff", 10),
+    ("#EF1C00", "#4c00b3", 10),
+    ("#8214FF", "#7d0082", 10),
+    ("#D176FF", "#ff0000", 10)
+]
+
+
+# Get Radar Image Based On Input timestamp if availale
+def GetRadarImage(InDT):
+    LastDT = datetime.datetime.fromtimestamp(int(InDT))
+    remainderDT = int(LastDT.minute) % 10
+    NextDT = LastDT + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainderDT) # noqa
+    RemoteImage = 'radar_'+NextDT.strftime("%Y%m%d_%H%M")
+    LocalImage = NextDT.strftime("%Y%m%d%H%M")+".png"
+    print LocalImage
+    print RemoteImage
+    socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, "127.0.0.1", 9050, True)
+    socket.socket = socks.socksocket
+    try:
+        r = requests.get('http://media.meteonews.net/radar/chComMET_800x618_c2/'+RemoteImage+'.png') # noqa
+        r.raise_for_status()
+        res = urllib.urlretrieve('http://media.meteonews.net/radar/chComMET_800x618_c2/'+RemoteImage+'.png', LocalImage) # noqa
+    except HTTPError:
+        print 'Could not download '+RemoteImage+'.png'
+        LocalImage = None
+    except Exception, e:
+        print e
+        LocalImage = None
+    return LocalImage, GetIP()
+
+
+# Execute external script to change image color based on Color Replacement List
+def ChangeColors(ImgData, Params, CmdPath):
+    for Param in Params:
+        cmd = CmdPath+" -i \""+Param[0]+"\" -f "+str(Param[2])+" -o \""+Param[1]+"\" "+ImgData[0]+" "+ImgData[0] # noqa
+        print cmd
+        os.system(cmd)
+
+
+# Reset Tor circuit to get ne ip address
+def ResetTorCircuit():
+    with Controller.from_port(port=9051) as controller:
+        controller.authenticate('ri3313co')
+        controller.signal(Signal.NEWNYM)
+    return "Tor Circuit Reset Done"
+
+
+# Get Current Ip - Just for debug
+def GetIP():
+    ip = get('https://api.ipify.org').text
+    return ip
+
+
+# Fetch Radar Image
+def FetchRadar(TS, ColorScript, Src, Dst):
+    print ResetTorCircuit()
+    Image = GetRadarImage(TS)
+    if Image[0] is not None:
+        print Image[0] + " downloaded with IP " + Image[1]
+        ChangeColors(Image, Colors, ColorScript)
+        try:
+            shutil.move(Src+Image[0], Dst)
+        except Exception, e:
+            print e
+    else:
+        print "Image download Error with IP " + Image[1]
+
+    return Image[0]

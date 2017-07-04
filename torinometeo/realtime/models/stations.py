@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from ckeditor_uploader.fields import RichTextUploadingField
+from colorful.fields import RGBColorField
 
 from realtime.models.geo import Nation, Region, Province
 from realtime.managers import StationManager
@@ -490,3 +491,29 @@ class NetRequest(models.Model):
 
     def __unicode__(self):
         return '%s %s - %s' % (self.firstname, self.lastname, self.city)
+
+
+class RadarSnapshot(models.Model):
+    datetime = models.DateTimeField('data e ora', auto_now=False, auto_now_add=False) # noqa
+    filename = models.CharField('nome file', max_length=128)
+
+    class Meta:
+        verbose_name = "Immagine radar"
+        verbose_name_plural = "Immagini radar"
+
+    def __unicode__(self):
+        return self.filename
+
+
+class RadarColorConversion(models.Model):
+    original_color = models.CharField('colore iniziale', max_length=7,
+                                      help_text='formato hex, i.e #ff8090')
+    converted_color = RGBColorField(verbose_name='colore finale')
+    tolerance = models.IntegerField('tolleranza')
+
+    class Meta:
+        verbose_name = "Conversione colore radar"
+        verbose_name_plural = "Conversioni colori radar"
+
+    def __unicode__(self):
+        return '%s - %s' % (self.original_color, str(self.converted_color))

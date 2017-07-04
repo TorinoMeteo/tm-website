@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'rest_framework_swagger',
     'treenav',
     'social_auth',
+    'colorful',
     # tm
     'forecast',
     'realtime',
