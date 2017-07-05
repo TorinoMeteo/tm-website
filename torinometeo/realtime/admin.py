@@ -106,7 +106,7 @@ class RadarSnapshotAdmin(admin.ModelAdmin):
     list_filter = ('datetime', )
 
     def view_image(self, obj):
-        return mark_safe('<a class="btn btn-primary" href="http://radar.torinometeo.org/images/%s">vedi</a>' % obj.filename) # noqa
+        return mark_safe('<a target="_blank" class="btn btn-primary" href="http://radar.torinometeo.org/images/%s">vedi</a>' % obj.filename) # noqa
     view_image.short_description = 'visualizza'
 
 admin.site.register(RadarSnapshot, RadarSnapshotAdmin)
