@@ -6,8 +6,10 @@ from django.db.models import Max
 from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 
-from realtime.models.stations import Station, Data, HistoricData
-from realtime.serializers import RealtimeDataSerializer, HistoricDataSerializer
+from realtime.models.stations import Station, Data, HistoricData, \
+        RadarSnapshot
+from realtime.serializers import RealtimeDataSerializer, HistoricDataSerializer, \
+        RadarSnapshotSerializer
 
 
 class LastRealtimeDataViewSet(viewsets.ViewSet):
@@ -63,3 +65,23 @@ class HistoricDataViewSet(mixins.ListModelMixin,
             date = datetime.date.fromordinal(datetime.date.today().toordinal() - 1) # noqa
 
         return HistoricData.objects.filter(date=date).order_by('station__name')
+
+
+
+class RadarSnapshotViewSet(mixins.ListModelMixin,
+                           viewsets.GenericViewSet):
+    """ Radar snapshot
+    """
+    serializer_class = RadarSnapshotSerializer
+
+    def get_queryset(self):
+        try:
+            date = datetime.datetime(
+                year=int(self.kwargs['year']),
+                month=int(self.kwargs['month']),
+                day=int(self.kwargs['day'])
+            )
+        except:
+            date = datetime.date.today()
+
+        return RadarSnapshot.objects.filter(datetime__startswith=date.date()).order_by('datetime') # noqa

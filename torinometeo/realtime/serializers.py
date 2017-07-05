@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models.stations import Data, Station, HistoricData
+from .models.stations import Data, Station, HistoricData, RadarSnapshot
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -110,3 +110,20 @@ class HistoricDataSerializer(serializers.ModelSerializer):
             'pressure_min',
             'rain'
         )
+
+
+class RadarSnapshotSerializer(serializers.ModelSerializer):
+    """ Radar images Serializer
+    """
+    file_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RadarSnapshot
+        fields = (
+            'filename',
+            'datetime',
+            'file_url',
+        )
+
+    def get_file_url(self, snapshot):
+        return 'http://radar.torinometeo.org/images/%s' % snapshot.filename

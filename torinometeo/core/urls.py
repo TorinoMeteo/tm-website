@@ -24,7 +24,8 @@ from core.routers import ApiRouter
 
 from core.views import LoginView, LogoutView
 from forecast.views.api import ForecastViewSet, DayForecastViewSet
-from realtime.views.api import LastRealtimeDataViewSet, HistoricDataViewSet
+from realtime.views.api import LastRealtimeDataViewSet, HistoricDataViewSet, \
+        RadarSnapshotViewSet
 from webcam.views import Webcams
 
 # BEGIN API
@@ -35,6 +36,7 @@ router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
 router.register(r'forecast', ForecastViewSet)
 router.register(r'realtime/data', LastRealtimeDataViewSet, 'last realtime data') # noqa
 router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', HistoricDataViewSet, 'history data') # noqa
+router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', RadarSnapshotViewSet, 'radar images') # noqa
 router.register(r'webcam', Webcams, 'webcams')
 # END API
 
