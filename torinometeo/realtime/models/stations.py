@@ -506,8 +506,7 @@ class RadarSnapshot(models.Model):
 
 
 class RadarColorConversion(models.Model):
-    original_color = models.CharField('colore iniziale', max_length=7,
-                                      help_text='formato hex, i.e #ff8090')
+    original_color = RGBColorField(verbose_name='colore iniziale')
     converted_color = RGBColorField(verbose_name='colore finale')
     tolerance = models.IntegerField('tolleranza')
 
