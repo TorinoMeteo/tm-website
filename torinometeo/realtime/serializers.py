@@ -13,6 +13,7 @@ class StationSerializer(serializers.ModelSerializer):
         model = Station
         fields = (
             'id',
+            'slug',
             'name',
             'description',
             'climate',
