@@ -16,7 +16,7 @@ from core.celery import app
 from celery.utils.log import get_task_logger
 
 from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
-    RadarColorConversion
+    RadarColorConversion, RadarConvertParams
 from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
@@ -223,7 +223,12 @@ def change_colors(img_path, conversions, cmd_path):
     for conversion in conversions:
         cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_path + " " + img_path # noqa
         os.system(cmd)
-        cmd = "convert " + img_path + " -gaussian-blur 3x2 -crop 290x310+225+310 " + img_path # noqa
+        params = ['-%s %s' % (p.param_name, p.param_value) for p in RadarConvertParams.objects.all()] # noqa
+        cmd = "convert %s %s %s" % (
+            img_path,
+            ' '.join(params),
+            img_path
+        )
         os.system(cmd)
 
 
@@ -282,11 +287,11 @@ def fetch_radar_images():
     except:
         pass
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
-    color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
-    # color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
+    #color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
+    color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
     src = '/tmp/'
-    dst = '/var/www/radar/images/'
-    # dst = '/home/abidibo/Junk/'
+    #dst = '/var/www/radar/images/'
+    dst = '/home/abidibo/Junk/'
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
     if result:
