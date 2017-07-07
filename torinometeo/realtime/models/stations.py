@@ -496,6 +496,7 @@ class NetRequest(models.Model):
 class RadarSnapshot(models.Model):
     datetime = models.DateTimeField('data e ora', auto_now=False, auto_now_add=False) # noqa
     filename = models.CharField('nome file', max_length=128)
+    save_datetime = models.DateTimeField('salvataggio', auto_now=True)
 
     class Meta:
         verbose_name = "Immagine radar"
