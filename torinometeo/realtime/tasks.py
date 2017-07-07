@@ -199,9 +199,11 @@ def fetch_radar_image(dt, src):
                            'https': 'socks5://127.0.0.1:9050'}
         ip = get_ip(session)
         #r = session.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
-        headers = {'Host': 'www.meteosvizzera.admin.ch', 
-                   'Referer': 'http://www.meteosvizzera.admin.ch/home.html?tab=rain', 
-                   'USer-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0'}
+        headers = {
+            'Host': 'www.meteosvizzera.admin.ch',
+            'Referer': 'http://www.meteosvizzera.admin.ch/home.html?tab=rain',
+            'USer-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0' # noqa
+        }
         r = session.get('http://www.meteosvizzera.admin.ch/product/output/radar-processing/%s.png' % remote_filename, headers=headers, stream=True) # noqa
         r.raise_for_status()
         with open(local_path, 'wb') as out_file:
@@ -221,7 +223,7 @@ def change_colors(img_path, conversions, cmd_path):
     for conversion in conversions:
         cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_path + " " + img_path # noqa
         os.system(cmd)
-	cmd = "convert " + img_path + " -gaussian-blur 3x2 -crop 290x310+225+310 " + img_path
+        cmd = "convert " + img_path + " -gaussian-blur 3x2 -crop 290x310+225+310 " + img_path # noqa
         os.system(cmd)
 
 
