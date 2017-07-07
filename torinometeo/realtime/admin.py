@@ -102,7 +102,7 @@ admin.site.register(HistoricData, HistoricDataAdmin)
 
 
 class RadarSnapshotAdmin(admin.ModelAdmin):
-    list_display = ('filename', 'datetime', 'view_image', )
+    list_display = ('filename', 'datetime', 'save_datetime', 'view_image', )
     list_filter = ('datetime', )
 
     def view_image(self, obj):
