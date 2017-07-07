@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 
 from realtime.models.geo import Nation, Region, Province
 from realtime.models.stations import Station, Data, NetRequest, DataFormat, \
-    HistoricData, RadarSnapshot, RadarColorConversion
+    HistoricData, RadarSnapshot, RadarColorConversion, RadarConvertParams
 
 
 # geo
@@ -116,3 +116,9 @@ class RadarColorConversionAdmin(admin.ModelAdmin):
     list_display = ('original_color', 'converted_color', 'tolerance', )
 
 admin.site.register(RadarColorConversion, RadarColorConversionAdmin)
+
+
+class RadarConvertParamsAdmin(admin.ModelAdmin):
+    list_display = ('param_name', 'param_value', )
+
+admin.site.register(RadarConvertParams, RadarConvertParamsAdmin)

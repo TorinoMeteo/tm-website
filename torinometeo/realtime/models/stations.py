@@ -516,3 +516,15 @@ class RadarColorConversion(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.original_color, str(self.converted_color))
+
+
+class RadarConvertParams(models.Model):
+    param_name = models.CharField('nome parametro', max_length=50)
+    param_value = models.CharField('valore parametro', max_length=50)
+
+    class Meta:
+        verbose_name = "Parametri comando convert"
+        verbose_name_plural = "Parametri comando convert"
+
+    def __unicode__(self):
+        return '%s' % self.param_name
