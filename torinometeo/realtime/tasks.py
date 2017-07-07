@@ -188,7 +188,7 @@ def clean_realtime_data():
 def fetch_radar_image(dt, src):
     remainder_dt = int(dt.minute) % 10
     next_dt = dt + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainder_dt) # noqa
-    remote_filename = 'radar_%s' % next_dt.strftime("%Y%m%d_%H%M")
+    remote_filename = 'VRAG05.CCSK_%s' % next_dt.strftime("%Y%m%d_%H%M")
     local_filename = '%s.png' % next_dt.strftime("%Y%m%d%H%M")
     local_path = os.path.join(src, local_filename)
     image_dt = next_dt
@@ -198,7 +198,8 @@ def fetch_radar_image(dt, src):
         session.proxies = {'http':  'socks5://127.0.0.1:9050',
                            'https': 'socks5://127.0.0.1:9050'}
         ip = get_ip(session)
-        r = session.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
+        #r = session.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
+        r = session.get('http://www.meteosvizzera.admin.ch/product/output/radar-processing/%s.png' % remote_filename, stream=True) # noqa
         r.raise_for_status()
         with open(local_path, 'wb') as out_file:
             shutil.copyfileobj(r.raw, out_file)
@@ -216,6 +217,8 @@ def fetch_radar_image(dt, src):
 def change_colors(img_path, conversions, cmd_path):
     for conversion in conversions:
         cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_path + " " + img_path # noqa
+        os.system(cmd)
+	cmd = "convert " + img_path + " -gaussian-blur 3x2 -crop 290x310+225+310 " + img_path
         os.system(cmd)
 
 
