@@ -287,11 +287,11 @@ def fetch_radar_images():
     except:
         pass
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
-    #color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
-    color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
+    color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
+    # color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
     src = '/tmp/'
-    #dst = '/var/www/radar/images/'
-    dst = '/home/abidibo/Junk/'
+    dst = '/var/www/radar/images/'
+    # dst = '/home/abidibo/Junk/'
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
     if result:
