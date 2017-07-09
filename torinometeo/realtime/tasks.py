@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import os
 import datetime
 import shutil
+import pytz
 
 import requests
 from requests.exceptions import HTTPError
@@ -189,8 +190,8 @@ def clean_realtime_data():
 def fetch_radar_image(dt, src):
     remainder_dt = int(dt.minute) % 10
     next_dt = dt + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainder_dt) # noqa
-    remote_filename = 'VRAG05.CCSK_%s' % next_dt.strftime("%Y%m%d_%H%M")
-    local_filename = '%s.png' % next_dt.strftime("%Y%m%d%H%M")
+    remote_filename = 'VRAG05.CCSK_%s' % next_dt.astimezone(pytz.utc).strftime("%Y%m%d_%H%M") # noqa
+    local_filename = '%s.png' % next_dt.astimezone(pytz.utc).strftime("%Y%m%d%H%M") # noqa
     local_path = os.path.join(src, local_filename)
     image_dt = next_dt
     try:
