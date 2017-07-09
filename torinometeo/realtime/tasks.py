@@ -11,6 +11,7 @@ from stem import Signal
 from stem.control import Controller
 
 from django.db.models import Max, Min, Avg
+from django.conf import settings
 
 from core.celery import app
 from celery.utils.log import get_task_logger
@@ -229,6 +230,7 @@ def change_colors(img_path, conversions, cmd_path):
             ' '.join(params),
             img_path
         )
+        logger.info('Executing imagemagick command: %s' % cmd)
         os.system(cmd)
 
 
@@ -287,11 +289,17 @@ def fetch_radar_images():
     except:
         pass
     colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
-    color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color'
-    # color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
+
     src = '/tmp/'
-    dst = '/var/www/radar/images/'
-    # dst = '/home/abidibo/Junk/'
+    if settings.DEBUG:
+        color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
+        dst = '/home/abidibo/Junk/'
+    else:
+        color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color' # noqa
+        dst = '/var/www/radar/images/'
+
+    print color_script_path
+    print dst
 
     result = fetch_radar(dt, colors, color_script_path, src, dst)
     if result:
