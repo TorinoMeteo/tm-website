@@ -4,9 +4,11 @@ import calendar
 import logging
 import random
 import string
+import pytz
 
 
 from django.shortcuts import render
+from django.conf import settings
 from django.views.generic import View, ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView
 from django.http import JsonResponse, HttpResponse
@@ -14,6 +16,8 @@ from django.http import Http404
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
+
 from sorl.thumbnail import get_thumbnail
 
 from realtime.models.stations import Station
@@ -59,7 +63,7 @@ class JumbotronStationJsonView(View):
             data['image_url'] = image_url
             data['day_data'] = day_data
             if realtime_data:
-                data['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M") # noqa
+                data['data_date'] = timezone.localtime(realtime_data.datetime, pytz.timezone(settings.TIME_ZONE)).strftime("%d/%m/%Y %H:%M") # noqa
                 data['data'] = {
                     'temperature': realtime_data.temperature,
                     'pressure': realtime_data.pressure,
@@ -112,7 +116,7 @@ class StationRealtimeView(DetailView):
         realtime_data = context['object'].get_realtime_data()
         if realtime_data is not None:
             context['data'] = realtime_data
-            context['data_date'] = realtime_data.datetime.strftime("%d/%m/%Y %H:%M") # noqa
+            context['data_date'] = realtime_data.datetime #.strftime("%d/%m/%Y %H:%M") # noqa
         else:
             context['data'] = None
             context['data_date'] = None
