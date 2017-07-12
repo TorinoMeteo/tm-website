@@ -1,4 +1,6 @@
 # coding=utf-8
+import pytz
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -183,13 +185,14 @@ class Station(models.Model):
             datetime__month=date.month,
             datetime__day=date.day).order_by('id').distinct()
         for record in data:
+            aux_datetime = timezone.localtime(record.datetime, pytz.timezone(settings.TIME_ZONE))
             datetime_data = {
-                'datetime_year': record.datetime.year,
-                'datetime_month': record.datetime.month,
-                'datetime_day': record.datetime.day,
-                'datetime_hour': record.datetime.hour,
-                'datetime_minute': record.datetime.minute,
-                'datetime_second': record.datetime.second,
+                'datetime_year': aux_datetime.year,
+                'datetime_month': aux_datetime.month,
+                'datetime_day': aux_datetime.day,
+                'datetime_hour': aux_datetime.hour,
+                'datetime_minute': aux_datetime.minute,
+                'datetime_second': aux_datetime.second,
             }
             temperature_data = datetime_data.copy()
             temperature_data.update({'value': record.temperature})
@@ -230,13 +233,14 @@ class Station(models.Model):
             station=self.id,
             datetime__gte=date_from).order_by('id').distinct()
         for record in data:
+	    aux_datetime = timezone.localtime(record.datetime, pytz.timezone(settings.TIME_ZONE))
             datetime_data = {
-                'datetime_year': record.datetime.year,
-                'datetime_month': record.datetime.month,
-                'datetime_day': record.datetime.day,
-                'datetime_hour': record.datetime.hour,
-                'datetime_minute': record.datetime.minute,
-                'datetime_second': record.datetime.second,
+                'datetime_year': aux_datetime.year,
+                'datetime_month': aux_datetime.month,
+                'datetime_day': aux_datetime.day,
+                'datetime_hour': aux_datetime.hour,
+                'datetime_minute': aux_datetime.minute,
+                'datetime_second': aux_datetime.second,
             }
             temperature_data = datetime_data.copy()
             temperature_data.update({'value': record.temperature})
