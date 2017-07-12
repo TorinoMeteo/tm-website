@@ -35,7 +35,10 @@
         {% javascript 'torinometeo' %}
         <script>
             jQuery(function () {
-                jQuery('[data-toggle="tooltip"]').tooltip()
+                jQuery('[data-toggle="tooltip"]').tooltip();
+            });
+            jQuery(document).ready(function () {
+                $('.lightbox-image').magnificPopup({ type: 'image' });
             });
         </script>
         {% block extra_js %}{% endblock %}

@@ -293,6 +293,7 @@ PIPELINE_CSS = {
         'source_filenames': (
             'core/src/vendor/Font-Awesome/scss/font-awesome.scss',
             'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css', # noqa
+            'core/src/vendor/magnific-popup/magnific-popup.css',
         ),
         'output_filename': 'core/css/vendor.min.css',
     },
@@ -319,6 +320,7 @@ PIPELINE_JS = {
             'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
             'core/src/vendor/bootstrap-material-design/scripts/material.js',
             'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js', # noqa
+            'core/src/vendor/magnific-popup/magnific-popup.min.js',
         ),
         'output_filename': 'core/js/vendor.min.js'
     },

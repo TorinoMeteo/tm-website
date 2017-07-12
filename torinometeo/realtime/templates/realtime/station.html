@@ -104,7 +104,9 @@
                         <div class="caption">
                             <h3><i class="fa fa-camera"></i> Webcam</h3>
                         </div>
-                        <img class="img-responsive" src={{ object.webcam }} alt="webcam" />
+                        <a href="{{ object.webcam }}" class="lightbox-image">
+                            <img class="img-responsive" src={{ object.webcam }} alt="webcam" />
+                        </a>
                     </div>
                 {% endif %}
                 <div class="thumbnail">

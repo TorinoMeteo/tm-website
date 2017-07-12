@@ -185,7 +185,7 @@ class Station(models.Model):
             datetime__month=date.month,
             datetime__day=date.day).order_by('id').distinct()
         for record in data:
-            aux_datetime = timezone.localtime(record.datetime, pytz.timezone(settings.TIME_ZONE))
+            aux_datetime = timezone.localtime(record.datetime, pytz.timezone(settings.TIME_ZONE)) # noqa
             datetime_data = {
                 'datetime_year': aux_datetime.year,
                 'datetime_month': aux_datetime.month,
@@ -233,7 +233,7 @@ class Station(models.Model):
             station=self.id,
             datetime__gte=date_from).order_by('id').distinct()
         for record in data:
-	    aux_datetime = timezone.localtime(record.datetime, pytz.timezone(settings.TIME_ZONE))
+            aux_datetime = timezone.localtime(record.datetime, pytz.timezone(settings.TIME_ZONE)) # noqa
             datetime_data = {
                 'datetime_year': aux_datetime.year,
                 'datetime_month': aux_datetime.month,
