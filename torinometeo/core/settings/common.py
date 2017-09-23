@@ -511,7 +511,7 @@ LOGGING = {
             'propagate': True,
         },
         'celery.tasks': {
-            'handlers': ['celery_logger'],
+            'handlers': ['mail_admins', 'celery_logger'],
             'level': 'DEBUG',
             'propagate': True,
         },

@@ -1,15 +1,23 @@
-from django.shortcuts import render
-from django.views.generic import View, DetailView, ListView
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.views.generic import DetailView, ListView
 
 from blog.models import Entry
+
 
 class EntryDetailView(DetailView):
     model = Entry
 
     def get_queryset(self):
         return Entry.objects.filter(published=True)
+
+    def get_object(self):
+        entry = Entry.objects.get(
+            slug=self.kwargs['slug'],
+            creation_date__year=self.kwargs['year'],
+            creation_date__month=self.kwargs['month'],
+            creation_date__day=self.kwargs['day']
+        )
+        return entry
+
 
 class CategoryListView(ListView):
     model = Entry
@@ -18,7 +26,7 @@ class CategoryListView(ListView):
 
     def get_queryset(self):
         tag = self.kwargs['tag']
-        return Entry.objects.filter(published=True, tags__name__in=[tag]).order_by('-last_edit_date')
+        return Entry.objects.filter(published=True, tags__name__in=[tag]).order_by('-last_edit_date') # noqa
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -26,6 +34,7 @@ class CategoryListView(ListView):
         context['tag'] = self.kwargs['tag']
 
         return context
+
 
 class ArchiveView(ListView):
     model = Entry
