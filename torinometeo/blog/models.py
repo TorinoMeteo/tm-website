@@ -39,11 +39,12 @@ class Entry(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
+        to_tz = timezone.get_default_timezone()
         return ('blog-detail', None, {
             'slug': self.slug,
-            'year': self.creation_date.year,
-            'month': self.creation_date.strftime("%m"),
-            'day': self.creation_date.strftime("%d")
+            'year': self.creation_date.astimezone(to_tz).year,
+            'month': self.creation_date.astimezone(to_tz).strftime("%m"),
+            'day': self.creation_date.astimezone(to_tz).strftime("%d")
         })
 
     def get_time_attribute(self):
