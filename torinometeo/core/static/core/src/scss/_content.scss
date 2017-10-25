@@ -1,4 +1,4 @@
-// scss-lint:disable all
+// sass-lint:disable property-sort-order
 h1, h2, h3 {
   font-family: $font-family-sans-serif;
 }
@@ -650,6 +650,22 @@ h1, h2, h3 {
   border: 1px solid #999;
   .card-img-top {
     border-radius: 0 !important;
+  }
+}
+
+/* support */
+.support-us {
+  background: #D6EAF7;
+  padding: .5rem 0;
+
+  .btn-support {
+    border: 1px solid #fff;
+    background: #EEC42B;
+    color: #002C8A;
+  }
+
+  .fa {
+    color: #002C8A;
   }
 }
 
