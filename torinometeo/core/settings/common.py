@@ -403,6 +403,9 @@ SOCIAL_AUTH_PIPELINE = (
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'social_auth/registration.html'
 # SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'social_auth.pipeline.email_validation'
 
+# Apixu
+APIXU_KEY = 'e683d070df0348fea6393603173010'
+
 
 # twitter
 SOCIAL_AUTH_TWITTER_KEY = 'HRDVxN1i59Aw6VEr3Pco83Sss'

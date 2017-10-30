@@ -1,29 +1,27 @@
-from datetime import date, datetime
-import simplejson
 import calendar
+import json
 import logging
 import random
 import string
+import urllib
+from datetime import date, datetime
+
 import pytz
-
-
-from django.shortcuts import render
+import simplejson
 from django.conf import settings
-from django.views.generic import View, ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView
-from django.http import JsonResponse, HttpResponse
-from django.http import Http404
-from django.core.urlresolvers import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.urlresolvers import reverse_lazy
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.utils import timezone
-
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView, ListView, TemplateView, View
+from django.views.generic.edit import CreateView
 from sorl.thumbnail import get_thumbnail
 
-from realtime.models.stations import Station
-from realtime.forms import NetRequestForm
 from realtime.fetch.shortcuts import fetch_data
-
+from realtime.forms import NetRequestForm
+from realtime.models.stations import ForecastWeather, Station, Weather
 from realtime.tasks import fetch_radar_images
 
 # Get an instance of a logger
@@ -37,6 +35,7 @@ def randomword(length):
 class JumbotronStationJsonView(View):
     """ Json used in jumbotron component
     """
+
     def get(self, request, id):
         data = {}
 
@@ -51,7 +50,8 @@ class JumbotronStationJsonView(View):
             day_data = station.get_last24_data()
 
             image_url = station.image.url
-            bookmarked = station.bookmarks.filter(user=request.user).exists() if request.user.is_authenticated() else False # noqa
+            bookmarked = station.bookmarks.filter(user=request.user).exists(
+            ) if request.user.is_authenticated() else False  # noqa
 
             data['id'] = station.id
             data['name'] = station.name
@@ -59,11 +59,14 @@ class JumbotronStationJsonView(View):
             data['authenticated'] = request.user.is_authenticated()
             data['nation'] = station.nation.name
             data['region'] = station.region.name
-            data['province'] = station.province.name if station.province else '' # noqa
+            data[
+                'province'] = station.province.name if station.province else ''  # noqa
             data['image_url'] = image_url
             data['day_data'] = day_data
             if realtime_data:
-                data['data_date'] = timezone.localtime(realtime_data.datetime, pytz.timezone(settings.TIME_ZONE)).strftime("%d/%m/%Y %H:%M") # noqa
+                data['data_date'] = timezone.localtime(
+                    realtime_data.datetime, pytz.timezone(
+                        settings.TIME_ZONE)).strftime("%d/%m/%Y %H:%M")  # noqa
                 data['data'] = {
                     'temperature': realtime_data.temperature,
                     'pressure': realtime_data.pressure,
@@ -116,7 +119,8 @@ class StationRealtimeView(DetailView):
         realtime_data = context['object'].get_realtime_data()
         if realtime_data is not None:
             context['data'] = realtime_data
-            context['data_date'] = realtime_data.datetime #.strftime("%d/%m/%Y %H:%M") # noqa
+            context[
+                'data_date'] = realtime_data.datetime  #.strftime("%d/%m/%Y %H:%M") # noqa
         else:
             context['data'] = None
             context['data_date'] = None
@@ -136,7 +140,7 @@ class StationHistoricView(DetailView):
     model = Station
     template_name = 'realtime/station_historic.html'
 
-    def get_context_data(self, **kwargs): # noqa
+    def get_context_data(self, **kwargs):  # noqa
         # Call the base implementation first to get a context
         context = super(StationHistoricView, self).get_context_data(**kwargs)
 
@@ -150,9 +154,12 @@ class StationHistoricView(DetailView):
         context['first_date'] = first_date
         context['min_year'] = first_date.year
         context['min_month'] = first_date.month
-        context['range_years'] = [context['min_year'] + i for i in range(int(today.year + 1) - context['min_year'])] # noqa
+        context['range_years'] = [
+            context['min_year'] + i
+            for i in range(int(today.year + 1) - context['min_year'])
+        ]  # noqa
 
-        if(m > 0 and m < 13 and y >= first_date.year and y <= today.year):
+        if (m > 0 and m < 13 and y >= first_date.year and y <= today.year):
             context['month'] = m
             context['year'] = y
             first_month_day = date(y, m, 1)
@@ -166,7 +173,8 @@ class StationHistoricView(DetailView):
             last_day_month = today.day
             d = today
 
-        context['data'] = context['object'].get_historic_data(first_month_day, d) # noqa
+        context['data'] = context['object'].get_historic_data(
+            first_month_day, d)  # noqa
 
         first_1d = True
         t_mean_max_1d = 0
@@ -324,9 +332,12 @@ class StationHistoricView(DetailView):
 
         context['last_day_month'] = last_day_month
 
-        context['t_mean_max_1d'] = round(t_mean_max_1d/range_1d, 2) if range_1d != 0 else 'N.D.'# noqa
-        context['t_mean_min_1d'] = round(t_mean_min_1d/range_1d, 2) if range_1d != 0 else 'N.D.'# noqa
-        context['t_mean_mean_1d'] = round(t_mean_mean_1d/range_1d, 2) if range_1d != 0 else 'N.D.'# noqa
+        context['t_mean_max_1d'] = round(
+            t_mean_max_1d / range_1d, 2) if range_1d != 0 else 'N.D.'  # noqa
+        context['t_mean_min_1d'] = round(
+            t_mean_min_1d / range_1d, 2) if range_1d != 0 else 'N.D.'  # noqa
+        context['t_mean_mean_1d'] = round(
+            t_mean_mean_1d / range_1d, 2) if range_1d != 0 else 'N.D.'  # noqa
         context['t_min_1d'] = t_min_1d
         context['t_max_1d'] = t_max_1d
         context['p_min_1d'] = p_min_1d
@@ -335,9 +346,12 @@ class StationHistoricView(DetailView):
         context['rh_max_1d'] = rh_max_1d
         context['r_sum_1d'] = r_sum_1d
 
-        context['t_mean_max_2d'] = round(t_mean_max_2d/range_2d, 2) if range_2d != 0 else 'N.D.'# noqa
-        context['t_mean_min_2d'] = round(t_mean_min_2d/range_2d, 2) if range_2d != 0 else 'N.D.'# noqa
-        context['t_mean_mean_2d'] = round(t_mean_mean_2d/range_2d, 2) if range_2d != 0 else 'N.D.'# noqa
+        context['t_mean_max_2d'] = round(
+            t_mean_max_2d / range_2d, 2) if range_2d != 0 else 'N.D.'  # noqa
+        context['t_mean_min_2d'] = round(
+            t_mean_min_2d / range_2d, 2) if range_2d != 0 else 'N.D.'  # noqa
+        context['t_mean_mean_2d'] = round(
+            t_mean_mean_2d / range_2d, 2) if range_2d != 0 else 'N.D.'  # noqa
         context['t_min_2d'] = t_min_2d
         context['t_max_2d'] = t_max_2d
         context['p_min_2d'] = p_min_2d
@@ -346,9 +360,12 @@ class StationHistoricView(DetailView):
         context['rh_max_2d'] = rh_max_2d
         context['r_sum_2d'] = r_sum_2d
 
-        context['t_mean_max_3d'] = round(t_mean_max_3d/range_3d, 2) if range_3d != 0 else 'N.D.'# noqa
-        context['t_mean_min_3d'] = round(t_mean_min_3d/range_3d, 2) if range_3d != 0 else 'N.D.'# noqa
-        context['t_mean_mean_3d'] = round(t_mean_mean_3d/range_3d, 2) if range_3d != 0 else 'N.D.'# noqa
+        context['t_mean_max_3d'] = round(
+            t_mean_max_3d / range_3d, 2) if range_3d != 0 else 'N.D.'  # noqa
+        context['t_mean_min_3d'] = round(
+            t_mean_min_3d / range_3d, 2) if range_3d != 0 else 'N.D.'  # noqa
+        context['t_mean_mean_3d'] = round(
+            t_mean_mean_3d / range_3d, 2) if range_3d != 0 else 'N.D.'  # noqa
         context['t_min_3d'] = t_min_3d
         context['t_max_3d'] = t_max_3d
         context['p_min_3d'] = p_min_3d
@@ -357,9 +374,12 @@ class StationHistoricView(DetailView):
         context['rh_max_3d'] = rh_max_3d
         context['r_sum_3d'] = r_sum_3d
 
-        context['t_mean_max_m'] = round(t_mean_max_m/range_m, 2) if range_m != 0 else 'N.D.'# noqa
-        context['t_mean_min_m'] = round(t_mean_min_m/range_m, 2) if range_m != 0 else 'N.D.'# noqa
-        context['t_mean_mean_m'] = round(t_mean_mean_m/range_m, 2) if range_m != 0 else 'N.D.'# noqa
+        context['t_mean_max_m'] = round(t_mean_max_m / range_m,
+                                        2) if range_m != 0 else 'N.D.'  # noqa
+        context['t_mean_min_m'] = round(t_mean_min_m / range_m,
+                                        2) if range_m != 0 else 'N.D.'  # noqa
+        context['t_mean_mean_m'] = round(t_mean_mean_m / range_m,
+                                         2) if range_m != 0 else 'N.D.'  # noqa
         context['t_min_m'] = t_min_m
         context['t_max_m'] = t_max_m
         context['p_min_m'] = p_min_m
@@ -411,6 +431,7 @@ class StationGraphJSONDataView(View):
     """ Historical data JSON
         called by ajax
     """
+
     def get(self, request, slug):
         data = {}
 
@@ -421,7 +442,8 @@ class StationGraphJSONDataView(View):
 
         if station:
             try:
-                from_date = datetime.strptime(request.GET['from_date'], '%d/%m/%Y') # noqa
+                from_date = datetime.strptime(request.GET['from_date'],
+                                              '%d/%m/%Y')  # noqa
                 to_date = datetime.strptime(request.GET['to_date'], '%d/%m/%Y')
             except:
                 today = date.today()
@@ -452,7 +474,6 @@ class NetRequestSentView(TemplateView):
 
 
 class FetchView(View):
-
     @method_decorator(staff_member_required)
     def dispatch(self, request, *args, **kwargs):
         return super(FetchView, self).dispatch(request, *args, **kwargs)
@@ -468,11 +489,11 @@ class FetchView(View):
         )
         json_data = data.as_json()
 
-        return render(
-            request,
-            'realtime/fetch.html',
-            {'station': station, 'data': data, 'json_data': json_data}
-        )
+        return render(request, 'realtime/fetch.html', {
+            'station': station,
+            'data': data,
+            'json_data': json_data
+        })
 
 
 class WebcamView(View):
@@ -480,7 +501,7 @@ class WebcamView(View):
         station = Station.objects.get(pk=pk)
         if station.webcam:
             url = station.webcam + '?' + randomword(10)
-            im = get_thumbnail(url, '800', quality=50) # noqa
+            im = get_thumbnail(url, '800', quality=50)  # noqa
             return HttpResponse(im.read(), content_type="image/jpg")
         else:
             raise Http404("Station does not have a webcam associated")
@@ -491,7 +512,46 @@ def fetch_radar(request):
     print 'DIO'
     print res
     if res:
-        out = '%s, %s, %s' % (res.get('filename', 'OPS'), res.get('datetime', 'OPS'), res.get('ip', 'OPS'))
+        out = '%s, %s, %s' % (res.get('filename', 'OPS'),
+                              res.get('datetime', 'OPS'),
+                              res.get('ip', 'OPS'))  # noqa
     else:
         out = 'no fetch'
     return HttpResponse(out)
+
+
+def weather(request):
+    for station in Station.objects.active():
+        url = "https://api.apixu.com/v1/forecast.json?key=e683d070df0348fea6393603173010&days=7&q=%s,%s" % (  # noqa
+            station.lat, station.lng)
+        response = urllib.urlopen(url)
+        data = json.loads(response.read())
+
+        weather = Weather(
+            station=station,
+            last_updated=datetime.fromtimestamp(
+                data['current']['last_updated_epoch']),
+            icon=data['current']['condition']['icon'],
+            text=data['current']['condition']['text'],
+            data=json.dumps(data['current']))
+        weather.save()
+
+        for day in data['forecast']['forecastday']:
+            try:
+                entry = ForecastWeather.objects.get(
+                    station=station, date=day['date'])
+                entry.icon = day['day']['condition']['icon']
+                entry.text = day['day']['condition']['text']
+                entry.data = json.dumps(day)
+                entry.save()
+            except:
+                entry = ForecastWeather(
+                    station=station,
+                    date=day['date'],
+                    icon=day['day']['condition']['icon'],
+                    text=day['day']['condition']['text'],
+                    data=json.dumps(day)
+                )
+                entry.save()
+
+    return HttpResponse(data)

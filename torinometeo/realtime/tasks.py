@@ -4,6 +4,8 @@ import os
 import datetime
 import shutil
 import pytz
+import urllib
+import json
 
 import requests
 from requests.exceptions import HTTPError
@@ -18,7 +20,7 @@ from core.celery import app
 from celery.utils.log import get_task_logger
 
 from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
-    RadarColorConversion, RadarConvertParams
+    RadarColorConversion, RadarConvertParams, Weather, ForecastWeather
 from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
@@ -298,8 +300,6 @@ def fetch_radar_images():
     else:
         dst = '/var/www/radar/images/'
 
-    print dst
-
     result = fetch_radar(dt, colors, src, dst)
     if result:
         snapshot = RadarSnapshot(
@@ -309,3 +309,42 @@ def fetch_radar_images():
         snapshot.save()
     logger.info('END -- running task: fetch_radar_images')
     return result
+
+
+@app.task
+def fetch_weather_forecast():
+    logger.info('BEGIN -- running task: fetch_weather_forecast')
+    for station in Station.objects.active():
+        url = "https://api.apixu.com/v1/forecast.json?key=%s&days=7&q=%s,%s" % (  # noqa
+            settings.APIXU_KEY,
+            station.lat, station.lng)
+        response = urllib.urlopen(url)
+        data = json.loads(response.read())
+
+        weather = Weather(
+            station=station,
+            last_updated=datetime.fromtimestamp(
+                data['current']['last_updated_epoch']),
+            icon=data['current']['condition']['icon'],
+            text=data['current']['condition']['text'],
+            data=json.dumps(data['current']))
+        weather.save()
+
+        for day in data['forecast']['forecastday']:
+            try:
+                entry = ForecastWeather.objects.get(
+                    station=station, date=day['date'])
+                entry.icon = day['day']['condition']['icon']
+                entry.text = day['day']['condition']['text']
+                entry.data = json.dumps(day)
+                entry.save()
+            except:
+                entry = ForecastWeather(
+                    station=station,
+                    date=day['date'],
+                    icon=day['day']['condition']['icon'],
+                    text=day['day']['condition']['text'],
+                    data=json.dumps(day)
+                )
+                entry.save()
+    logger.info('END -- running task: fetch_weather_forecast')

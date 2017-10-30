@@ -540,6 +540,7 @@ class Weather(models.Model):
     station = models.ForeignKey(Station, verbose_name='stazione')
     last_updated = models.DateTimeField('ultimo aggiornamento')
     icon = models.CharField('icona', max_length=255)
+    text = models.CharField('testo', max_length=50)
     data = models.TextField('json data')
 
     class Meta:
@@ -549,3 +550,18 @@ class Weather(models.Model):
     def __unicode__(self):
         return '%s' % self.icon
 
+
+class ForecastWeather(models.Model):
+    last_edit = models.DateTimeField('ultima modifica', auto_now=True)
+    station = models.ForeignKey(Station, verbose_name='stazione')
+    date = models.DateField('data')
+    icon = models.CharField('icona', max_length=255)
+    text = models.CharField('testo', max_length=50)
+    data = models.TextField('json data')
+
+    class Meta:
+        verbose_name = "Previsione grafica"
+        verbose_name_plural = "Previsioni grafiche"
+
+    def __unicode__(self):
+        return '%s' % self.icon

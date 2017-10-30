@@ -55,4 +55,9 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(seconds=240),
         'args': ()
     },
+    'fetch-weather-forecast': {
+        'task': 'realtime.tasks.fetch_weather_forecast',
+        'schedule': timedelta(seconds=3600),
+        'args': ()
+    },
 }
