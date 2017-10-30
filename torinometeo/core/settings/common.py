@@ -476,7 +476,8 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': here('..', '..', '..',
                              os.path.join('logs', 'celery.log')),
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+            'when':     'midnight',
         },
         'realtime_celery_logger': {
             'level': 'DEBUG',
@@ -484,7 +485,8 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': here('..', '..', '..',
                              os.path.join('logs', 'realtime.log')),
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+            'when':     'midnight',
         },
         'mail_admins': {
             'level': 'ERROR',
