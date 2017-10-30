@@ -315,6 +315,7 @@ PIPELINE_JS = {
     'vendor': {
         'source_filenames': (
             'core/src/vendor/popper/popper.min.js', # noqa
+            'core/src/vendor/bootstrap/js/tether.js',
             'core/src/vendor/bootstrap/js/bootstrap.min.js',
             'core/src/vendor/moment/moment-with-locales.min.js',
             'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
