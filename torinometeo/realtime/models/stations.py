@@ -533,3 +533,19 @@ class RadarConvertParams(models.Model):
 
     def __unicode__(self):
         return '%s' % self.param_name
+
+
+class Weather(models.Model):
+    last_edit = models.DateTimeField('ultima modifica', auto_now=True)
+    station = models.ForeignKey(Station, verbose_name='stazione')
+    last_updated = models.DateTimeField('ultimo aggiornamento')
+    icon = models.CharField('icona', max_length=255)
+    data = models.TextField('json data')
+
+    class Meta:
+        verbose_name = "Tempo corrente"
+        verbose_name_plural = "Tempo corrente"
+
+    def __unicode__(self):
+        return '%s' % self.icon
+
