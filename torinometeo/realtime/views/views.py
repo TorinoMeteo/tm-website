@@ -520,38 +520,38 @@ def fetch_radar(request):
     return HttpResponse(out)
 
 
-def weather(request):
-    for station in Station.objects.active():
-        url = "https://api.apixu.com/v1/forecast.json?key=e683d070df0348fea6393603173010&days=7&q=%s,%s" % (  # noqa
-            station.lat, station.lng)
-        response = urllib.urlopen(url)
-        data = json.loads(response.read())
+# def weather(request):
+#     for station in Station.objects.active():
+#         url = "https://api.apixu.com/v1/forecast.json?key=e683d070df0348fea6393603173010&days=7&q=%s,%s" % (  # noqa
+#             station.lat, station.lng)
+#         response = urllib.urlopen(url)
+#         data = json.loads(response.read())
 
-        weather = Weather(
-            station=station,
-            last_updated=datetime.fromtimestamp(
-                data['current']['last_updated_epoch']),
-            icon=data['current']['condition']['icon'],
-            text=data['current']['condition']['text'],
-            data=json.dumps(data['current']))
-        weather.save()
+#         weather = Weather(
+#             station=station,
+#             last_updated=datetime.fromtimestamp(
+#                 data['current']['last_updated_epoch']),
+#             icon=data['current']['condition']['icon'],
+#             text=data['current']['condition']['text'],
+#             data=json.dumps(data['current']))
+#         weather.save()
 
-        for day in data['forecast']['forecastday']:
-            try:
-                entry = ForecastWeather.objects.get(
-                    station=station, date=day['date'])
-                entry.icon = day['day']['condition']['icon']
-                entry.text = day['day']['condition']['text']
-                entry.data = json.dumps(day)
-                entry.save()
-            except:
-                entry = ForecastWeather(
-                    station=station,
-                    date=day['date'],
-                    icon=day['day']['condition']['icon'],
-                    text=day['day']['condition']['text'],
-                    data=json.dumps(day)
-                )
-                entry.save()
+#         for day in data['forecast']['forecastday']:
+#             try:
+#                 entry = ForecastWeather.objects.get(
+#                     station=station, date=day['date'])
+#                 entry.icon = day['day']['condition']['icon']
+#                 entry.text = day['day']['condition']['text']
+#                 entry.data = json.dumps(day)
+#                 entry.save()
+#             except:
+#                 entry = ForecastWeather(
+#                     station=station,
+#                     date=day['date'],
+#                     icon=day['day']['condition']['icon'],
+#                     text=day['day']['condition']['text'],
+#                     data=json.dumps(day)
+#                 )
+#                 entry.save()
 
-    return HttpResponse(data)
+#     return HttpResponse(data)

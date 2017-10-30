@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models.stations import Data, Station, HistoricData, RadarSnapshot
+from .models.stations import Data, Station, HistoricData, RadarSnapshot, \
+    Weather, ForecastWeather
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -23,6 +24,7 @@ class StationSerializer(serializers.ModelSerializer):
             'city',
             'lat',
             'lng',
+            'elevation',
             'image_url',
             'webcam',
             'webcam_url',
@@ -48,11 +50,13 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
     """ Realtime Data Serializer
     """
     station = StationSerializer()
+    weather_icon_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Data
         fields = (
             'station',
+            'weather_icon_url',
             'datetime',
             'temperature',
             'temperature_max',
@@ -88,6 +92,15 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
             'rain_month',
             'rain_year'
         )
+
+    def get_weather_icon_url(self, data):
+        try:
+            weather = Weather.objects.filter(
+                station=data.station
+            ).order_by('-last_updated').first()
+            return weather.icon
+        except:
+            return None
 
 
 class HistoricDataSerializer(serializers.ModelSerializer):
@@ -128,3 +141,16 @@ class RadarSnapshotSerializer(serializers.ModelSerializer):
 
     def get_file_url(self, snapshot):
         return 'http://radar.torinometeo.org/images/%s' % snapshot.filename
+
+
+class ForecastWeatherSerializer(serializers.ModelSerializer):
+    """ Forecast Weather Serializer
+    """
+    class Meta:
+        model = ForecastWeather
+        fields = (
+            'station',
+            'date',
+            'icon',
+            'text',
+        )

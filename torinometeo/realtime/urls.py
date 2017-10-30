@@ -2,7 +2,6 @@ from django.conf.urls import patterns,url
 from realtime.views import views
 
 urlpatterns = patterns('realtime.views',
-
     url(r'^jumbotron/station/(?P<id>[\d]+)/?$', views.JumbotronStationJsonView.as_view(), name='realtime-jumbotron-station-json'),
     url(r'^rete/?$', views.NetView.as_view(), name='realtime-net'),
     url(r'^entra/richiesta-inviata/?$', views.NetRequestSentView.as_view(), name='realtime-net-request-sent'),
@@ -17,6 +16,5 @@ urlpatterns = patterns('realtime.views',
     url(r'^fetch/(?P<pk>[0-9]+)/?$', views.FetchView.as_view(), name='realtime-station-fetch'),
     url(r'^webcam/(?P<pk>[0-9]+)/?$', views.WebcamView.as_view(), name='realtime-station-webcam'),
     url(r'^radar/fetch/?$', views.fetch_radar, name='realtime-fetch-radar'),
-    url(r'^weather/fetch/?$', views.weather, name='realtime-weather'),
-
+    # url(r'^weather/fetch/?$', views.weather, name='realtime-weather'),
 )
