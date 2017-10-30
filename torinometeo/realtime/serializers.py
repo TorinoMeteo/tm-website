@@ -146,6 +146,8 @@ class RadarSnapshotSerializer(serializers.ModelSerializer):
 class ForecastWeatherSerializer(serializers.ModelSerializer):
     """ Forecast Weather Serializer
     """
+    station = StationSerializer()
+
     class Meta:
         model = ForecastWeather
         fields = (
