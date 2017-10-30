@@ -105,3 +105,9 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.tooltip {
+  &.show {
+    opacity: 1;
+  }
+}

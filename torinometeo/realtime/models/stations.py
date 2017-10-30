@@ -148,6 +148,18 @@ class Station(models.Model):
         return timezone.make_aware(datetime_obj,
                                    timezone.get_current_timezone())
 
+    def weather_icon(self):
+        last_weather = Weather.objects.filter(
+            station=self.id
+        ).order_by('-last_updated').first()
+        if last_weather and last_weather.last_updated.date() == self.now().date():
+            return {
+                'icon': str(last_weather.icon),
+                'text': str(last_weather.text),
+            }
+        else:
+            return None
+
     def get_realtime_data(self):
         """ Last measured data, if inside the Station.RT_RANGE_SECONDS range
             http://stackoverflow.com/questions/21918802/problems-filtering-django-datetime-field-by-month-and-day
@@ -537,7 +549,8 @@ class RadarConvertParams(models.Model):
 
 class Weather(models.Model):
     last_edit = models.DateTimeField('ultima modifica', auto_now=True)
-    station = models.ForeignKey(Station, verbose_name='stazione')
+    station = models.ForeignKey(Station, verbose_name='stazione',
+                                related_name='weather_infos')
     last_updated = models.DateTimeField('ultimo aggiornamento')
     icon = models.CharField('icona', max_length=255)
     text = models.CharField('testo', max_length=50)

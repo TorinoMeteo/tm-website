@@ -38,10 +38,16 @@
         }
     }
 
+    .weather-icon {
+      float: left;
+      margin-top: -12px;
+      margin-right: 10px;
+    }
+
     .fa-star-o,
     .fa-star {
       font-size: 43px;
-      margin-left: 20px;
+      margin-right: 20px;
       color: #0275d8;
       cursor: pointer;
       text-decoration: none;

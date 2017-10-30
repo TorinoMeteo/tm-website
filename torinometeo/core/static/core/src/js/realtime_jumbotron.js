@@ -10,7 +10,7 @@ torinometeo.realtime = torinometeo.realtime || {};
  * @param array id_stations station ids array
  * @param array name_stations station name array
  */
-torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_stations, url_stations, options)
+torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_stations, url_stations, weather_stations, options)
 {
     var opts = {
         'base_url': '/realtime/jumbotron/station/'
@@ -26,13 +26,14 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
     /**
      * Constructor
      */
-    this.init = function(container_id, id_stations, name_stations, options) {
+    this.init = function(container_id, id_stations, name_stations, weather_stations, options) {
 
         this.$dom = {};
         this.$dom.container = jQuery('#' + container_id);
         this._id_stations = id_stations;
         this._name_stations = name_stations;
         this._url_stations = url_stations;
+        this._weather_stations = weather_stations;
         this.$last_index = id_stations.length - 1;
         this.options = jQuery.extend({}, opts, options);
 
@@ -44,12 +45,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.date = jQuery('<time>').appendTo(jQuery('<p>', {'class': 'pull-left time'}).appendTo(this.$dom.container));
         this.$dom.detail = jQuery('<p>', {'class': 'pull-left'}).appendTo(this.$dom.container);
         this.$dom.clear = jQuery('<div>', {'class': 'clearfix'}).appendTo(this.$dom.container);
-        this.$dom.bookmark = jQuery('<a>', {
-            'class': 'fa fa-star-o',
-            'data-toggle': 'tooltip',
-            'data-placement': 'bottom',
-            'title': 'Puoi aggiungere le stazioni ai tuoi preferiti, così la prossima volta che entrerai in home page, verranno mostrate per prime!'
-        }).appendTo(this.$dom.title_container);
+        this.$dom.weather_icon = jQuery('<span />', { 'class': 'weather-icon' }).prependTo(this.$dom.title_container);
         this.$dom.arrow_container = jQuery('<span>', {'class': 'arrow-container'}).appendTo(this.$dom.title_container);
         this.$dom.next_arrow = jQuery('<span>', {'class': 'arrow arrow-next fa fa-angle-double-right hidden'})
             .on('click', jQuery.proxy(this.goNext, this))
@@ -57,6 +53,12 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.prev_arrow = jQuery('<span>', {'class': 'arrow arrow-prev fa fa-angle-double-left hidden'})
             .on('click', jQuery.proxy(this.goPrev, this))
             .appendTo(this.$dom.arrow_container);
+        this.$dom.bookmark = jQuery('<a>', {
+            'class': 'fa fa-star-o',
+            'data-toggle': 'tooltip',
+            'data-placement': 'bottom',
+            'title': 'Puoi aggiungere le stazioni ai tuoi preferiti, così la prossima volta che entrerai in home page, verranno mostrate per prime!'
+        }).appendTo(this.$dom.arrow_container);
 
         // columns
         this.$dom.col1 = jQuery('<div>', {'class': 'col-lg-3 col-md-6 hidden-sm-down'}).appendTo(this.$dom.container);
@@ -196,6 +198,13 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         }
         else {
             this.$dom.date.html('<strong>Dati non disponibili</strong>');
+        }
+        this.$dom.detail.html('<a href="' + this._url_stations[this.$index] + '"><i class="fa fa-plus-circle"></i></a>');
+        var weather_icon = this._weather_stations[this.$index];
+        if (weather_icon) {
+          this.$dom.weather_icon.html('<img src="' + weather_icon.icon + '" alt="' + weather_icon.text + '" title="' + weather_icon.text + '" />');
+        } else {
+          this.$dom.weather_icon.html('');
         }
         this.$dom.detail.html('<a href="' + this._url_stations[this.$index] + '"><i class="fa fa-plus-circle"></i></a>');
         // bookmarks
@@ -525,5 +534,5 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.spinner.addClass('hidden');
     }
 
-    this.init(container_id, id_stations, name_stations, options);
+    this.init(container_id, id_stations, name_stations, weather_stations, options);
 }
