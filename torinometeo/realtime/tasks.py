@@ -323,7 +323,7 @@ def fetch_weather_forecast():
 
         weather = Weather(
             station=station,
-            last_updated=datetime.fromtimestamp(
+            last_updated=datetime.datetime.fromtimestamp(
                 data['current']['last_updated_epoch']),
             icon=data['current']['condition']['icon'],
             text=data['current']['condition']['text'],
