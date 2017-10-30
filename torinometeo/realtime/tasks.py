@@ -221,9 +221,10 @@ def fetch_radar_image(dt, src):
 
 
 # Execute external script to change image color based on Color Replacement List
-def change_colors(img_path, conversions, cmd_path):
+def change_colors(img_path, conversions):
     for conversion in conversions:
-        cmd = cmd_path + " -i \"" + conversion[0] + "\" -f " + str(conversion[2]) + " -o \"" + conversion[1] + "\" " + img_path + " " + img_path # noqa
+        cmd = "convert " + img_path + " -fuzz " + str(conversion[2]) + "% -fill \"" + str(conversion[1]) + "\" -opaque \"" + str(conversion[0]) + "\" " + img_path # noqa
+        logger.info('Executing imagemagick command: %s' % cmd)
         os.system(cmd)
         params = ['-%s %s' % (p.param_name, p.param_value) for p in RadarConvertParams.objects.all()] # noqa
         cmd = "convert %s %s %s" % (
@@ -250,7 +251,7 @@ def get_ip(session):
 
 
 # Fetch Radar Image
-def fetch_radar(dt, colors, color_script_path, src, dst):
+def fetch_radar(dt, colors, src, dst):
     try:
         logger.info(reset_tor_circuit())
     except:
@@ -260,7 +261,7 @@ def fetch_radar(dt, colors, color_script_path, src, dst):
         (ip, filename, datetime) = image_data
         if filename:
             logger.info('%s downloaded with IP %s' % (filename, ip))
-            change_colors(os.path.join(src, filename), colors, color_script_path) # noqa
+            change_colors(os.path.join(src, filename), colors) # noqa
             try:
                 shutil.move(os.path.join(src, filename), os.path.join(dst, filename)) # noqa
             except Exception, e:
@@ -293,16 +294,13 @@ def fetch_radar_images():
 
     src = '/tmp/'
     if settings.DEBUG:
-        color_script_path = '/home/abidibo/Work/torinometeo/replace_color'
         dst = '/home/abidibo/Junk/'
     else:
-        color_script_path = '/home/torinometeo/www/torinometeo/bin/replace_color' # noqa
         dst = '/var/www/radar/images/'
 
-    print color_script_path
     print dst
 
-    result = fetch_radar(dt, colors, color_script_path, src, dst)
+    result = fetch_radar(dt, colors, src, dst)
     if result:
         snapshot = RadarSnapshot(
             datetime=result.get('datetime'),
