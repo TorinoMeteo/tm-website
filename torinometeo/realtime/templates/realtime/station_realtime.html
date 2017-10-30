@@ -12,7 +12,12 @@
 {% block content %}
 <div class="container margin-top faded main-content">
     <section class="realtime-station">
-        <h1>{{ object.name }}</h1>
+      <h1 class="clearfix">
+        {{ object.name }}
+        {% if object.weather_icon %}
+          <img class="" src="{{ object.weather_icon.icon }}" alt="{{ object.weather_icon.text }}" title="{{ object.weather_icon.text }}" />
+        {% endif %}
+      </h1>
         <nav>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
