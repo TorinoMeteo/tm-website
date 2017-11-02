@@ -315,7 +315,7 @@ def fetch_radar_images():
 def fetch_weather_forecast():
     logger.info('BEGIN -- running task: fetch_weather_forecast')
     for station in Station.objects.active():
-        url = "https://api.apixu.com/v1/forecast.json?key=%s&days=7&q=%s,%s" % (  # noqa
+        url = "https://api.apixu.com/v1/current.json?key=%s&q=%s,%s" % (  # noqa
             settings.APIXU_KEY,
             station.lat, station.lng)
         response = urllib.urlopen(url)
@@ -330,21 +330,21 @@ def fetch_weather_forecast():
             data=json.dumps(data['current']))
         weather.save()
 
-        for day in data['forecast']['forecastday']:
-            try:
-                entry = ForecastWeather.objects.get(
-                    station=station, date=day['date'])
-                entry.icon = day['day']['condition']['icon']
-                entry.text = day['day']['condition']['text']
-                entry.data = json.dumps(day)
-                entry.save()
-            except:
-                entry = ForecastWeather(
-                    station=station,
-                    date=day['date'],
-                    icon=day['day']['condition']['icon'],
-                    text=day['day']['condition']['text'],
-                    data=json.dumps(day)
-                )
-                entry.save()
+        # for day in data['forecast']['forecastday']:
+        #     try:
+        #         entry = ForecastWeather.objects.get(
+        #             station=station, date=day['date'])
+        #         entry.icon = day['day']['condition']['icon']
+        #         entry.text = day['day']['condition']['text']
+        #         entry.data = json.dumps(day)
+        #         entry.save()
+        #     except:
+        #         entry = ForecastWeather(
+        #             station=station,
+        #             date=day['date'],
+        #             icon=day['day']['condition']['icon'],
+        #             text=day['day']['condition']['text'],
+        #             data=json.dumps(day)
+        #         )
+        #         entry.save()
     logger.info('END -- running task: fetch_weather_forecast')

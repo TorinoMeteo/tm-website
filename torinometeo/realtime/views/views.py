@@ -521,11 +521,15 @@ def fetch_radar(request):
 
 
 # def weather(request):
+#     stations = ''
 #     for station in Station.objects.active():
 #         url = "https://api.apixu.com/v1/forecast.json?key=e683d070df0348fea6393603173010&days=7&q=%s,%s" % (  # noqa
 #             station.lat, station.lng)
+#         print 'DIOFFA'
+#         print url
 #         response = urllib.urlopen(url)
 #         data = json.loads(response.read())
+#         stations += station.name + ' - '
 
 #         weather = Weather(
 #             station=station,
@@ -554,4 +558,4 @@ def fetch_radar(request):
 #                 )
 #                 entry.save()
 
-#     return HttpResponse(data)
+#     return HttpResponse(stations)
