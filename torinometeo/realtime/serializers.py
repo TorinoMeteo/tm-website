@@ -72,7 +72,7 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
                   'rain_year')
 
     def get_weather_icon(self, data):
-        return data.station.weather_icon()
+        return data.station.weather_icon(encode=False)
 
     def get_weather_icon_credits(self, f):
         if f.station.forecast_url:

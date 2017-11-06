@@ -150,7 +150,7 @@ class Station(models.Model):
     def forecast_url_credits(self):
         return self.forecast_url.replace("forecast.xml", "")
 
-    def weather_icon(self):
+    def weather_icon(self, encode=True):
         now = datetime.datetime.now()
         if now.hour < 6:
             period = 0
@@ -166,11 +166,20 @@ class Station(models.Model):
             date=now.date(),
             period=period
         ).first()
+
         if forecast:
-            return {
-                'icon': ('%s%s.png' % (settings.BASE_WEATHER_ICON_URL, forecast.icon)).encode('utf-8'),
-                'text': forecast.text.encode('utf-8')
-            }
+            icon = '%s%s.png' % (settings.BASE_WEATHER_ICON_URL, forecast.icon)
+            text = forecast.text
+            if encode:
+                return {
+                    'icon': icon.encode('utf-8'),
+                    'text': text.encode('utf-8')
+                }
+            else:
+                return {
+                    'icon': icon,
+                    'text': text
+                }
         else:
             return None
 
