@@ -522,40 +522,40 @@ def fetch_radar(request):
     return HttpResponse(out)
 
 
-def weather(request):
-    stations = ''
-    for station in Station.objects.active()[0:3]:
-        stations += ' - ' + station.name
-        url = station.forecast_url
-        xml = urllib2.urlopen(url).read()
-        soup = BeautifulSoup(xml, 'xml')
-        for t in soup.forecast.tabular.findAll('time'):
-            data = {
-                'precipitation': t.precipitation.attrs.get('value', None),
-                'wind_direction': t.windDirection.attrs.get('deg', None),
-                'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
-                'temperature': t.temperature.attrs.get('value', None),
-                'pressure': t.pressure.attrs.get('value', None),
-            }
-            try:
-                forecast = StationForecast.objects.get(
-                    station=station,
-                    date=datetime.strptime(
-                        t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
-                    period=t.attrs.get('period', None),
-                )
-            except:
-                forecast = StationForecast(
-                    station=station,
-                    date=datetime.strptime(
-                        t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
-                    period=t.attrs.get('period', None),
-                )
-            forecast.last_edit = datetime.strptime(
-                soup.meta.lastupdate.string, '%Y-%m-%dT%H:%M:%S')
-            forecast.icon = t.symbol.attrs.get('var', None).encode('utf-8')
-            forecast.text = t.symbol.attrs.get('name', '').encode('utf-8')
-            forecast.data = json.dumps(data)
-            forecast.save()
+# def weather(request):
+#     stations = ''
+#     for station in Station.objects.active()[0:3]:
+#         stations += ' - ' + station.name
+#         url = station.forecast_url
+#         xml = urllib2.urlopen(url).read()
+#         soup = BeautifulSoup(xml, 'xml')
+#         for t in soup.forecast.tabular.findAll('time'):
+#             data = {
+#                 'precipitation': t.precipitation.attrs.get('value', None),
+#                 'wind_direction': t.windDirection.attrs.get('deg', None),
+#                 'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
+#                 'temperature': t.temperature.attrs.get('value', None),
+#                 'pressure': t.pressure.attrs.get('value', None),
+#             }
+#             try:
+#                 forecast = StationForecast.objects.get(
+#                     station=station,
+#                     date=datetime.strptime(
+#                         t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
+#                     period=t.attrs.get('period', None),
+#                 )
+#             except:
+#                 forecast = StationForecast(
+#                     station=station,
+#                     date=datetime.strptime(
+#                         t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
+#                     period=t.attrs.get('period', None),
+#                 )
+#             forecast.last_edit = datetime.strptime(
+#                 soup.meta.lastupdate.string, '%Y-%m-%dT%H:%M:%S')
+#             forecast.icon = t.symbol.attrs.get('var', None).encode('utf-8')
+#             forecast.text = t.symbol.attrs.get('name', '').encode('utf-8')
+#             forecast.data = json.dumps(data)
+#             forecast.save()
 
-    return HttpResponse(stations)
+#     return HttpResponse(stations)

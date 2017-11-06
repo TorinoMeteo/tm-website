@@ -16,5 +16,5 @@ urlpatterns = patterns('realtime.views',
     url(r'^fetch/(?P<pk>[0-9]+)/?$', views.FetchView.as_view(), name='realtime-station-fetch'),
     url(r'^webcam/(?P<pk>[0-9]+)/?$', views.WebcamView.as_view(), name='realtime-station-webcam'),
     url(r'^radar/fetch/?$', views.fetch_radar, name='realtime-fetch-radar'),
-    url(r'^weather/fetch/?$', views.weather, name='realtime-weather'),
+    # url(r'^weather/fetch/?$', views.weather, name='realtime-weather'),
 )

@@ -57,7 +57,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'fetch-weather-forecast': {
         'task': 'realtime.tasks.fetch_weather_forecast',
-        'schedule': crontab(minute=10, hour=0),  # every day 00:10
+        'schedule': crontab(minute=0, hour='0,6,12,18'),  # every 6 hours
         'args': ()
     },
 }
