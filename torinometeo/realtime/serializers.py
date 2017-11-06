@@ -51,11 +51,11 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
     """ Realtime Data Serializer
     """
     station = StationSerializer()
-    weather_icon_url = serializers.SerializerMethodField()
+    weather_icon = serializers.SerializerMethodField()
 
     class Meta:
         model = Data
-        fields = ('station', 'weather_icon_url', 'datetime', 'temperature',
+        fields = ('station', 'weather_icon', 'datetime', 'temperature',
                   'temperature_max', 'temperature_max_time', 'temperature_min',
                   'temperature_min_time', 'relative_humidity',
                   'relative_humidity_max', 'relative_humidity_max_time',
@@ -69,7 +69,7 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
                   'rain_rate_max', 'rain_rate_max_time', 'rain_month',
                   'rain_year')
 
-    def get_weather_icon_url(self, data):
+    def get_weather_icon(self, data):
         return data.station.weather_icon()
 
 
