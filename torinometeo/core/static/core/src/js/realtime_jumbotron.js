@@ -10,7 +10,7 @@ torinometeo.realtime = torinometeo.realtime || {};
  * @param array id_stations station ids array
  * @param array name_stations station name array
  */
-torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_stations, url_stations, weather_stations, options)
+torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_stations, url_stations, weather_stations, weather_credits, options)
 {
     var opts = {
         'base_url': '/realtime/jumbotron/station/'
@@ -26,7 +26,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
     /**
      * Constructor
      */
-    this.init = function(container_id, id_stations, name_stations, weather_stations, options) {
+    this.init = function(container_id, id_stations, name_stations, weather_stations, weather_credits, options) {
 
         this.$dom = {};
         this.$dom.container = jQuery('#' + container_id);
@@ -34,6 +34,7 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this._name_stations = name_stations;
         this._url_stations = url_stations;
         this._weather_stations = weather_stations;
+        this._weather_credits = weather_credits;
         this.$last_index = id_stations.length - 1;
         this.options = jQuery.extend({}, opts, options);
 
@@ -201,8 +202,9 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         }
         this.$dom.detail.html('<a href="' + this._url_stations[this.$index] + '"><i class="fa fa-plus-circle"></i></a>');
         var weather_icon = this._weather_stations[this.$index];
+        var weather_credits = this._weather_credits[this.$index];
         if (weather_icon) {
-          this.$dom.weather_icon.html('<img src="' + weather_icon.icon + '" alt="' + weather_icon.text + '" title="' + weather_icon.text + '" />');
+          this.$dom.weather_icon.html('<a href="' + weather_credits + '"><img src="' + weather_icon.icon + '" alt="' + weather_icon.text + '" title="' + weather_icon.text + '" /></a>');
         } else {
           this.$dom.weather_icon.html('');
         }
@@ -534,5 +536,5 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         this.$dom.spinner.addClass('hidden');
     }
 
-    this.init(container_id, id_stations, name_stations, weather_stations, options);
+    this.init(container_id, id_stations, name_stations, weather_stations, weather_credits, options);
 }

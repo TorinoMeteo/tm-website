@@ -4,6 +4,7 @@
             var stations = [];
             var stations_name = [];
             var stations_weather = [];
+            var stations_weather_credits = [];
             var stations_url = [];
             //var stations = [1, 2, 4];
             //var stations_name = ['Torino Regio Parco', 'Torino Lingotto', 'Bielmonte'];
@@ -11,9 +12,10 @@
                 stations.push({{ station.id }});
                 stations_name.push('{{ station.name|escapejs }}');
                 stations_weather.push({% if station.weather_icon %}{{ station.weather_icon|safe }}{% else %}null{% endif %});
+                stations_weather_credits.push({% if station.weather_icon %}'{{ station.forecast_url_credits }}'{% else %}null{% endif %});
                 stations_url.push('{{ station.get_absolute_url }}');
             {% endfor %}
-            var jumbotron = new torinometeo.realtime.Jumbotron('rt-jumbotron', stations, stations_name, stations_url, stations_weather);
+            var jumbotron = new torinometeo.realtime.Jumbotron('rt-jumbotron', stations, stations_name, stations_url, stations_weather, stations_weather_credits);
             jumbotron.load();
         })()
     </script>

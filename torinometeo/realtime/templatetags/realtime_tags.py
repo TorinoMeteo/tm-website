@@ -27,10 +27,10 @@ def realtime_line(context):
     for obj in objects:
         data = obj.get_realtime_data()
         weather = obj.weather_icon()
-        print weather
         stations.append({
             'name': obj.name,
             'weather_icon': weather.get('icon') if weather else None,
+            'forecast_url_credits': obj.forecast_url_credits(),
             'temperature': data.temperature if data and data.temperature is not None else 'N.D.', # noqa
             'temperature_max': data.temperature_max if data and data.temperature_max is not None else 'N.D.', # noqa
             'temperature_min': data.temperature_min if data and data.temperature_min is not None else 'N.D.', # noqa

@@ -27,7 +27,9 @@
                 </div>
             </div>
             {% if object.weather_icon %}
-              <img class="" src="{{ object.weather_icon.icon }}" alt="{{ object.weather_icon.text }}" title="{{ object.weather_icon.text }}" style="margin-left: 20px;" />
+                <a href="{{ object.forecast_url_credits }}">
+                    <img class="" src="{{ object.weather_icon.icon }}" alt="{{ object.weather_icon.text }}" title="{{ object.weather_icon.text }}" style="margin-left: 20px;" />
+                </a>
             {% endif %}
         </nav>
         <div class="row">

@@ -147,6 +147,9 @@ class Station(models.Model):
         return timezone.make_aware(datetime_obj,
                                    timezone.get_current_timezone())
 
+    def forecast_url_credits(self):
+        return self.forecast_url.replace("forecast.xml", "")
+
     def weather_icon(self):
         now = datetime.datetime.now()
         if now.hour < 6:
