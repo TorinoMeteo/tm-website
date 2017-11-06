@@ -7,7 +7,7 @@
             &#160;<span class="fa fa-star"></span>&#160;
             <i><b>{{ station.name }}</b></i>
             {% if station.weather_icon %}
-            <img src="{{ station.weather_icon }}" style="height: 34px; margin-top: -4px;" />
+            <img src="{{ station.weather_icon }}" style="height: 28px; margin-top: -6px;" />
             {% endif %}
             {{ station.temperature|unlocalize }} °C &#8226; <i class="fa fa-angle-up" style="color: red;"></i> {{ station.temperature_max|unlocalize }} °C &#8226; <i class="fa fa-angle-down" style="color: blue;"></i> {{ station.temperature_min|unlocalize }} °C
             {% endfor %}

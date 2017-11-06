@@ -4,11 +4,13 @@ import os
 import datetime
 import shutil
 import pytz
-import urllib
+import urllib2
 import json
 
 import requests
 from requests.exceptions import HTTPError
+
+from bs4 import BeautifulSoup
 
 from stem import Signal
 from stem.control import Controller
@@ -20,7 +22,7 @@ from core.celery import app
 from celery.utils.log import get_task_logger
 
 from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
-    RadarColorConversion, RadarConvertParams, Weather, ForecastWeather
+    RadarColorConversion, RadarConvertParams, StationForecast
 from .fetch.shortcuts import fetch_data
 
 logger = get_task_logger(__name__)
@@ -315,36 +317,38 @@ def fetch_radar_images():
 def fetch_weather_forecast():
     logger.info('BEGIN -- running task: fetch_weather_forecast')
     for station in Station.objects.active():
-        url = "https://api.apixu.com/v1/current.json?key=%s&q=%s,%s" % (  # noqa
-            settings.APIXU_KEY,
-            station.lat, station.lng)
-        response = urllib.urlopen(url)
-        data = json.loads(response.read())
-
-        weather = Weather(
-            station=station,
-            last_updated=datetime.datetime.fromtimestamp(
-                data['current']['last_updated_epoch']),
-            icon=data['current']['condition']['icon'],
-            text=data['current']['condition']['text'],
-            data=json.dumps(data['current']))
-        weather.save()
-
-        # for day in data['forecast']['forecastday']:
-        #     try:
-        #         entry = ForecastWeather.objects.get(
-        #             station=station, date=day['date'])
-        #         entry.icon = day['day']['condition']['icon']
-        #         entry.text = day['day']['condition']['text']
-        #         entry.data = json.dumps(day)
-        #         entry.save()
-        #     except:
-        #         entry = ForecastWeather(
-        #             station=station,
-        #             date=day['date'],
-        #             icon=day['day']['condition']['icon'],
-        #             text=day['day']['condition']['text'],
-        #             data=json.dumps(day)
-        #         )
-        #         entry.save()
+        try:
+            url = station.forecast_url
+            xml = urllib2.urlopen(url).read()
+            soup = BeautifulSoup(xml, 'xml')
+            for t in soup.forecast.tabular.findAll('time'):
+                data = {
+                    'precipitation': t.precipitation.attrs.get('value', None),
+                    'wind_direction': t.windDirection.attrs.get('deg', None),
+                    'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
+                    'temperature': t.temperature.attrs.get('value', None),
+                    'pressure': t.pressure.attrs.get('value', None),
+                }
+                try:
+                    forecast = StationForecast.objects.get(
+                        station=station,
+                        date=datetime.datetime.strptime(
+                            t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
+                        period=t.attrs.get('period', None),
+                    )
+                except:
+                    forecast = StationForecast(
+                        station=station,
+                        date=datetime.datetime.strptime(
+                            t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
+                        period=t.attrs.get('period', None),
+                    )
+                forecast.last_edit = datetime.datetime.strptime(
+                    soup.meta.lastupdate.string, '%Y-%m-%dT%H:%M:%S')
+                forecast.icon = t.symbol.attrs.get('var', None).encode('utf-8')
+                forecast.text = t.symbol.attrs.get('name', '').encode('utf-8')
+                forecast.data = json.dumps(data)
+                forecast.save()
+        except:
+            pass
     logger.info('END -- running task: fetch_weather_forecast')

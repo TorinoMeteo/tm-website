@@ -1,7 +1,8 @@
 from rest_framework import serializers
+from django.conf import settings
 
-from .models.stations import Data, Station, HistoricData, RadarSnapshot, \
-    Weather, ForecastWeather
+from .models.stations import (Data, HistoricData, RadarSnapshot, Station,
+                              StationForecast)
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -54,53 +55,22 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Data
-        fields = (
-            'station',
-            'weather_icon_url',
-            'datetime',
-            'temperature',
-            'temperature_max',
-            'temperature_max_time',
-            'temperature_min',
-            'temperature_min_time',
-            'relative_humidity',
-            'relative_humidity_max',
-            'relative_humidity_max_time',
-            'relative_humidity_min',
-            'relative_humidity_min_time',
-            'dewpoint',
-            'dewpoint_max',
-            'dewpoint_max_time',
-            'dewpoint_min',
-            'dewpoint_min_time',
-            'pressure',
-            'pressure_max',
-            'pressure_max_time',
-            'pressure_min',
-            'pressure_min_time',
-            'wind_strength',
-            'wind_dir',
-            'wind_dir_text',
-            'wind_strength_max',
-            'wind_dir_max',
-            'wind_dir_max_text',
-            'wind_max_time',
-            'rain',
-            'rain_rate',
-            'rain_rate_max',
-            'rain_rate_max_time',
-            'rain_month',
-            'rain_year'
-        )
+        fields = ('station', 'weather_icon_url', 'datetime', 'temperature',
+                  'temperature_max', 'temperature_max_time', 'temperature_min',
+                  'temperature_min_time', 'relative_humidity',
+                  'relative_humidity_max', 'relative_humidity_max_time',
+                  'relative_humidity_min', 'relative_humidity_min_time',
+                  'dewpoint', 'dewpoint_max', 'dewpoint_max_time',
+                  'dewpoint_min', 'dewpoint_min_time', 'pressure',
+                  'pressure_max', 'pressure_max_time', 'pressure_min',
+                  'pressure_min_time', 'wind_strength', 'wind_dir',
+                  'wind_dir_text', 'wind_strength_max', 'wind_dir_max',
+                  'wind_dir_max_text', 'wind_max_time', 'rain', 'rain_rate',
+                  'rain_rate_max', 'rain_rate_max_time', 'rain_month',
+                  'rain_year')
 
     def get_weather_icon_url(self, data):
-        try:
-            weather = Weather.objects.filter(
-                station=data.station
-            ).order_by('-last_updated').first()
-            return weather.icon
-        except:
-            return None
+        return data.station.weather_icon()
 
 
 class HistoricDataSerializer(serializers.ModelSerializer):
@@ -110,20 +80,10 @@ class HistoricDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HistoricData
-        fields = (
-            'station',
-            'date',
-            'temperature_mean',
-            'temperature_max',
-            'temperature_min',
-            'relative_humidity_mean',
-            'relative_humidity_max',
-            'relative_humidity_min',
-            'pressure_mean',
-            'pressure_max',
-            'pressure_min',
-            'rain'
-        )
+        fields = ('station', 'date', 'temperature_mean', 'temperature_max',
+                  'temperature_min', 'relative_humidity_mean',
+                  'relative_humidity_max', 'relative_humidity_min',
+                  'pressure_mean', 'pressure_max', 'pressure_min', 'rain')
 
 
 class RadarSnapshotSerializer(serializers.ModelSerializer):
@@ -143,16 +103,26 @@ class RadarSnapshotSerializer(serializers.ModelSerializer):
         return 'http://radar.torinometeo.org/images/%s' % snapshot.filename
 
 
-class ForecastWeatherSerializer(serializers.ModelSerializer):
-    """ Forecast Weather Serializer
+class StationForecastSerializer(serializers.ModelSerializer):
+    """ Station Forecast Serializer
     """
     station = StationSerializer()
+    period = serializers.SerializerMethodField()
+    icon = serializers.SerializerMethodField()
 
     class Meta:
-        model = ForecastWeather
+        model = StationForecast
         fields = (
             'station',
+            'last_edit',
             'date',
+            'period',
             'icon',
             'text',
         )
+
+    def get_period(self, f):
+        return f.get_period_display()
+
+    def get_icon(self, f):
+        return '%s%s.png' % (settings.BASE_WEATHER_ICON_URL, f.icon)

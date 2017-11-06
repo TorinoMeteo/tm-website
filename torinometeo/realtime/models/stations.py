@@ -1,5 +1,6 @@
 # coding=utf-8
 import pytz
+import datetime
 
 from django.db import models
 from django.conf import settings
@@ -10,8 +11,6 @@ from colorful.fields import RGBColorField
 
 from realtime.models.geo import Nation, Region, Province
 from realtime.managers import StationManager
-
-import datetime
 
 
 def wind_dir_text_base(value): # noqa
@@ -149,13 +148,25 @@ class Station(models.Model):
                                    timezone.get_current_timezone())
 
     def weather_icon(self):
-        last_weather = Weather.objects.filter(
-            station=self.id
-        ).order_by('-last_updated').first()
-        if last_weather and last_weather.last_updated.date() == self.now().date():
+        now = datetime.datetime.now()
+        if now.hour < 6:
+            period = 0
+        elif now.hour < 12:
+            period = 1
+        elif now.hour < 18:
+            period = 2
+        else:
+            period = 3
+
+        forecast = StationForecast.objects.filter(
+            station=self.id,
+            date=now.date(),
+            period=period
+        ).first()
+        if forecast:
             return {
-                'icon': str(last_weather.icon),
-                'text': str(last_weather.text),
+                'icon': ('%s%s.png' % (settings.BASE_WEATHER_ICON_URL, forecast.icon)).encode('utf-8'),
+                'text': forecast.text.encode('utf-8')
             }
         else:
             return None
@@ -547,34 +558,28 @@ class RadarConvertParams(models.Model):
         return '%s' % self.param_name
 
 
-class Weather(models.Model):
-    last_edit = models.DateTimeField('ultima modifica', auto_now=True)
-    station = models.ForeignKey(Station, verbose_name='stazione',
-                                related_name='weather_infos')
-    last_updated = models.DateTimeField('ultimo aggiornamento')
-    icon = models.CharField('icona', max_length=255)
-    text = models.CharField('testo', max_length=50)
-    data = models.TextField('json data')
-
-    class Meta:
-        verbose_name = "Tempo corrente"
-        verbose_name_plural = "Tempo corrente"
-
-    def __unicode__(self):
-        return '%s' % self.icon
-
-
-class ForecastWeather(models.Model):
-    last_edit = models.DateTimeField('ultima modifica', auto_now=True)
+class StationForecast(models.Model):
+    PERIOD_NIGHT = 0
+    PERIOD_MORNING = 1
+    PERDIOD_AFTERNOON = 2
+    PERIOD_EVENING = 3
+    PERIOD_CHOICES = (
+        (PERIOD_NIGHT, '00:00 06:00'),
+        (PERIOD_MORNING, '06:00 12:00'),
+        (PERDIOD_AFTERNOON, '12:00 18:00'),
+        (PERIOD_EVENING, '18:00 24:00'),
+    )
+    last_edit = models.DateTimeField('ultima modifica')
     station = models.ForeignKey(Station, verbose_name='stazione')
     date = models.DateField('data')
+    period = models.IntegerField('periodo', choices=PERIOD_CHOICES)
     icon = models.CharField('icona', max_length=255)
     text = models.CharField('testo', max_length=50)
     data = models.TextField('json data')
 
     class Meta:
-        verbose_name = "Previsione grafica"
-        verbose_name_plural = "Previsioni grafiche"
+        verbose_name = "Previsione"
+        verbose_name_plural = "Previsioni"
 
     def __unicode__(self):
         return '%s' % self.icon

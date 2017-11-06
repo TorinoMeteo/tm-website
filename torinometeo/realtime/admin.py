@@ -5,7 +5,7 @@ from realtime.models.geo import Nation, Province, Region
 from realtime.models.stations import (Data, DataFormat, HistoricData,
                                       NetRequest, RadarColorConversion,
                                       RadarConvertParams, RadarSnapshot,
-                                      Station, Weather, ForecastWeather)
+                                      Station, StationForecast, )
 
 
 # geo
@@ -228,17 +228,9 @@ class RadarConvertParamsAdmin(admin.ModelAdmin):
 admin.site.register(RadarConvertParams, RadarConvertParamsAdmin)
 
 
-class WeatherAdmin(admin.ModelAdmin):
-    list_display = ('station', 'last_updated', 'icon', 'text', )
-    list_filter = ('last_updated', 'station', )
+class StationForecastAdmin(admin.ModelAdmin):
+    list_display = ('date', 'period', 'station', 'icon', 'text', )
+    list_filter = ('date', 'period', 'station', )
 
 
-admin.site.register(Weather, WeatherAdmin)
-
-
-class ForecastWeatherAdmin(admin.ModelAdmin):
-    list_display = ('date', 'station', 'icon', 'text', )
-    list_filter = ('date', 'station', )
-
-
-admin.site.register(ForecastWeather, ForecastWeatherAdmin)
+admin.site.register(StationForecast, StationForecastAdmin)

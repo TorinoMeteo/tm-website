@@ -407,6 +407,9 @@ SOCIAL_AUTH_EMAIL_FORM_HTML = 'social_auth/registration.html'
 # Apixu
 APIXU_KEY = 'e683d070df0348fea6393603173010'
 
+# yr
+BASE_WEATHER_ICON_URL = 'https://www.yr.no/grafikk/sym/v2017/png/38/'
+
 
 # twitter
 SOCIAL_AUTH_TWITTER_KEY = 'HRDVxN1i59Aw6VEr3Pco83Sss'

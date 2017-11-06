@@ -2,15 +2,15 @@ import datetime
 
 from django.db.models import Max
 from django.http import Http404
-from rest_framework import mixins, permissions, status, viewsets
+from rest_framework import mixins, status, viewsets, permissions
 from rest_framework.response import Response
 
-from realtime.models.stations import (Data, ForecastWeather, HistoricData,
-                                      RadarSnapshot, Station, Weather)
+from realtime.models.stations import (Data, HistoricData,
+                                      RadarSnapshot, Station, StationForecast, )
 from realtime.serializers import (HistoricDataSerializer,
                                   RadarSnapshotSerializer,
                                   RealtimeDataSerializer,
-                                  ForecastWeatherSerializer, )
+                                  StationForecastSerializer, )
 
 
 class LastRealtimeDataViewSet(viewsets.ViewSet):
@@ -90,13 +90,13 @@ class RadarSnapshotViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             datetime__startswith=date.date()).order_by('datetime')  # noqa
 
 
-class ForecastWeatherViewSet(viewsets.ModelViewSet):
-    """ ForecastWeather CRUD
-        Allows to create, edit and delete day forecasts
+class StationForecastViewSet(viewsets.ModelViewSet):
+    """ StationForecast CRUD
+        Allows to create, edit and delete station forecasts
         GET is public, POST, PUT, PATCH and DELETE require authentication
     """
-    queryset = ForecastWeather.objects.all()
-    serializer_class = ForecastWeatherSerializer
+    queryset = StationForecast.objects.all()
+    serializer_class = StationForecastSerializer
 
     def get_permissions(self):
         """
@@ -110,7 +110,7 @@ class ForecastWeatherViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """ Looks for forecast param in order to filter only related day forecasts
         """
-        queryset = ForecastWeather.objects.all()
+        queryset = StationForecast.objects.all()
         station_slug = self.request.query_params.get('station', None)
         if station_slug is not None:
             queryset = queryset.filter(station__slug=station_slug)

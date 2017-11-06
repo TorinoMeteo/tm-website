@@ -13,31 +13,33 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.conf import settings
 from django.views.generic import TemplateView
-
 from rest_framework_swagger.views import get_swagger_view
 
 from core.routers import ApiRouter
-
 from core.views import LoginView, LogoutView
-from forecast.views.api import ForecastViewSet, DayForecastViewSet
-from realtime.views.api import LastRealtimeDataViewSet, HistoricDataViewSet, \
-        RadarSnapshotViewSet, ForecastWeatherViewSet
+from forecast.views.api import DayForecastViewSet, ForecastViewSet
+from realtime.views.api import (HistoricDataViewSet, LastRealtimeDataViewSet,
+                                RadarSnapshotViewSet, StationForecastViewSet)
 from webcam.views import Webcams
 
 # BEGIN API
 schema_view = get_swagger_view(title='TorinoMeteo REST API')
 # django rest default api view
 router = ApiRouter()
-router.register(r'weather', ForecastWeatherViewSet)
+router.register(r'realtime/forecast', StationForecastViewSet,
+                'station forecast')
 router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
 router.register(r'forecast', ForecastViewSet)
-router.register(r'realtime/data', LastRealtimeDataViewSet, 'last realtime data') # noqa
-router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', HistoricDataViewSet, 'history data') # noqa
-router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)', RadarSnapshotViewSet, 'radar images') # noqa
+router.register(r'realtime/data', LastRealtimeDataViewSet,
+                'last realtime data')  # noqa
+router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
+                HistoricDataViewSet, 'history data')  # noqa
+router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
+                RadarSnapshotViewSet, 'radar images')  # noqa
 router.register(r'webcam', Webcams, 'webcams')
 # END API
 
@@ -57,9 +59,11 @@ urlpatterns = [
     url(r'^account/', include('social_auth.urls')),
 
     # REST API
-    url(r'^api/v1/auth/login/$', LoginView.as_view(),
+    url(r'^api/v1/auth/login/$',
+        LoginView.as_view(),
         name='torinometeo-api-auth-login'),
-    url(r'^api/v1/auth/logout/$', LogoutView.as_view(),
+    url(r'^api/v1/auth/logout/$',
+        LogoutView.as_view(),
         name='torinometeo-api-auth-logout'),
     url(r'^api/doc/$', schema_view),
     url(r'^api/v1/', include(router.urls))
@@ -67,9 +71,9 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^media/(?P<path>.*)$',
-            'django.views.static.serve',
-            {'document_root': settings.MEDIA_ROOT}),
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT
+        }),
     ]
     urlpatterns += [
         url(r'^static/(?P<path>.*)$',

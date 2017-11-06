@@ -14,9 +14,6 @@
     <section class="realtime-station">
       <h1 class="clearfix">
         {{ object.name }}
-        {% if object.weather_icon %}
-          <img class="" src="{{ object.weather_icon.icon }}" alt="{{ object.weather_icon.text }}" title="{{ object.weather_icon.text }}" />
-        {% endif %}
       </h1>
         <nav>
             <div class="btn-group">
@@ -29,6 +26,9 @@
                     <a class="dropdown-item" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
                 </div>
             </div>
+            {% if object.weather_icon %}
+              <img class="" src="{{ object.weather_icon.icon }}" alt="{{ object.weather_icon.text }}" title="{{ object.weather_icon.text }}" style="margin-left: 20px;" />
+            {% endif %}
         </nav>
         <div class="row">
             <div class="col-md-8">

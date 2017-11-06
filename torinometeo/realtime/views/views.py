@@ -4,10 +4,12 @@ import logging
 import random
 import string
 import urllib
+import urllib2
 from datetime import date, datetime
 
 import pytz
 import simplejson
+from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.urlresolvers import reverse_lazy
@@ -21,7 +23,7 @@ from sorl.thumbnail import get_thumbnail
 
 from realtime.fetch.shortcuts import fetch_data
 from realtime.forms import NetRequestForm
-from realtime.models.stations import ForecastWeather, Station, Weather
+from realtime.models.stations import Station, StationForecast
 from realtime.tasks import fetch_radar_images
 
 # Get an instance of a logger
@@ -520,42 +522,40 @@ def fetch_radar(request):
     return HttpResponse(out)
 
 
-# def weather(request):
-#     stations = ''
-#     for station in Station.objects.active():
-#         url = "https://api.apixu.com/v1/forecast.json?key=e683d070df0348fea6393603173010&days=7&q=%s,%s" % (  # noqa
-#             station.lat, station.lng)
-#         print 'DIOFFA'
-#         print url
-#         response = urllib.urlopen(url)
-#         data = json.loads(response.read())
-#         stations += station.name + ' - '
+def weather(request):
+    stations = ''
+    for station in Station.objects.active()[0:3]:
+        stations += ' - ' + station.name
+        url = station.forecast_url
+        xml = urllib2.urlopen(url).read()
+        soup = BeautifulSoup(xml, 'xml')
+        for t in soup.forecast.tabular.findAll('time'):
+            data = {
+                'precipitation': t.precipitation.attrs.get('value', None),
+                'wind_direction': t.windDirection.attrs.get('deg', None),
+                'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
+                'temperature': t.temperature.attrs.get('value', None),
+                'pressure': t.pressure.attrs.get('value', None),
+            }
+            try:
+                forecast = StationForecast.objects.get(
+                    station=station,
+                    date=datetime.strptime(
+                        t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
+                    period=t.attrs.get('period', None),
+                )
+            except:
+                forecast = StationForecast(
+                    station=station,
+                    date=datetime.strptime(
+                        t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
+                    period=t.attrs.get('period', None),
+                )
+            forecast.last_edit = datetime.strptime(
+                soup.meta.lastupdate.string, '%Y-%m-%dT%H:%M:%S')
+            forecast.icon = t.symbol.attrs.get('var', None).encode('utf-8')
+            forecast.text = t.symbol.attrs.get('name', '').encode('utf-8')
+            forecast.data = json.dumps(data)
+            forecast.save()
 
-#         weather = Weather(
-#             station=station,
-#             last_updated=datetime.fromtimestamp(
-#                 data['current']['last_updated_epoch']),
-#             icon=data['current']['condition']['icon'],
-#             text=data['current']['condition']['text'],
-#             data=json.dumps(data['current']))
-#         weather.save()
-
-#         for day in data['forecast']['forecastday']:
-#             try:
-#                 entry = ForecastWeather.objects.get(
-#                     station=station, date=day['date'])
-#                 entry.icon = day['day']['condition']['icon']
-#                 entry.text = day['day']['condition']['text']
-#                 entry.data = json.dumps(day)
-#                 entry.save()
-#             except:
-#                 entry = ForecastWeather(
-#                     station=station,
-#                     date=day['date'],
-#                     icon=day['day']['condition']['icon'],
-#                     text=day['day']['condition']['text'],
-#                     data=json.dumps(day)
-#                 )
-#                 entry.save()
-
-#     return HttpResponse(stations)
+    return HttpResponse(stations)
