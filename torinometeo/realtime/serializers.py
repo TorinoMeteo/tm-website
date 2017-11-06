@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from django.conf import settings
+from rest_framework import serializers
 
 from .models.stations import (Data, HistoricData, RadarSnapshot, Station,
                               StationForecast)
@@ -52,11 +52,13 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
     """
     station = StationSerializer()
     weather_icon = serializers.SerializerMethodField()
+    weather_icon_credits = serializers.SerializerMethodField()
 
     class Meta:
         model = Data
-        fields = ('station', 'weather_icon', 'datetime', 'temperature',
-                  'temperature_max', 'temperature_max_time', 'temperature_min',
+        fields = ('station', 'weather_icon', 'weather_icon_credits',
+                  'datetime', 'temperature', 'temperature_max',
+                  'temperature_max_time', 'temperature_min',
                   'temperature_min_time', 'relative_humidity',
                   'relative_humidity_max', 'relative_humidity_max_time',
                   'relative_humidity_min', 'relative_humidity_min_time',
@@ -71,6 +73,11 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
 
     def get_weather_icon(self, data):
         return data.station.weather_icon()
+
+    def get_weather_icon_credits(self, f):
+        if f.station.forecast_url:
+            return f.station.forecast_url.replace('forecast.xml', '')
+        return None
 
 
 class HistoricDataSerializer(serializers.ModelSerializer):
@@ -109,6 +116,7 @@ class StationForecastSerializer(serializers.ModelSerializer):
     station = StationSerializer()
     period = serializers.SerializerMethodField()
     icon = serializers.SerializerMethodField()
+    credits = serializers.SerializerMethodField()
 
     class Meta:
         model = StationForecast
@@ -119,6 +127,7 @@ class StationForecastSerializer(serializers.ModelSerializer):
             'period',
             'icon',
             'text',
+            'credits',
         )
 
     def get_period(self, f):
@@ -126,3 +135,8 @@ class StationForecastSerializer(serializers.ModelSerializer):
 
     def get_icon(self, f):
         return '%s%s.png' % (settings.BASE_WEATHER_ICON_URL, f.icon)
+
+    def get_credits(self, f):
+        if f.station.forecast_url:
+            return f.station.forecast_url.replace('forecast.xml', '')
+        return None
