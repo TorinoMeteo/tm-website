@@ -22,6 +22,9 @@
         </nav>
          <div class="row">
             <div class="col-sm-8 col-xs-12">
+                {% if object.web %}
+                    <p><i class="fa fa-link"></i> <a href="{{ object.web }}">{{ object.web }}</a></p>
+                {% endif %}
                 {{ object.description | safe }}
                 <table class="table table-station-data">
                     <tbody>
