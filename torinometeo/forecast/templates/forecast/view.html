@@ -20,7 +20,7 @@
                 {{ forecast.pattern | safe }}
                 {% for fd in forecast.dayforecast_set.all %}
                     {% now "Y-m-d" as todays_date %}
-                    {% if fd.date >= todays_date %}
+                    {% if fd.date|date:"Y-m-d" >= todays_date %}
                         <hr />
                         <h2>{{ fd.date }}</h2>
                         <p><i class="fa fa-check-circle fa-2x" style="color: green"></i> <span style="font-size: 24px; display: inline-block; margin-left: 10px; font-weight: bold;">{{ fd.reliability }}%</span></p>
