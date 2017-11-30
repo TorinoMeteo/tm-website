@@ -19,22 +19,25 @@
                 <h2>Situazione</h2>
                 {{ forecast.pattern | safe }}
                 {% for fd in forecast.dayforecast_set.all %}
-                    <hr />
-                    <h2>{{ fd.date }}</h2>
-                    <p><i class="fa fa-check-circle fa-2x" style="color: green"></i> <span style="font-size: 24px; display: inline-block; margin-left: 10px; font-weight: bold;">{{ fd.reliability }}%</span></p>
-                    <div style="margin-bottom: 20px;" class="clearfix">
-                        <div class="col-xs-6">
-                            <img class="forecast-img img-responsive" src="{{ fd.image12.url }}" alt="previsioni 00-12"/>
+                    {% now "Y-m-d" as todays_date %}
+                    {% if fd.date >= todays_date %}
+                        <hr />
+                        <h2>{{ fd.date }}</h2>
+                        <p><i class="fa fa-check-circle fa-2x" style="color: green"></i> <span style="font-size: 24px; display: inline-block; margin-left: 10px; font-weight: bold;">{{ fd.reliability }}%</span></p>
+                        <div style="margin-bottom: 20px;" class="clearfix">
+                            <div class="col-xs-6">
+                                <img class="forecast-img img-responsive" src="{{ fd.image12.url }}" alt="previsioni 00-12"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <img class="forecast-img img-responsive" src="{{ fd.image24.url }}" alt="previsioni 12-24"/>
+                            </div>
                         </div>
-                        <div class="col-xs-6">
-                            <img class="forecast-img img-responsive" src="{{ fd.image24.url }}" alt="previsioni 12-24"/>
-                        </div>
-                    </div>
-                    <div class="div-p">{{ fd.text | safe }}</div>
-                    <h3><i class="wi wi-thermometer"></i> Temperature</h3>
-                    <div class="div-p">{{ fd.temperatures | safe }}</div>
-                    <h3><i class="wi wi-strong-wind"></i> Venti</h3>
-                    <div class="div-p">{{ fd.winds | safe }}</div>
+                        <div class="div-p">{{ fd.text | safe }}</div>
+                        <h3><i class="wi wi-thermometer"></i> Temperature</h3>
+                        <div class="div-p">{{ fd.temperatures | safe }}</div>
+                        <h3><i class="wi wi-strong-wind"></i> Venti</h3>
+                        <div class="div-p">{{ fd.winds | safe }}</div>
+                    {% endif %}
                 {% endfor %}
 
                 <table class="table"><tr><td style="vertical-align: middle; color: red;"><i class="fa fa-exclamation-triangle fa-2x"></i></td><td><small>Le previsioni meteorologiche qui presentate sono da considerarsi ad uso ed interesse personale e non mirano in alcun modo a sostituirsi agli organi preposti.<br />
