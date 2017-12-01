@@ -107,7 +107,7 @@ class RadarSnapshotSerializer(serializers.ModelSerializer):
         )
 
     def get_file_url(self, snapshot):
-        return 'http://radar.torinometeo.org/images/%s' % snapshot.filename
+        return 'https://radar.torinometeo.org/images/%s' % snapshot.filename
 
 
 class StationForecastSerializer(serializers.ModelSerializer):

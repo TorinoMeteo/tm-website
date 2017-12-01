@@ -198,7 +198,7 @@ class RadarSnapshotAdmin(admin.ModelAdmin):
 
     def view_image(self, obj):
         return mark_safe(
-            '<a target="_blank" class="btn btn-primary" href="http://radar.torinometeo.org/images/%s">vedi</a>'  # noqa
+            '<a target="_blank" class="btn btn-primary" href="https://radar.torinometeo.org/images/%s">vedi</a>'  # noqa
             % obj.filename)  # noqa
 
     view_image.short_description = 'visualizza'
