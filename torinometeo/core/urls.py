@@ -30,8 +30,8 @@ from webcam.views import Webcams
 schema_view = get_swagger_view(title='TorinoMeteo REST API')
 # django rest default api view
 router = ApiRouter()
-router.register(r'realtime/forecast', StationForecastViewSet,
-                'station forecast')
+# router.register(r'realtime/forecast', StationForecastViewSet,
+#                 'station forecast')
 router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
 router.register(r'forecast', ForecastViewSet)
 router.register(r'realtime/data', LastRealtimeDataViewSet,
