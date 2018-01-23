@@ -34,7 +34,7 @@ $link-color: #fb730f;
   width: 152px;
   z-index: 10;
 
-  @include media-breakpoint-up(lg) {
+  @include media-breakpoint-up(xl) {
     background-size: auto;
     height: 80px;
     left: 50%;
@@ -48,6 +48,7 @@ $link-color: #fb730f;
   height: 100%;
   line-height: 1.5;
   margin-top: 74px;
+  overflow: auto;
   padding-top: 20px;
   position: fixed;
   right: -280px;
@@ -56,21 +57,22 @@ $link-color: #fb730f;
   width: 280px;
   z-index: -1;
 
-  @include media-breakpoint-up(lg) {
+  @include media-breakpoint-up(xl) {
     margin-top: 0;
+    overflow: visible;
     padding-top: 0;
     position: static;
     width: 100%;
   }
 
   .menu-container-sx {
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(xl) {
       float: left;
     }
   }
 
   .menu-container-dx {
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(xl) {
       float: right;
 
       > ul {
@@ -82,7 +84,12 @@ $link-color: #fb730f;
   .signin-btns {
     display: inline-block;
     margin: 10px 0 0 10px;
+    margin-bottom: 94px;
     vertical-align: top;
+
+    @include media-breakpoint-up(xl) {
+      margin-bottom: 0;
+    }
   }
 
   .navbar-nav .nav-item {
@@ -92,14 +99,14 @@ $link-color: #fb730f;
     padding: .5rem 0 .5rem 1rem;
     text-transform: uppercase;
 
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(xl) {
       border-bottom: 0 solid;
       float: left;
       position: relative;
     }
 
     a {
-      @include media-breakpoint-up(lg) {
+      @include media-breakpoint-up(xl) {
         color: $white;
       }
     }
@@ -111,7 +118,7 @@ $link-color: #fb730f;
     font-size: .9rem;
     position: static;
 
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(xl) {
       border: 1px solid $light-gray;
       border-radius: 0;
       float: left;
@@ -126,7 +133,7 @@ $link-color: #fb730f;
       border-left: 6px solid $border-li-color;
       padding: .5rem;
 
-      @include media-breakpoint-up(lg) {
+      @include media-breakpoint-up(xl) {
         background: $white;
         border-left: 0 solid;
         float: none;

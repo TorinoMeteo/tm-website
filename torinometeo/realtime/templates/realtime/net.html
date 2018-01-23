@@ -39,7 +39,7 @@
                         <div class="back">
                             <h2>{{ station.name }}</h2>
                             {{ station.description | safe | truncatewords_html:10 }}
-                            <p style="margin-top: 10px;"><a href="{% url 'realtime-station' station.slug %}">PAGINA STAZIONE <i class="fa fa-arrow-right"></i></a></p>
+                            <p style="margin-top: 10px;"><a href="{% url 'realtime-station-realtime' station.slug %}">PAGINA STAZIONE <i class="fa fa-arrow-right"></i></a></p>
                         </div>
                     </div>
                 </div>

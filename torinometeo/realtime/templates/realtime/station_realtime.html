@@ -17,14 +17,12 @@
       </h1>
         <nav>
             <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="btn btn-secondary" href="{% url 'realtime-station' object.slug %}">Principale</a>
+                <button type="button" class="btn btn-primary">
                     Live
                 </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{% url 'realtime-station' object.slug %}">Principale</a>
-                    <a class="dropdown-item" href="{% url 'realtime-station-historic' object.slug %}">Storico</a>
-                    <a class="dropdown-item" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
-                </div>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-historic' object.slug %}">Storico</a>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
             </div>
             {% if object.weather_icon %}
                 <a href="{{ object.forecast_url_credits }}">

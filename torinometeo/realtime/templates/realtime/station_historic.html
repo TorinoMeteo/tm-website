@@ -11,14 +11,12 @@
         <h1>{{ object.name }}</h1>
         <nav>
             <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="btn btn-secondary" href="{% url 'realtime-station' object.slug %}">Principale</a>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-realtime' object.slug %}">Live</a>
+                <button type="button" class="btn btn-primary">
                     Storico
                 </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{% url 'realtime-station' object.slug %}">Principale</a>
-                    <a class="dropdown-item" href="{% url 'realtime-station-realtime' object.slug %}">Live</a>
-                    <a class="dropdown-item" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
-                </div>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
             </div>
         </nav>
         <div class="row">
