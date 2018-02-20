@@ -68,6 +68,9 @@
             }
 
             this.chart = new Highcharts.Chart({
+                time : {
+                    timezone: 'Europe/Rome'
+                },
                 chart: {
                     renderTo: this.render_to.attr('id'),
                     zoomType: 'x',
