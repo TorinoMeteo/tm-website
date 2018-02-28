@@ -303,6 +303,8 @@ def fetch_radar_images():
         dst = '/var/www/radar/images/'
 
     result = fetch_radar(dt, colors, src, dst)
+    if not result:
+        result = fetch_radar((dt + datetime.timedelta(minutes=10)), colors, src, dst)
     if result:
         snapshot = RadarSnapshot(
             datetime=result.get('datetime'),
