@@ -110,6 +110,8 @@ class StationForecastViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """ Looks for date param in order to filter only related forecasts
+            The date param is mandatory! otherwise it will return an empty queryset
+            to avoid timeout issues (too many records)
         """
         queryset = StationForecast.objects.all()
         station_slug = self.request.query_params.get('station', None)
@@ -118,6 +120,8 @@ class StationForecastViewSet(viewsets.ModelViewSet):
         date = self.request.query_params.get('date', None)
         if date is not None:
             queryset = queryset.filter(date=date)
+        else:
+            return StationForecast.objects.none()
         return queryset
 
     @list_route()
