@@ -3,6 +3,7 @@ import datetime
 from django.db.models import Max
 from django.http import Http404
 from rest_framework import mixins, status, viewsets, permissions
+from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from realtime.models.stations import (Data, HistoricData,
@@ -108,7 +109,7 @@ class StationForecastViewSet(viewsets.ModelViewSet):
         return (permissions.DjangoModelPermissionsOrAnonReadOnly(), )
 
     def get_queryset(self):
-        """ Looks for forecast param in order to filter only related day forecasts
+        """ Looks for date param in order to filter only related forecasts
         """
         queryset = StationForecast.objects.all()
         station_slug = self.request.query_params.get('station', None)
@@ -118,3 +119,13 @@ class StationForecastViewSet(viewsets.ModelViewSet):
         if date is not None:
             queryset = queryset.filter(date=date)
         return queryset
+
+    @list_route()
+    def next(self, request):
+        queryset = StationForecast.objects.filter(date__gte=datetime.datetime.now).order_by('date')
+        station_slug = self.request.query_params.get('station', None)
+        if station_slug is not None:
+            queryset = queryset.filter(station__slug=station_slug)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
