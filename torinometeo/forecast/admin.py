@@ -1,5 +1,7 @@
 from django.contrib import admin
-from forecast.models import Forecast, DayForecast
+
+from forecast.models import DayForecast, Forecast
+
 
 # forecast
 class DayForecastInline(admin.StackedInline):
@@ -7,31 +9,54 @@ class DayForecastInline(admin.StackedInline):
     extra = 1
     suit_classes = 'suit-tab suit-tab-dayforecast'
 
+
 class ForecastAdmin(admin.ModelAdmin):
-    list_display = ['id', 'date',]
-    inlines = [DayForecastInline, ]
+    list_display = [
+        'id',
+        'date',
+        'user',
+    ]
+    inlines = [
+        DayForecastInline,
+    ]
     list_filter = ('date', )
     search_fields = ('note', )
 
-    fieldsets = (
-        (None, {
-            'classes': ('suit-tab', 'suit-tab-main',),
-            'fields': ['date', 'pattern', 'note', ],
-        }),
-    )
+    fieldsets = ((None, {
+        'classes': (
+            'suit-tab',
+            'suit-tab-main',
+        ),
+        'fields': [
+            'date',
+            'pattern',
+            'note',
+        ],
+    }), )
 
     suit_form_tabs = (
         ('main', 'Principale'),
         ('dayforecast', 'Previsioni giornate'),
     )
 
+    def save_model(self, request, obj, form, change):
+        obj.user = request.user
+        obj.save()
+
+
 admin.site.register(Forecast, ForecastAdmin)
 
 # day forecast
 
+
 class DayForecastAdmin(admin.ModelAdmin):
-    list_display = ['id', 'forecast', 'date',]
+    list_display = [
+        'id',
+        'forecast',
+        'date',
+    ]
     list_filter = ('date', )
     search_fields = ('note', )
+
 
 admin.site.register(DayForecast, DayForecastAdmin)
