@@ -354,3 +354,14 @@ def fetch_weather_forecast():
         except:
             pass
     logger.info('END -- running task: fetch_weather_forecast')
+
+
+@app.task
+def clean_weather_forecast():
+    """ Deletes data older than 2 days
+    """
+    logger.info('BEGIN -- running task: clean_weather_forecast')
+    date = datetime.datetime.now() - datetime.timedelta(days=2)
+    StationForecast.objects.filter(date__lte=date).delete()
+    logger.info('delete station forecast older than 2 days successfull')
+    logger.info('END -- running task: clean_weather_forecast')

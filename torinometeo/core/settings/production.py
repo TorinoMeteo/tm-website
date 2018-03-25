@@ -60,4 +60,9 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(minute=0, hour='0,6,12,18'),  # every 6 hours
         'args': ()
     },
+    'clean-weather-forecast': {
+        'task': 'realtime.tasks.clean_weather_forecast',
+        'schedule': crontab(minute=30, hour=0),  # every day 00:30
+        'args': ()
+    },
 }
