@@ -182,6 +182,7 @@ class HistoricDataAdmin(admin.ModelAdmin):
         'date',
         'station',
     )
+    list_filter = ('station', 'date', )
 
 
 admin.site.register(HistoricData, HistoricDataAdmin)

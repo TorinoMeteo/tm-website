@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, View
@@ -253,7 +253,7 @@ class StationHistoricView(DetailView):
                 if first_m or rh_max_m < d.get('relative_humidity_max'):
                     rh_max_m = d.get('relative_humidity_max')
 
-                r_sum_m = r_sum_m + d.get('rain')
+                r_sum_m = r_sum_m + d.get('rain', 0)
 
                 first_m = False
 
@@ -278,7 +278,7 @@ class StationHistoricView(DetailView):
                     if first_1d or rh_max_1d < d.get('relative_humidity_max'):
                         rh_max_1d = d.get('relative_humidity_max')
 
-                    r_sum_1d = r_sum_1d + d.get('rain')
+                    r_sum_1d = r_sum_1d + d.get('rain', 0)
 
                     first_1d = False
 
@@ -303,7 +303,7 @@ class StationHistoricView(DetailView):
                     if first_2d or rh_max_2d < d.get('relative_humidity_max'):
                         rh_max_2d = d.get('relative_humidity_max')
 
-                    r_sum_2d = r_sum_2d + d.get('rain')
+                    r_sum_2d = r_sum_2d + d.get('rain', 0)
 
                     first_2d = False
 
@@ -328,7 +328,7 @@ class StationHistoricView(DetailView):
                     if first_3d or rh_max_3d < d.get('relative_humidity_max'):
                         rh_max_3d = d.get('relative_humidity_max')
 
-                    r_sum_3d = r_sum_3d + d.get('rain')
+                    r_sum_3d = r_sum_3d + d.get('rain', 0)
 
                     first_3d = False
 
@@ -503,8 +503,11 @@ class WebcamView(View):
         station = Station.objects.get(pk=pk)
         if station.webcam:
             url = station.webcam + '?' + randomword(10)
-            im = get_thumbnail(url, '800', quality=50)  # noqa
-            return HttpResponse(im.read(), content_type="image/jpg")
+            try:
+                im = get_thumbnail(url, '800', quality=50)  # noqa
+                return HttpResponse(im.read(), content_type="image/jpg")
+            except:
+                return redirect(url)
         else:
             raise Http404("Station does not have a webcam associated")
 
