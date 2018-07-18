@@ -28,7 +28,7 @@ class Data(dict):
         super(Data, self).__init__(*args, **kwargs)
         try:
             self[DL['DATETIME']] = datetime.combine(self[DL['DATE']], self[DL['TIME']]) # noqa
-        except:
+        except: # noqa
             self[DL['DATETIME']] = None
 
     def as_json(self):

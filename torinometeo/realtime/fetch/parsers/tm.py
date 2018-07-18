@@ -1,9 +1,9 @@
-import os
 import json
+import os
 import re
 
-from .abstract import Parser
 from ..labels import DATA_LABELS as DL
+from .abstract import Parser
 
 
 class TmParser(Parser):
@@ -46,17 +46,17 @@ class TmParser(Parser):
     }
 
     def parse(self, content):
-	aux = re.sub(r"[\r\n\t\f\v]",r"",content)
-	aux = re.sub(r",}",r"}",aux)
-	jsondata = json.loads(aux)
+        aux = re.sub(r"[\r\n\t\f\v]", r"", content)
+        aux = re.sub(r",}", r"}", aux)
+        jsondata = json.loads(aux)
         jsondata.update({'measure_time': jsondata['datetime']})
         jsondata.update({'measure_date': jsondata['datetime']})
         data = {}
         for k, i in self.data_map.iteritems():
-	    try:
-	        value = str(jsondata[k])
-        	value = self._clean(value, i[1])
-	    except:
-		value = None
-	    data[i[0]] = value
+            try:
+                value = str(jsondata[k])
+                value = self._clean(value, i[1])
+            except: # noqa
+                value = None
+            data[i[0]] = value
         return data

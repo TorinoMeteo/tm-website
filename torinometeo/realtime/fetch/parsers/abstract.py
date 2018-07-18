@@ -1,5 +1,6 @@
-import re
 import datetime
+import re
+
 import dateutil.parser
 
 from ..settings import EXTREMES as EX
@@ -13,7 +14,7 @@ class Parser(object):
     non_decimal = re.compile(r'[^\d.-]+')
 
     def __init__(self, **kwargs):
-        self.time_format = kwargs.get('time_format') or ('%H:%M',)
+        self.time_format = kwargs.get('time_format') or ('%H:%M', )
         self.date_format = kwargs.get('date_format') or '%d/%m/%Y'
 
     def parse(self, content):
@@ -23,6 +24,9 @@ class Parser(object):
         """ String to float rounded with precision
             Add here logic to support internalization
         """
+        if isinstance(value, float):
+            return round(value, precision)
+
         value = value.replace(',', '.')
         return round(float(self.non_decimal.sub('', value)), precision)
 
@@ -42,7 +46,7 @@ class Parser(object):
         try:
             value = getattr(self, '_clean_%s' % var)(value)
             return value
-        except:
+        except:  # noqa
             # @TODO do something more specific with value errors?
             return None
 
@@ -54,40 +58,44 @@ class Parser(object):
 
     def _clean_time(self, value):
         if isinstance(self.time_format, basestring):
-            self.time_format = (self.time_format,)
+            self.time_format = (self.time_format, )
         for i, fmt in enumerate(self.time_format):
             try:
-		aux = datetime.datetime.strptime(value.strip(), fmt).time() # noqa
-#		print aux
-		return aux
-            except:
-		if i == len(self.time_format) -1:
-		    try:
-			aux = dateutil.parser.parse(value.strip(), dayfirst=True).time()
-#			print aux
-			return aux
-		    except:
-			pass
-		else:
+                aux = datetime.datetime.strptime(value.strip(),
+                                                 fmt).time()  # noqa
+                # print aux
+                return aux
+            except:  # noqa
+                if i == len(self.time_format) - 1:
+                    try:
+                        aux = dateutil.parser.parse(
+                            value.strip(), dayfirst=True).time()
+                        # print aux
+                        return aux
+                    except: # noqa
+                        pass
+                else:
                     pass
 
     def _clean_date(self, value):
         if isinstance(self.date_format, basestring):
-            self.date_format = (self.date_format,)
+            self.date_format = (self.date_format, )
         for i, fmt in enumerate(self.date_format):
             try:
-                aux = datetime.datetime.strptime(value.strip(), fmt).date() # noqa
-#		print aux
-		return aux
-            except:
-		if i == len(self.date_format) -1:
-		    try:
-			aux = dateutil.parser.parse(value.strip(), dayfirst=True).date()
-#			print aux
-			return aux
-		    except:
-			pass
-		else:
+                aux = datetime.datetime.strptime(value.strip(),
+                                                 fmt).date()  # noqa
+                # print aux
+                return aux
+            except: # noqa
+                if i == len(self.date_format) - 1:
+                    try:
+                        aux = dateutil.parser.parse(
+                            value.strip(), dayfirst=True).date()
+                        # print aux
+                        return aux
+                    except: # noqa
+                        pass
+                else:
                     pass
 
     def _clean_humidity(self, value):
@@ -105,15 +113,15 @@ class Parser(object):
     def _clean_wind_dir(self, value):
         try:
             aux = self._to_float(value)
-        except:
+        except: # noqa
             # some files may be html
             value = re.sub('[^nNsSoOwWeE]', '', value).rstrip()
             try:
                 aux = EX['WIND_DIR']['TEXT'].index(value) * 22.5
-            except:
+            except: # noqa
                 try:
                     aux = EX['WIND_DIR']['TEXT_I'].index(value) * 22.5
-                except:
+                except: # noqa
                     raise ValueError('wrong wind direction detected')
         return aux
 
