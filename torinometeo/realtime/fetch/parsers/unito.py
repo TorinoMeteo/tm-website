@@ -44,7 +44,11 @@ class UnitoParser(Parser):
     }
 
     def parse(self, content):
-        lines = content.split(os.linesep)
+        f_lines = content.split(os.linesep)
+        lines = []
+        for line in f_lines:
+            if line != '' and line != '\r':
+                lines.append(line)
 
         data = {}
         for k, i in self.data_map.iteritems():
