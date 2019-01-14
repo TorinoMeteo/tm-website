@@ -12,3 +12,4 @@ releases
 logs
 backups
 supervisord.conf.production
+tags
