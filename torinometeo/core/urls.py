@@ -22,8 +22,9 @@ from rest_framework_swagger.views import get_swagger_view
 from core.routers import ApiRouter
 from core.views import LoginView, LogoutView
 from forecast.views.api import DayForecastViewSet, ForecastViewSet
-from realtime.views.api import (HistoricDataViewSet, LastRealtimeDataViewSet,
-                                RadarSnapshotViewSet, StationForecastViewSet)
+from realtime.views.api import (CurrentDayDataViewSet, HistoricDataViewSet,
+                                LastRealtimeDataViewSet, RadarSnapshotViewSet,
+                                StationForecastViewSet)
 from webcam.views import Webcams
 
 # BEGIN API
@@ -31,9 +32,11 @@ schema_view = get_swagger_view(title='TorinoMeteo REST API')
 # django rest default api view
 router = ApiRouter()
 router.register(r'realtime/forecast', StationForecastViewSet,
-                 'station forecast')
+                'station forecast')
 router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
 router.register(r'forecast', ForecastViewSet)
+router.register(r'realtime/today/data', CurrentDayDataViewSet,
+                'current day realtime data')  # noqa
 router.register(r'realtime/data', LastRealtimeDataViewSet,
                 'last realtime data')  # noqa
 router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
@@ -71,9 +74,8 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT
-        }),
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT}),
     ]
     urlpatterns += [
         url(r'^static/(?P<path>.*)$',

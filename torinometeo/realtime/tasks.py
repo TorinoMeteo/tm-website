@@ -24,6 +24,7 @@ from celery.utils.log import get_task_logger
 from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
     RadarColorConversion, RadarConvertParams, StationForecast
 from .fetch.shortcuts import fetch_data
+from constance import config
 
 logger = get_task_logger(__name__)
 
@@ -194,6 +195,7 @@ def clean_realtime_data():
 def fetch_radar_image(dt, src):
     remainder_dt = int(dt.minute) % 10
     next_dt = dt + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainder_dt) # noqa
+    base_url = config.RADAR_BASE_URL
     remote_filename = 'VRAG05.CCSK_%s' % next_dt.astimezone(pytz.utc).strftime("%Y%m%d_%H%M") # noqa
     local_filename = '%s.png' % next_dt.astimezone(pytz.utc).strftime("%Y%m%d%H%M") # noqa
     local_path = os.path.join(src, local_filename)
@@ -210,14 +212,14 @@ def fetch_radar_image(dt, src):
             'Referer': 'http://www.meteosvizzera.admin.ch/home.html?tab=rain',
             'USer-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0' # noqa
         }
-        r = session.get('http://www.meteosvizzera.admin.ch/product/output/radar-processing/%s.png' % remote_filename, headers=headers, stream=True) # noqa
+        r = session.get(base_url + remote_filename + '.png', headers=headers, stream=True) # noqa
         r.raise_for_status()
         with open(local_path, 'wb') as out_file:
             shutil.copyfileobj(r.raw, out_file)
         del r
         return (ip, local_filename, image_dt)
     except HTTPError:
-        logger.error('Could not download %s.png' % remote_filename)
+        logger.error('Could not download '+ base_url+ remote_filename+'.png')
         return False
     except Exception, e:
         logger.error(e)

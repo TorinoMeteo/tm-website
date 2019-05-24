@@ -93,6 +93,8 @@ INSTALLED_APPS = (
     'pipeline',
     'social.apps.django_app.default',
     'corsheaders',
+    'constance',
+    'constance.backends.database',
     'filer',
     'mptt',
     'easy_thumbnails',
@@ -139,6 +141,7 @@ TEMPLATES = [
         'OPTIONS': {
             'debug': False,
             'context_processors': [
+                'constance.context_processors.config',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -166,6 +169,16 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# CONSTANCE
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+    'RADAR_BASE_URL': ('http://www.meteosvizzera.admin.ch/product/output/radar/precipitation/', 'Base URL immagini radar'),
+}
+
+CONSTANCE_CONFIG_FIELDSETS = {
+    'Realtime': ('RADAR_BASE_URL', ),
+}
 
 
 # Static files (CSS, JavaScript, Images)
@@ -223,10 +236,11 @@ SUIT_CONFIG = {
 
         '-',
 
-        {'app': 'auth', 'label': 'Authentication', 'icon': 'fa fa-lock'},
+        {'app': 'auth', 'label': 'Autenticazione', 'icon': 'fa fa-lock'},
         {'app': 'authtoken', 'label': 'REST token authentication',
          'icon': 'fa fa-lock'},
-        {'app': 'sites', 'label': 'Sites', 'icon': 'fa fa-leaf'},
+        {'app': 'sites', 'label': 'Siti', 'icon': 'fa fa-leaf'},
+        {'app': 'constance', 'label': 'Impostazioni', 'icon': 'fa fa-cogs'},
 
         '-',
 
@@ -234,7 +248,7 @@ SUIT_CONFIG = {
 
         '-',
 
-        {'app': 'filer', 'label': 'Files', 'icon': 'fa fa-file'},
+        {'app': 'filer', 'label': 'File Manager', 'icon': 'fa fa-file'},
 
 
         '-',

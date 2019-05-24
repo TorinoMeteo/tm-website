@@ -2,16 +2,60 @@ import datetime
 
 from django.db.models import Max
 from django.http import Http404
-from rest_framework import mixins, status, viewsets, permissions
+from django.utils import timezone
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
-from realtime.models.stations import (Data, HistoricData,
-                                      RadarSnapshot, Station, StationForecast, )
+from realtime.models.stations import (Data, HistoricData, RadarSnapshot,
+                                      Station, StationForecast)
 from realtime.serializers import (HistoricDataSerializer,
                                   RadarSnapshotSerializer,
                                   RealtimeDataSerializer,
-                                  StationForecastSerializer, )
+                                  StationForecastSerializer)
+
+
+class CurrentDayDataViewSet(viewsets.ViewSet):
+    """ Realtime current day data
+        Fetches the current day measured data of each station
+    """
+
+    def list(self, request):
+        """
+        Gets the day data
+        """
+        try:
+            today = timezone.datetime.today()
+            data = Data.objects.filter(
+                station__active=True,
+                datetime__year=today.year,
+                datetime__month=today.month,
+                datetime__day=today.day).order_by('station__name')
+            serializer = RealtimeDataSerializer(
+                data, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Data.DoesNotExist:
+            raise Http404()
+
+    def retrieve(self, request, pk=None):
+        """
+        Gets the current day measured data for the given station
+        """
+        try:
+            today = timezone.datetime.today()
+            station = Station.objects.get(active=True, slug=pk)
+            data = Data.objects.filter(
+                station__active=True,
+                station=station,
+                datetime__year=today.year,
+                datetime__month=today.month,
+                datetime__day=today.day).order_by('station__name').order_by(
+                    'datetime')
+            serializer = RealtimeDataSerializer(
+                data, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Station.DoesNotExist:
+            raise Http404()
 
 
 class LastRealtimeDataViewSet(viewsets.ViewSet):
@@ -27,11 +71,10 @@ class LastRealtimeDataViewSet(viewsets.ViewSet):
             last_data = Data.objects.values('station').annotate(
                 latest_id=Max('id'))
             ids = [d.get('latest_id') for d in last_data]
-            data = Data.objects.filter(station__active=True, id__in=ids).order_by('station__name')
+            data = Data.objects.filter(
+                station__active=True, id__in=ids).order_by('station__name')
             serializer = RealtimeDataSerializer(
-                data, many=True, context={
-                    'request': request
-                })
+                data, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Data.DoesNotExist:
             raise Http404()
@@ -45,9 +88,7 @@ class LastRealtimeDataViewSet(viewsets.ViewSet):
             data = Data.objects.filter(
                 station=station).order_by('-datetime').first()
             serializer = RealtimeDataSerializer(
-                data, many=False, context={
-                    'request': request
-                })
+                data, many=False, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Station.DoesNotExist:
             raise Http404()
@@ -126,7 +167,8 @@ class StationForecastViewSet(viewsets.ModelViewSet):
 
     @list_route()
     def next(self, request):
-        queryset = StationForecast.objects.filter(date__gte=datetime.datetime.now).order_by('date')
+        queryset = StationForecast.objects.filter(
+            date__gte=datetime.datetime.now).order_by('date')
         station_slug = self.request.query_params.get('station', None)
         if station_slug is not None:
             queryset = queryset.filter(station__slug=station_slug).distinct()
