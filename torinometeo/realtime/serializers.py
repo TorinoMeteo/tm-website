@@ -80,6 +80,26 @@ class RealtimeDataSerializer(serializers.ModelSerializer):
         return None
 
 
+class JustDataSerializer(serializers.ModelSerializer):
+    """ Realtime Just Data Serializer
+    """
+    class Meta:
+        model = Data
+        fields = ('datetime', 'temperature', 'temperature_max',
+                  'temperature_max_time', 'temperature_min',
+                  'temperature_min_time', 'relative_humidity',
+                  'relative_humidity_max', 'relative_humidity_max_time',
+                  'relative_humidity_min', 'relative_humidity_min_time',
+                  'dewpoint', 'dewpoint_max', 'dewpoint_max_time',
+                  'dewpoint_min', 'dewpoint_min_time', 'pressure',
+                  'pressure_max', 'pressure_max_time', 'pressure_min',
+                  'pressure_min_time', 'wind_strength', 'wind_dir',
+                  'wind_dir_text', 'wind_strength_max', 'wind_dir_max',
+                  'wind_dir_max_text', 'wind_max_time', 'rain', 'rain_rate',
+                  'rain_rate_max', 'rain_rate_max_time', 'rain_month',
+                  'rain_year')
+
+
 class HistoricDataSerializer(serializers.ModelSerializer):
     """ Realtime Data Serializer
     """

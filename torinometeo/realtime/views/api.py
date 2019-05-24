@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from realtime.models.stations import (Data, HistoricData, RadarSnapshot,
                                       Station, StationForecast)
-from realtime.serializers import (HistoricDataSerializer,
+from realtime.serializers import (HistoricDataSerializer, JustDataSerializer,
                                   RadarSnapshotSerializer,
                                   RealtimeDataSerializer,
                                   StationForecastSerializer)
@@ -19,23 +19,6 @@ class CurrentDayDataViewSet(viewsets.ViewSet):
     """ Realtime current day data
         Fetches the current day measured data of each station
     """
-
-    def list(self, request):
-        """
-        Gets the day data
-        """
-        try:
-            today = timezone.datetime.today()
-            data = Data.objects.filter(
-                station__active=True,
-                datetime__year=today.year,
-                datetime__month=today.month,
-                datetime__day=today.day).order_by('station__name')
-            serializer = RealtimeDataSerializer(
-                data, many=True, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Data.DoesNotExist:
-            raise Http404()
 
     def retrieve(self, request, pk=None):
         """
@@ -51,7 +34,7 @@ class CurrentDayDataViewSet(viewsets.ViewSet):
                 datetime__month=today.month,
                 datetime__day=today.day).order_by('station__name').order_by(
                     'datetime')
-            serializer = RealtimeDataSerializer(
+            serializer = JustDataSerializer(
                 data, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Station.DoesNotExist:
