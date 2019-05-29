@@ -375,6 +375,7 @@ SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = False
 SOCIAL_AUTH_ACTION_BOOKMARK = 'Devi essere loggato per salvare un preferito'
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/#login'
 LOGIN_ERROR_URL = '/account/errors/'
 # SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/account/email-sent/'

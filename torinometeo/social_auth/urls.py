@@ -14,7 +14,7 @@ urlpatterns = [
         name='account-errors'),
     url(r'^email-sent/$', mail_sent),
     url(r'^logout/$',
-        views.LogoutView.as_view(), {'next_page': '/'},
+        views.LogoutView.as_view(),
         name='account-logout'),
     url(r'^login/$',
         views.LoginView.as_view(), {'template_name': 'social_auth/login.html'},

@@ -178,6 +178,7 @@ class Station(models.Model):
         if forecast:
             icon = '%s%s.png' % (settings.BASE_WEATHER_ICON_URL, forecast.icon)
             text = forecast.text
+            # @TODO check, probably not needed anymore
             if encode:
                 return {
                     'icon': icon.encode('utf-8'),
