@@ -78,7 +78,7 @@ DATABASES = {
 
 INSTALLED_APPS = (
     'core',
-    'suit',
+    'baton',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -91,7 +91,6 @@ INSTALLED_APPS = (
     'ckeditor_uploader',
     'widget_tweaks',
     'pipeline',
-    'social.apps.django_app.default',
     'corsheaders',
     'constance',
     'constance.backends.database',
@@ -107,7 +106,8 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'treenav',
-    'social_auth',
+    'social_django',
+    'social_auth', # wrapper
     'colorful',
     # tm
     'forecast',
@@ -115,20 +115,19 @@ INSTALLED_APPS = (
     'blog',
     'webcam',
     'bookmarks',
+    'baton.autodiscover',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'core.urls'
@@ -148,8 +147,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.debug',
                 'treenav.context_processors.treenav_active',
-                'social.apps.django_app.context_processors.backends',
-                'social.apps.django_app.context_processors.login_redirect',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -229,46 +228,45 @@ CORS_ALLOW_CREDENTIALS = True
 TAGGIT_CASE_INSENSITIVE = True
 
 # ADMIN
-
-SUIT_CONFIG = {
-    'ADMIN_NAME': 'TorinoMeteo',
+BATON = {
+    'SITE_HEADER': '<img src="/static/core/src/img/logoTM.png" style="height: 50px;"/>',
+    'SITE_TITLE': 'TorinoMeteo',
+    'INDEX_TITLE': 'Amministrazione Sito',
     'MENU': (
+        {'type': 'title', 'label': 'Sistema',  'apps': ('auth', 'sites', 'constance', )},
+        {'type': 'app', 'name': 'auth', 'label': 'Autenticazione', 'icon':'fa fa-lock'},
+        {'type': 'model', 'app': 'authtoken', 'name': 'token', 'label': 'REST token', 'icon':'fa fa-key'},
+        {'type': 'model', 'app': 'sites', 'name': 'site', 'label': 'Siti', 'icon':'fa fa-leaf'},
+        {'type': 'model', 'app': 'constance', 'name': 'config', 'label': 'Impostazioni', 'icon':'fa fa-cogs'},
 
-        '-',
+        
+        {'type': 'title', 'label': 'Risorse',  'apps': ('filer', )},
+        {'type': 'model', 'app': 'filer', 'name': 'folder', 'label': 'File manager', 'icon':'fa fa-folder-open'},
+        
 
-        {'app': 'auth', 'label': 'Autenticazione', 'icon': 'fa fa-lock'},
-        {'app': 'authtoken', 'label': 'REST token authentication',
-         'icon': 'fa fa-lock'},
-        {'app': 'sites', 'label': 'Siti', 'icon': 'fa fa-leaf'},
-        {'app': 'constance', 'label': 'Impostazioni', 'icon': 'fa fa-cogs'},
+        {'type': 'title', 'label': 'Navigazione',  'apps': ('treenav', )},
+        {'type': 'model', 'app': 'treenav', 'name': 'menuitem', 'label': 'Menu', 'icon':'fa fa-bars'},
 
-        '-',
+        {'type': 'title', 'label': 'Contenuti',  'apps': ('flatpages', 'blog', )},
+        {'type': 'model', 'app': 'flatpages', 'name': 'flatpage', 'label': 'Pagine', 'icon':'fa fa-file-alt'},
+        {'type': 'model', 'app': 'blog', 'name': 'entry', 'label': 'Blog', 'icon':'fa fa-book'},
 
-        {'app': 'treenav', 'label': 'Menu', 'icon': 'fa fa-bars'},
+        {'type': 'title', 'label': 'Meteo',  'apps': ('realtime', 'webcam', 'forecast', )},
+        {'type': 'app', 'name': 'realtime', 'label': 'Realtime', 'icon':'fa fa-clock'},
+        {'type': 'app', 'name': 'forecast', 'label': 'Previsioni', 'icon':'fa fa-cloud-sun-rain'},
+        {'type': 'model', 'app': 'webcam', 'name': 'webcam', 'label': 'Webcam', 'icon':'fa fa-camera'},
 
-        '-',
-
-        {'app': 'filer', 'label': 'File Manager', 'icon': 'fa fa-file'},
-
-
-        '-',
-
-        {'app': 'flatpages', 'label': 'Pagine', 'icon': 'fa fa-file-text-o'},
-        {'app': 'blog', 'label': 'Blog', 'icon': 'fa fa-book'},
-
-        '-',
-
-        {'app': 'realtime', 'label': 'Realtime', 'icon': 'fa fa-clock-o'},
-        {'app': 'forecast', 'label': 'Previsioni', 'icon': 'fa fa-globe'},
-        {'app': 'webcam', 'label': 'Webcam', 'icon': 'fa fa-camera'},
-
-        '-',
-
-        {'app': 'bookmarks', 'label': 'Bookmarks', 'icon': 'fa fa-bookmark'},
-
-    )
+        {'type': 'title', 'label': 'Preferiti',  'apps': ('bookmarks', )},
+        {'type': 'model', 'app': 'bookmarks', 'name': 'stationbookmark', 'label': 'Stazioni', 'icon':'fa fa-bookmark'},
+    ),
+    'COPYRIGHT': '© 2019 torinometeo.org',
+    'SUPPORT_HREF': 'mailto:abidibo@gmail.com',
+    'POWERED_BY': '<a href="https://www.abidibo.net">abidibo</a>',
+    'ANALYTICS': {
+        'CREDENTIALS': os.path.join(BASE_DIR, 'credentials.json'),
+        'VIEW_ID': '34377537',
+    }
 }
-
 
 # CKEDITOR
 CKEDITOR_UPLOAD_PATH = 'ckeditor/'
@@ -302,58 +300,56 @@ CKEDITOR_CONFIGS = {
 }
 
 # pipeline
-PIPELINE_CSS = {
-    'vendor': {
-        'source_filenames': (
-            'core/src/vendor/Font-Awesome/scss/font-awesome.scss',
-            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css', # noqa
-            'core/src/vendor/magnific-popup/magnific-popup.css',
-        ),
-        'output_filename': 'core/css/vendor.min.css',
+PIPELINE = {
+    'STYLESHEETS': {
+        'vendor': {
+            'source_filenames': (
+                'core/src/vendor/Font-Awesome/scss/font-awesome.scss',
+                'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css', # noqa
+                'core/src/vendor/magnific-popup/magnific-popup.css',
+            ),
+            'output_filename': 'core/css/vendor.min.css',
+        },
+        'torinometeo': {  # bootstrap + custom
+            'source_filenames': (
+                'core/src/scss/styles.scss',
+                'social_auth/scss/_style.scss'
+            ),
+            'output_filename': 'core/css/core.min.css',
+        },
+        'api': {  # api
+            'source_filenames': (
+                'core/src/scss/api/styles.scss',
+            ),
+            'output_filename': 'core/css/api.min.css',
+        },
     },
-    'torinometeo': {  # bootstrap + custom
-        'source_filenames': (
-            'core/src/scss/styles.scss',
-            'social_auth/scss/_style.scss'
-        ),
-        'output_filename': 'core/css/core.min.css',
+    'JAVASCRIPT': {
+        'vendor': {
+            'source_filenames': (
+                'core/src/vendor/popper/popper.min.js', # noqa
+                'core/src/vendor/bootstrap/js/tether.js',
+                'core/src/vendor/bootstrap/js/bootstrap.min.js',
+                'core/src/vendor/moment/moment-with-locales.min.js',
+                'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
+                'core/src/vendor/bootstrap-material-design/scripts/material.js',
+                'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js', # noqa
+                'core/src/vendor/magnific-popup/magnific-popup.min.js',
+            ),
+            'output_filename': 'core/js/vendor.min.js'
+        },
+        'torinometeo': {
+            'source_filenames': (
+                'core/src/js/core.js',
+                'core/src/js/realtime_jumbotron.js',
+            ),
+            'output_filename': 'core/js/core.min.js'
+        },
     },
-    'api': {  # api
-        'source_filenames': (
-            'core/src/scss/api/styles.scss',
-        ),
-        'output_filename': 'core/css/api.min.css',
-    },
+    'COMPILERS': ('pipeline.compilers.sass.SASSCompiler', ),
+    'CSS_COMPRESSOR': None,
+    'JS_COMPRESSOR': None,
 }
-PIPELINE_JS = {
-    'vendor': {
-        'source_filenames': (
-            'core/src/vendor/popper/popper.min.js', # noqa
-            'core/src/vendor/bootstrap/js/tether.js',
-            'core/src/vendor/bootstrap/js/bootstrap.min.js',
-            'core/src/vendor/moment/moment-with-locales.min.js',
-            'core/src/vendor/bootstrap-material-design/scripts/ripples.js',
-            'core/src/vendor/bootstrap-material-design/scripts/material.js',
-            'core/src/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js', # noqa
-            'core/src/vendor/magnific-popup/magnific-popup.min.js',
-        ),
-        'output_filename': 'core/js/vendor.min.js'
-    },
-    'torinometeo': {
-        'source_filenames': (
-            'core/src/js/core.js',
-            'core/src/js/realtime_jumbotron.js',
-        ),
-        'output_filename': 'core/js/core.min.js'
-    },
-}
-
-PIPELINE_COMPILERS = (
-    'pipeline.compilers.sass.SASSCompiler',
-)
-PIPELINE_CSS_COMPRESSOR = None
-PIPELINE_JS_COMPRESSOR = None
-
 
 # Disqus
 DISQUS_API_KEY = 'kjNmaqKMTwg388VnEJicaYV1jdteFZYQLQcsvQwmQJth4V2LpW9lJ3sfgSsxN4YP' # noqa
@@ -373,7 +369,6 @@ THUMBNAIL_PROCESSORS = (
 USERS_GROUP_NAME = 'users' # group associated to new registrations
 
 SOCIAL_AUTH_FORCE_EMAIL_VALIDATION = False
-SOCIAL_AUTH_STRATEGY = 'social.strategies.django_strategy.DjangoStrategy'
 
 # action query string param traduced into alert, like
 # Hey you son of a bitch, in order to do this you must be authenticated
@@ -384,38 +379,35 @@ LOGIN_URL = '/#login'
 LOGIN_ERROR_URL = '/account/errors/'
 # SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/account/email-sent/'
 
+
 AUTHENTICATION_BACKENDS = (
-    'social.backends.open_id.OpenIdAuth',
-    'social.backends.google.GoogleOpenId',
-    'social.backends.google.GoogleOAuth2',
-    'social.backends.google.GoogleOAuth',
-    'social.backends.google.GooglePlusAuth',
-    'social.backends.twitter.TwitterOAuth',
-    'social.backends.yahoo.YahooOpenId',
-    'social.backends.facebook.FacebookOAuth2',
-    'social.backends.email.EmailAuth',
+    'social_core.backends.open_id.OpenIdAuth',
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.email.EmailAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (
-    'social_auth.pipeline.check_details',                      # check user inputs (only email backend)
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',              # return the social user (is_new is defined here)
-    'social.pipeline.user.get_username',
-    'social_auth.pipeline.require_email',                      # cut the pipeline to check if email is present
-    # 'social.pipeline.mail.mail_validation',                 # cut the pipeline to validate the account using a mail
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.user.create_user',
-    'social_auth.pipeline.set_password',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details',
-    'social_auth.pipeline.add_user_to_correct_group',          # users must belong to "utenti"
+
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_auth.pipeline.require_email',  # cut the pipeline to check if email is present
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
 )
 
+
+SOCIAL_AUTH_EMAIL_FORM_URL = '/account/login/email/'
 SOCIAL_AUTH_EMAIL_FORM_HTML = 'social_auth/registration.html'
+
 # SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'social_auth.pipeline.email_validation'
 
 # Apixu
@@ -466,7 +458,7 @@ LOGGING = {
     'handlers': {
         'null': {
             'level': 'DEBUG',
-            'class': 'django.utils.log.NullHandler',
+            'class': 'logging.NullHandler',
         },
         'console': {
             'level': 'DEBUG',
@@ -514,7 +506,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': True,
         },
         'django.request': {

@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('last_updated', models.DateTimeField(verbose_name=b'ultimo aggiornamento')),
                 ('icon', models.CharField(max_length=255, verbose_name=b'icona')),
                 ('data', models.TextField(verbose_name=b'json data')),
-                ('station', models.ForeignKey(verbose_name=b'stazione', to='realtime.Station')),
+                ('station', models.ForeignKey(verbose_name=b'stazione', to='realtime.Station', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Tempo corrente',

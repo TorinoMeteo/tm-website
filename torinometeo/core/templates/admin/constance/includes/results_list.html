@@ -1,5 +1,4 @@
 {% load admin_static admin_list i18n %}
-
 <table cellspacing="0" id="result_list" class="table table-striped table-bordered table-hover table-condensed">
     <thead>
         <tr>
@@ -24,7 +23,7 @@
             <a href="#" onClick="
               document.getElementById('{{ item.form_field.auto_id }}').{% if item.is_checkbox %}checked =
                   {% if item.raw_default %} true {% else %} false {% endif %}
-                {% else %}value = '{{ item.default|escapejs }}'{% endif %}; return false;">Reset to default</a>
+                {% else %}value = '{{ item.default|escapejs }}'{% endif %}; return false;">Reset</a>
         </td>
         <td>
             {% if item.modified %}
@@ -36,3 +35,4 @@
     </tr>
     {% endfor %}
 </table>
+

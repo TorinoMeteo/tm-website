@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='forecast',
             name='user',
-            field=models.ForeignKey(verbose_name=b'utente', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(verbose_name=b'utente', blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL),
         ),
     ]

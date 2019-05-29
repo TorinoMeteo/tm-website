@@ -4,7 +4,7 @@ import os
 import datetime
 import shutil
 import pytz
-import urllib2
+from urllib.request import urlopen
 import json
 
 import requests
@@ -119,7 +119,7 @@ def fetch_realtime_data():
                 new_data.save()
                 logger.info('station %s fetch successfull' % (station.name))
 
-        except Exception, e:
+        except Exception as e:
             logger.warn('station %s fetch failed: %s' % (station.name, str(e))) # noqa
 
     logger.info('END -- running task: fetch_realtime_data')
@@ -173,7 +173,7 @@ def store_historic_data():
             )
             history.save()
             logger.info('station %s history save successfull' % (station.name))
-        except Exception, e:
+        except Exception as e:
             logger.warn('station %s history save failed: %s' % (station.name, str(e))) # noqa
 
     logger.info('END -- running task: store_historic_data')
@@ -221,7 +221,7 @@ def fetch_radar_image(dt, src):
     except HTTPError:
         logger.error('Could not download '+ base_url+ remote_filename+'.png')
         return False
-    except Exception, e:
+    except Exception as e:
         logger.error(e)
         return False
 
@@ -270,7 +270,7 @@ def fetch_radar(dt, colors, src, dst):
             change_colors(os.path.join(src, filename), colors) # noqa
             try:
                 shutil.move(os.path.join(src, filename), os.path.join(dst, filename)) # noqa
-            except Exception, e:
+            except Exception as e:
                 logger.error('cannot move the image %s' % e)
                 return False
         else:
@@ -323,7 +323,7 @@ def fetch_weather_forecast():
     for station in Station.objects.active():
         try:
             url = station.forecast_url
-            xml = urllib2.urlopen(url).read()
+            xml = urlopen(url).read()
             soup = BeautifulSoup(xml, 'xml')
             for t in soup.forecast.tabular.findAll('time'):
                 data = {

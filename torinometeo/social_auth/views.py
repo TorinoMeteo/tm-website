@@ -4,7 +4,7 @@ from django.conf import settings
 from django.views.generic import View
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 
 class SignInView(View):
     """ SignIn view

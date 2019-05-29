@@ -4,7 +4,6 @@ import logging
 import random
 import string
 import urllib
-import urllib2
 from datetime import date, datetime
 
 import pytz
@@ -12,13 +11,13 @@ import simplejson
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.core.urlresolvers import reverse_lazy
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 from sorl.thumbnail import get_thumbnail
 
 from realtime.fetch.shortcuts import fetch_data
@@ -53,12 +52,12 @@ class JumbotronStationJsonView(View):
 
             image_url = station.image.url
             bookmarked = station.bookmarks.filter(user=request.user).exists(
-            ) if request.user.is_authenticated() else False  # noqa
+            ) if request.user.is_authenticated else False  # noqa
 
             data['id'] = station.id
             data['name'] = station.name
             data['bookmarked'] = bookmarked
-            data['authenticated'] = request.user.is_authenticated()
+            data['authenticated'] = request.user.is_authenticated
             data['nation'] = station.nation.name
             data['region'] = station.region.name
             data[
@@ -514,8 +513,6 @@ class WebcamView(View):
 
 def fetch_radar(request):
     res = fetch_radar_images()
-    print 'DIO'
-    print res
     if res:
         out = '%s, %s, %s' % (res.get('filename', 'OPS'),
                               res.get('datetime', 'OPS'),

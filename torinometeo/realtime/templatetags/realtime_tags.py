@@ -9,7 +9,7 @@ register = template.Library()
 @register.inclusion_tag('realtime/jumbotron.html', takes_context=True)
 def realtime_jumbotron(context):
     user = context['request'].user
-    if user.is_authenticated():
+    if user.is_authenticated:
         ids = [b.station.id for b in user.station_bookmarks.all()]
         stations = list(chain(
             Station.objects.filter(active=True, id__in=ids),

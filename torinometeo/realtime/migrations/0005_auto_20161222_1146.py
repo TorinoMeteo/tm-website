@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='station',
             name='data_format',
-            field=models.ForeignKey(verbose_name=b'formato dati', to='realtime.DataFormat'),
+            field=models.ForeignKey(verbose_name=b'formato dati', to='realtime.DataFormat', on_delete=models.CASCADE),
         ),
     ]

@@ -11,7 +11,11 @@ class Forecast(models.Model):
     for one day
     """
     user = models.ForeignKey(
-        User, verbose_name='utente', blank=True, null=True)
+        User,
+        verbose_name='utente',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL)
     date = models.DateField(
         'data', auto_now=False, auto_now_add=False, unique=True)
     pattern = RichTextUploadingField('situazione')
@@ -21,7 +25,7 @@ class Forecast(models.Model):
         verbose_name = 'previsione'
         verbose_name_plural = 'previsioni'
 
-    def __unicode__(self):
+    def __str__(self):
         return 'previsione del %s' % str(self.date)
 
 
@@ -35,7 +39,8 @@ class DayForecast(models.Model):
     """ DayForecast
     One day prevision
     """
-    forecast = models.ForeignKey(Forecast, verbose_name='previsione')
+    forecast = models.ForeignKey(
+        Forecast, verbose_name='previsione', on_delete=models.CASCADE)
     date = models.DateField(
         'data', auto_now=False, auto_now_add=False, unique=True)
     image12 = models.ImageField(
@@ -59,5 +64,5 @@ class DayForecast(models.Model):
         verbose_name_plural = 'previsioni giornate'
         ordering = ('date', )
 
-    def __unicode__(self):
+    def __str__(self):
         return 'previsione per il giorno %s' % str(self.date)

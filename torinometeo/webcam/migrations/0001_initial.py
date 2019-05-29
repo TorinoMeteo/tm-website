@@ -38,6 +38,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bestshot',
             name='webcam',
-            field=models.ForeignKey(verbose_name=b'webcam', to='webcam.Webcam'),
+            field=models.ForeignKey(verbose_name=b'webcam', to='webcam.Webcam', on_delete=models.CASCADE),
         ),
     ]

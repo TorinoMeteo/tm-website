@@ -1,5 +1,6 @@
 from django import template
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
+from sorl.thumbnail.templatetags.thumbnail import ThumbnailNode
 
 register = template.Library()
 
@@ -20,3 +21,10 @@ def absurl(url):
 @register.inclusion_tag('core/sharethis.html')
 def sharethis(relative_url, title=''):
     return {'url': relative_url, 'title': title}
+
+
+def sorl_thumbnail(parser, token):
+    return ThumbnailNode(parser, token)
+
+
+register.tag(sorl_thumbnail)

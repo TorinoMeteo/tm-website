@@ -79,6 +79,13 @@ class StationAdmin(admin.ModelAdmin):
                 'web',
                 'webcam',
                 'image',
+            ),
+            'classes': (
+                'baton-tabs-init',
+                'baton-tab-fs-localization',
+                'baton-tab-fs-station',
+                'baton-tab-fs-data',
+                'baton-tab-fs-status',
             )
         }),
         ('Localizzazione', {
@@ -92,7 +99,8 @@ class StationAdmin(admin.ModelAdmin):
                 'lat',
                 'lng',
                 'elevation',
-            )
+            ),
+            'classes': ('tab-fs-localization', )
         }),
         ('Stazione', {
             'fields': (
@@ -101,7 +109,8 @@ class StationAdmin(admin.ModelAdmin):
                 'installation_type',
                 'installation_position',
                 'elevation_ground',
-            )
+            ),
+            'classes': ('tab-fs-station', )
         }),
         ('Dati', {
             'fields': (
@@ -110,13 +119,15 @@ class StationAdmin(admin.ModelAdmin):
                 'data_date_format',
                 'data_time_format',
                 'forecast_url',
-            )
+            ),
+            'classes': ('tab-fs-data', )
         }),
         ('Stato', {
             'fields': (
                 'ranking',
                 'active',
-            )
+            ),
+            'classes': ('tab-fs-status', )
         }),
     )
 

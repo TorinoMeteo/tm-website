@@ -156,7 +156,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=64, verbose_name=b'nome')),
                 ('rank', models.IntegerField(verbose_name=b'importanza')),
-                ('nation', models.ForeignKey(verbose_name=b'nazione', to='realtime.Nation')),
+                ('nation', models.ForeignKey(verbose_name=b'nazione', to='realtime.Nation', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('nation__rank', 'rank', 'name'),
@@ -193,10 +193,10 @@ class Migration(migrations.Migration):
                 ('data_time_regexp', models.CharField(max_length=128, null=True, verbose_name=b'espressione regolare ora', blank=True)),
                 ('forecast_url', models.URLField(max_length=255, null=True, verbose_name=b'url sito previsionale', blank=True)),
                 ('active', models.BooleanField(default=True, verbose_name=b'attiva')),
-                ('data_type', models.ForeignKey(verbose_name=b'tipologia dati', to='realtime.DataFormat')),
-                ('nation', models.ForeignKey(verbose_name=b'nazione', blank=True, to='realtime.Nation', null=True)),
-                ('province', models.ForeignKey(verbose_name=b'provincia', blank=True, to='realtime.Province', null=True)),
-                ('region', models.ForeignKey(verbose_name=b'regione', blank=True, to='realtime.Region', null=True)),
+                ('data_type', models.ForeignKey(verbose_name=b'tipologia dati', to='realtime.DataFormat', on_delete=models.CASCADE)),
+                ('nation', models.ForeignKey(verbose_name=b'nazione', blank=True, to='realtime.Nation', null=True, on_delete=models.SET_NULL)),
+                ('province', models.ForeignKey(verbose_name=b'provincia', blank=True, to='realtime.Province', null=True, on_delete=models.SET_NULL)),
+                ('region', models.ForeignKey(verbose_name=b'regione', blank=True, to='realtime.Region', null=True, on_delete=models.SET_NULL)),
             ],
             options={
                 'verbose_name': 'stazione',
@@ -206,16 +206,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='province',
             name='region',
-            field=models.ForeignKey(verbose_name=b'regione', to='realtime.Region'),
+            field=models.ForeignKey(verbose_name=b'regione', to='realtime.Region', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='historicdata',
             name='station',
-            field=models.ForeignKey(verbose_name=b'stazione', to='realtime.Station'),
+            field=models.ForeignKey(verbose_name=b'stazione', to='realtime.Station', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='data',
             name='station',
-            field=models.ForeignKey(verbose_name=b'stazione', to='realtime.Station'),
+            field=models.ForeignKey(verbose_name=b'stazione', to='realtime.Station', on_delete=models.CASCADE),
         ),
     ]
