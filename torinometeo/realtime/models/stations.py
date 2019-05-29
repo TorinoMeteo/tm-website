@@ -161,7 +161,7 @@ class Station(models.Model):
     def forecast_url_credits(self):
         return self.forecast_url.replace("forecast.xml", "")
 
-    def weather_icon(self, encode=True):
+    def weather_icon(self, encode=False):
         now = datetime.datetime.now()
         if now.hour < 6:
             period = 0
