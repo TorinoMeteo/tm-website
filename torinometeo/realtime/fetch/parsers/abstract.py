@@ -5,6 +5,11 @@ import dateutil.parser
 
 from ..settings import EXTREMES as EX
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 class Parser(object):
     """ Parser class interface
@@ -78,8 +83,6 @@ class Parser(object):
                     pass
 
     def _clean_date(self, value):
-        print('DIOFFA')
-        print(value)
         if isinstance(self.date_format, basestring):
             self.date_format = (self.date_format, )
         for i, fmt in enumerate(self.date_format):
