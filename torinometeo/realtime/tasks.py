@@ -349,8 +349,8 @@ def fetch_weather_forecast():
                     )
                 forecast.last_edit = datetime.datetime.strptime(
                     soup.meta.lastupdate.string, '%Y-%m-%dT%H:%M:%S')
-                forecast.icon = t.symbol.attrs.get('var', None).encode('utf-8')
-                forecast.text = t.symbol.attrs.get('name', '').encode('utf-8')
+                forecast.icon = t.symbol.attrs.get('var', None)
+                forecast.text = t.symbol.attrs.get('name', '')
                 forecast.data = json.dumps(data)
                 forecast.save()
         except:
