@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 def randomword(length):
-    return ''.join(random.choice(string.lowercase) for i in range(length))
+    return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
 
 
 class JumbotronStationJsonView(View):
