@@ -51,7 +51,7 @@ class UnitoParser(Parser):
                 lines.append(line)
 
         data = {}
-        for k, i in self.data_map.iteritems():
+        for k, i in self.data_map.items():
             value = lines[k]
             value = self._clean(value, i[1])
             data[i[0]] = value
