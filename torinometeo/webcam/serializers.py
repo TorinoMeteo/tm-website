@@ -25,5 +25,6 @@ class WebcamSerializer(serializers.ModelSerializer):
         )
 
     def get_random_url(self, webcam):
-        request = self.context.get('request')
-        return request.build_absolute_uri(webcam.random_url())
+        # request = self.context.get('request')
+        # return request.build_absolute_uri(webcam.random_url())
+        return webcam.random_url()

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from taggit.managers import TaggableManager
 
 """ Path to the upload folder for post images """
@@ -16,7 +17,12 @@ def set_entry_image_folder(instance, filename):
 class Entry(models.Model):
 
     author = models.ForeignKey(
-        User, verbose_name='autore', related_name='entries')
+        User,
+        verbose_name='autore',
+        related_name='entries',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True)
     creation_date = models.DateTimeField('creazione', auto_now_add=True)
     last_edit_date = models.DateTimeField('ultima modifica', auto_now=True)
     title = models.CharField('titolo', max_length=128)
@@ -39,17 +45,16 @@ class Entry(models.Model):
         verbose_name_plural = 'articoli'
         ordering = ('-creation_date', )
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.title
 
-    @models.permalink
     def get_absolute_url(self):
         to_tz = timezone.get_default_timezone()
-        return ('blog-detail', None, {
-            'slug': self.slug,
+        return reverse('blog-detail', kwargs={
             'year': self.creation_date.astimezone(to_tz).year,
             'month': self.creation_date.astimezone(to_tz).strftime("%m"),
-            'day': self.creation_date.astimezone(to_tz).strftime("%d")
+            'day': self.creation_date.astimezone(to_tz).strftime("%d"),
+            'slug': self.slug,
         })
 
     def get_time_attribute(self):

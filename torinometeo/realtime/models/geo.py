@@ -15,14 +15,15 @@ class Nation(models.Model):
         verbose_name_plural = 'nazioni'
         ordering = ('name', )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Region(models.Model):
     """ Regions
     """
-    nation = models.ForeignKey(Nation, verbose_name='nazione')
+    nation = models.ForeignKey(
+        Nation, verbose_name='nazione', on_delete=models.CASCADE)
     name = models.CharField('nome', max_length=64)
     rank = models.IntegerField('importanza')
 
@@ -31,14 +32,15 @@ class Region(models.Model):
         verbose_name_plural = 'regioni'
         ordering = ('name', )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Province(models.Model):
     """ Provinces
     """
-    region = models.ForeignKey(Region, verbose_name='regione')
+    region = models.ForeignKey(
+        Region, verbose_name='regione', on_delete=models.CASCADE)
     name = models.CharField('nome', max_length=64)
     rank = models.IntegerField('importanza')
 
@@ -47,5 +49,5 @@ class Province(models.Model):
         verbose_name_plural = 'province'
         ordering = ('name', )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

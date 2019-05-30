@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import include, url
+from django.urls import re_path
 from django.contrib import admin
 from django.views.generic import TemplateView
+from django.views import static
+from django.contrib.staticfiles.views import serve
 from rest_framework_swagger.views import get_swagger_view
+from baton.autodiscover import admin
 
 from core.routers import ApiRouter
 from core.views import LoginView, LogoutView
@@ -47,7 +51,8 @@ router.register(r'webcam', Webcams, 'webcams')
 # END API
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url('admin/', admin.site.urls),
+    url('baton/', include('baton.urls')),
     url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
     # ckeditor uploader
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
@@ -74,10 +79,15 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-            {'document_root': settings.MEDIA_ROOT}),
+        re_path(r'^media/(?P<path>.*)$',
+                static.serve,
+                {'document_root': settings.MEDIA_ROOT}),
     ]
     urlpatterns += [
-        url(r'^static/(?P<path>.*)$',
-            'django.contrib.staticfiles.views.serve'),
+        re_path(r'^static/(?P<path>.*)$', serve),
+    ]
+    # debug toolbar
+    import debug_toolbar
+    urlpatterns += [
+        re_path(r'^__debug__/', include(debug_toolbar.urls)),
     ]

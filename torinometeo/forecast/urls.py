@@ -1,8 +1,6 @@
-from django.conf.urls import patterns,url
+from django.conf.urls import url
 from forecast.views import views
 
-urlpatterns = patterns('forecast.views',
-
+urlpatterns = [
     url(r'^/?$', views.ForecastView.as_view(), name='forecast-view'),
-
-)
+]

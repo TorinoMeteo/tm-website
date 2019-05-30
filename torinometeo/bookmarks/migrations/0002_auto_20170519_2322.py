@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='stationbookmark',
             name='station',
-            field=models.ForeignKey(related_name='bookmarks', verbose_name=b'stazione', to='realtime.Station'),
+            field=models.ForeignKey(related_name='bookmarks', verbose_name=b'stazione', to='realtime.Station', on_delete=models.CASCADE),
         ),
     ]

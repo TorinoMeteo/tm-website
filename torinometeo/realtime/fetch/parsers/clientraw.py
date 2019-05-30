@@ -35,7 +35,7 @@ class ClientrawParser(Parser):
         self.data_map.update({int(len(rawdata)-1): (DL['TIME'], 'time')})
 
         data = {}
-        for k, i in self.data_map.iteritems():
+        for k, i in self.data_map.items():
             value = rawdata[k]
             value = self._clean(value, i[1])
             data[i[0]] = value

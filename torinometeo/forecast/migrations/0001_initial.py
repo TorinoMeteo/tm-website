@@ -45,6 +45,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='dayforecast',
             name='forecast',
-            field=models.ForeignKey(verbose_name=b'previsione', to='forecast.Forecast'),
+            field=models.ForeignKey(verbose_name=b'previsione', to='forecast.Forecast', on_delete=models.CASCADE),
         ),
     ]

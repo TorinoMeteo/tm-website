@@ -52,7 +52,7 @@ class TmParser(Parser):
         jsondata.update({'measure_time': jsondata['datetime']})
         jsondata.update({'measure_date': jsondata['datetime']})
         data = {}
-        for k, i in self.data_map.iteritems():
+        for k, i in self.data_map.items():
             try:
                 value = str(jsondata[k])
                 value = self._clean(value, i[1])

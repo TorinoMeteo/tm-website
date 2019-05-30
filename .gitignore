@@ -13,3 +13,4 @@ logs
 backups
 supervisord.conf.production
 tags
+credentials.json

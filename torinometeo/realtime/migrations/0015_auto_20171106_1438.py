@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('icon', models.CharField(max_length=255, verbose_name=b'icona')),
                 ('text', models.CharField(max_length=50, verbose_name=b'testo')),
                 ('data', models.TextField(verbose_name=b'json data')),
-                ('station', models.ForeignKey(verbose_name=b'stazione', to='realtime.Station')),
+                ('station', models.ForeignKey(verbose_name=b'stazione', to='realtime.Station', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Previsione',

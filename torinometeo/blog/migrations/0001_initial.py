@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('enable_comments', models.BooleanField(default=True, verbose_name=b'abilita commenti')),
                 ('featured', models.BooleanField(default=False, verbose_name=b'featured')),
                 ('num_read', models.IntegerField(default=0, verbose_name=b'numero letture', blank=True)),
-                ('author', models.ForeignKey(related_name='entries', verbose_name=b'autore', to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(related_name='entries', verbose_name=b'autore', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                 ('related_entries', models.ManyToManyField(related_name='_related_entries_+', null=True, verbose_name=b'articoli correlati', to='blog.Entry', blank=True)),
                 ('tags', taggit.managers.TaggableManager(to='taggit.Tag', through='taggit.TaggedItem', blank=True, help_text=b'valori separati da virgole', verbose_name=b'tag')),
             ],

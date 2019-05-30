@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('insertion_date', models.DateTimeField(auto_now_add=True, verbose_name=b'inserimento')),
-                ('station', models.ForeignKey(verbose_name=b'stazione', to='realtime.Station')),
-                ('user', models.ForeignKey(related_name='station_bookmarks', verbose_name=b'utente', to=settings.AUTH_USER_MODEL)),
+                ('station', models.ForeignKey(verbose_name=b'stazione', to='realtime.Station', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(related_name='station_bookmarks', verbose_name=b'utente', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Bookmark',

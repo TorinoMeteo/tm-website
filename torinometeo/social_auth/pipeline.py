@@ -12,11 +12,11 @@ from django.contrib.auth.models import Group, User
 from django.shortcuts import redirect
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core import signing
 
-from social.exceptions import AuthFailed
-from social.pipeline.partial import partial
+from social_core.exceptions import AuthFailed
+from social_core.pipeline.partial import partial
 
 import logging
 
@@ -68,7 +68,6 @@ def set_password(strategy, backend, user, response, is_new=False,
                  *args, **kwargs):
 
     if backend.name in ('email', 'username') and is_new and response.get('password'):
-        print response.get('password')[0]
         user.set_password(response.get('password'))
         user.save()
 
@@ -89,7 +88,6 @@ def email_validation(strategy, backend, code):
 
     # force session save
     strategy.request.session.save()
-    print strategy.session.session_key
     signature = signing.dumps({"session_key": strategy.session.session_key, "email": code.email},
                               key=settings.EMAIL_SECRET_KEY)
 

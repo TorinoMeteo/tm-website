@@ -22,10 +22,10 @@ class ForecastAdmin(admin.ModelAdmin):
     list_filter = ('date', )
     search_fields = ('note', )
 
-    fieldsets = ((None, {
+    fieldsets = (('Principale', {
         'classes': (
-            'suit-tab',
-            'suit-tab-main',
+            'baton-tabs-init',
+            'baton-tab-inline-dayforecast_set',
         ),
         'fields': [
             'date',
@@ -33,11 +33,6 @@ class ForecastAdmin(admin.ModelAdmin):
             'note',
         ],
     }), )
-
-    suit_form_tabs = (
-        ('main', 'Principale'),
-        ('dayforecast', 'Previsioni giornate'),
-    )
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user

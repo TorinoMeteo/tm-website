@@ -5,6 +5,11 @@ import dateutil.parser
 
 from ..settings import EXTREMES as EX
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 class Parser(object):
     """ Parser class interface

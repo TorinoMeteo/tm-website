@@ -32,7 +32,7 @@ class AprsParser(Parser):
         weatherData.update({'dew_point': dew})
 
         data = {}
-        for k, i in self.data_map.iteritems():
+        for k, i in self.data_map.items():
             value = str(weatherData[k])
             value = self._clean(value, i[1])
             data[i[0]] = value

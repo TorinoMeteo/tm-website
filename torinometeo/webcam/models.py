@@ -1,8 +1,8 @@
-from django.db import models
-from django.conf import settings
-from django.utils.crypto import get_random_string
-
 from ckeditor.fields import RichTextField
+from django.conf import settings
+from django.db import models
+from django.urls import reverse
+from django.utils.crypto import get_random_string
 
 from .managers import WebcamManager
 
@@ -29,12 +29,11 @@ class Webcam(models.Model):
     class Meta:
         verbose_name = 'webcam'
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.name
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('webcam-detail', None, {
+        return reverse('webcam-detail', kwargs={
             'slug': self.slug,
         })
 
@@ -44,6 +43,9 @@ class Webcam(models.Model):
 
 
 class BestShot(models.Model):
-    webcam = models.ForeignKey(Webcam, verbose_name='webcam')
-    caption = models.CharField('caption', max_length=255, blank=True, null=True) # noqa
-    image = models.ImageField(upload_to=set_webcam_image_folder, verbose_name='immagine') # noqa
+    webcam = models.ForeignKey(
+        Webcam, verbose_name='webcam', on_delete=models.CASCADE)
+    caption = models.CharField(
+        'caption', max_length=255, blank=True, null=True)  # noqa
+    image = models.ImageField(
+        upload_to=set_webcam_image_folder, verbose_name='immagine')  # noqa

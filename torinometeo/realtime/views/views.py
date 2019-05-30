@@ -3,8 +3,7 @@ import json
 import logging
 import random
 import string
-import urllib
-import urllib2
+from urllib.request import urlopen
 from datetime import date, datetime
 
 import pytz
@@ -12,13 +11,13 @@ import simplejson
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.core.urlresolvers import reverse_lazy
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 from sorl.thumbnail import get_thumbnail
 
 from realtime.fetch.shortcuts import fetch_data
@@ -31,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 def randomword(length):
-    return ''.join(random.choice(string.lowercase) for i in range(length))
+    return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
 
 
 class JumbotronStationJsonView(View):
@@ -53,12 +52,12 @@ class JumbotronStationJsonView(View):
 
             image_url = station.image.url
             bookmarked = station.bookmarks.filter(user=request.user).exists(
-            ) if request.user.is_authenticated() else False  # noqa
+            ) if request.user.is_authenticated else False  # noqa
 
             data['id'] = station.id
             data['name'] = station.name
             data['bookmarked'] = bookmarked
-            data['authenticated'] = request.user.is_authenticated()
+            data['authenticated'] = request.user.is_authenticated
             data['nation'] = station.nation.name
             data['region'] = station.region.name
             data[
@@ -498,6 +497,36 @@ class FetchView(View):
         })
 
 
+class FetchForecastView(View):
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FetchForecastView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, pk):
+        station = Station.objects.get(pk=pk)
+
+        url = station.forecast_url
+        xml = urlopen(url).read()
+        soup = BeautifulSoup(xml, 'xml')
+        for t in soup.forecast.tabular.findAll('time'):
+            data = {
+                'precipitation': t.precipitation.attrs.get('value', None),
+                'wind_direction': t.windDirection.attrs.get('deg', None),
+                'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
+                'temperature': t.temperature.attrs.get('value', None),
+                'pressure': t.pressure.attrs.get('value', None),
+                'last_edit': soup.meta.lastupdate.string,
+                'icon': t.symbol.attrs.get('var', None),
+                'text': t.symbol.attrs.get('name', '')
+            }
+
+        return render(request, 'realtime/fetchforecast.html', {
+            'station': station,
+            'data': data,
+            'json_data': json.dumps(data),
+        })
+
+
 class WebcamView(View):
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
@@ -514,8 +543,6 @@ class WebcamView(View):
 
 def fetch_radar(request):
     res = fetch_radar_images()
-    print 'DIO'
-    print res
     if res:
         out = '%s, %s, %s' % (res.get('filename', 'OPS'),
                               res.get('datetime', 'OPS'),

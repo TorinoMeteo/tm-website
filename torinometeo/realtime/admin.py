@@ -58,6 +58,7 @@ class StationAdmin(admin.ModelAdmin):
         'get_data_url',
         'get_webcam',
         'test_fetch',
+        'test_forecast',
     ]
     list_filter = (
         'region',
@@ -79,6 +80,13 @@ class StationAdmin(admin.ModelAdmin):
                 'web',
                 'webcam',
                 'image',
+            ),
+            'classes': (
+                'baton-tabs-init',
+                'baton-tab-fs-localization',
+                'baton-tab-fs-station',
+                'baton-tab-fs-data',
+                'baton-tab-fs-status',
             )
         }),
         ('Localizzazione', {
@@ -92,7 +100,8 @@ class StationAdmin(admin.ModelAdmin):
                 'lat',
                 'lng',
                 'elevation',
-            )
+            ),
+            'classes': ('tab-fs-localization', )
         }),
         ('Stazione', {
             'fields': (
@@ -101,7 +110,8 @@ class StationAdmin(admin.ModelAdmin):
                 'installation_type',
                 'installation_position',
                 'elevation_ground',
-            )
+            ),
+            'classes': ('tab-fs-station', )
         }),
         ('Dati', {
             'fields': (
@@ -110,13 +120,15 @@ class StationAdmin(admin.ModelAdmin):
                 'data_date_format',
                 'data_time_format',
                 'forecast_url',
-            )
+            ),
+            'classes': ('tab-fs-data', )
         }),
         ('Stato', {
             'fields': (
                 'ranking',
                 'active',
-            )
+            ),
+            'classes': ('tab-fs-status', )
         }),
     )
 
@@ -136,6 +148,10 @@ class StationAdmin(admin.ModelAdmin):
     def test_fetch(self, obj):
         return mark_safe(
             '<a href="/realtime/fetch/%d" target="_blank">test</a>' % obj.id)
+
+    def test_forecast(self, obj):
+        return mark_safe(
+            '<a href="/realtime/fetchforecast/%d" target="_blank">test</a>' % obj.id)
 
 
 admin.site.register(Station, StationAdmin)

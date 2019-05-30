@@ -92,7 +92,7 @@ class Weatherlink2Parser(Parser):
             DL['DATE']: datetime.date(),
             DL['TIME']: datetime.time()
         }
-        for k, i in self.data_map.iteritems():
+        for k, i in self.data_map.items():
             try:
                 value = str(self.get_from_path(jsondata, k))
                 value = self._clean(value, i[1])
