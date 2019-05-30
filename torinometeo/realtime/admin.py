@@ -58,6 +58,7 @@ class StationAdmin(admin.ModelAdmin):
         'get_data_url',
         'get_webcam',
         'test_fetch',
+        'test_forecast',
     ]
     list_filter = (
         'region',
@@ -147,6 +148,10 @@ class StationAdmin(admin.ModelAdmin):
     def test_fetch(self, obj):
         return mark_safe(
             '<a href="/realtime/fetch/%d" target="_blank">test</a>' % obj.id)
+
+    def test_forecast(self, obj):
+        return mark_safe(
+            '<a href="/realtime/fetchforecast/%d" target="_blank">test</a>' % obj.id)
 
 
 admin.site.register(Station, StationAdmin)

@@ -3,7 +3,7 @@ import json
 import logging
 import random
 import string
-import urllib
+from urllib.request import urlopen
 from datetime import date, datetime
 
 import pytz
@@ -494,6 +494,36 @@ class FetchView(View):
             'station': station,
             'data': data,
             'json_data': json_data
+        })
+
+
+class FetchForecastView(View):
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FetchForecastView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, pk):
+        station = Station.objects.get(pk=pk)
+
+        url = station.forecast_url
+        xml = urlopen(url).read()
+        soup = BeautifulSoup(xml, 'xml')
+        for t in soup.forecast.tabular.findAll('time'):
+            data = {
+                'precipitation': t.precipitation.attrs.get('value', None),
+                'wind_direction': t.windDirection.attrs.get('deg', None),
+                'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
+                'temperature': t.temperature.attrs.get('value', None),
+                'pressure': t.pressure.attrs.get('value', None),
+                'last_edit': soup.meta.lastupdate.string,
+                'icon': t.symbol.attrs.get('var', None),
+                'text': t.symbol.attrs.get('name', '')
+            }
+
+        return render(request, 'realtime/fetchforecast.html', {
+            'station': station,
+            'data': data,
+            'json_data': json.dumps(data),
         })
 
 
