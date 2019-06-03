@@ -356,6 +356,7 @@ DISQUS_API_KEY = 'kjNmaqKMTwg388VnEJicaYV1jdteFZYQLQcsvQwmQJth4V2LpW9lJ3sfgSsxN4
 DISQUS_WEBSITE_SHORTNAME = 'torinometeo'
 
 THUMBNAIL_HIGH_RESOLUTION = True
+THUMBNAIL_REMOVE_URL_ARGS = False
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',
     'easy_thumbnails.processors.autocrop',

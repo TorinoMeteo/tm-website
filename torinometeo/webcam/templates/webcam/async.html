@@ -1,4 +1,6 @@
 {% load core_tags %}
-{% sorl_thumbnail webcam.random_url "706x530" crop="center" format="PNG" as im %}
-    <img class="card-img-top img-responsive" src="{{ im.url }}" alt="{{ webcam.name }}">
+{% with webcam.random_url as url %}
+{% sorl_thumbnail url "706x530" crop="center" format="PNG" as im %}
+    <img class="card-img-top img-responsive" data-random="{{ url }}" src="{{ im.url }}" alt="{{ webcam.name }}" />
 {% endthumbnail %}
+{% endwith %}
