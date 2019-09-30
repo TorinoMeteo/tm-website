@@ -111,8 +111,8 @@ def fetch_realtime_data():
             data = fetch_data(
                 station.data_url,
                 station.data_format.name,
-                time_format=station.data_time_format.split(','),
-                date_format=station.data_date_format.split(','),
+                time_format=station.data_time_format.split(',') if station.data_time_format else None,
+                date_format=station.data_date_format.split(',') if station.data_date_format else None,
             )
             if not data_exists(station, data['datetime']):
                 new_data = Data(**adjust_data(station, data))

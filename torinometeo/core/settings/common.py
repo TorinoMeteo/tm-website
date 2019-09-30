@@ -471,7 +471,7 @@ LOGGING = {
         #  see
         #  noqa https://docs.python.org/2.7/library/logging.handlers.html#logging.handlers.TimedRotatingFileHandler
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'formatter': 'verbose',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': here('..',
@@ -482,7 +482,7 @@ LOGGING = {
             'when':     'midnight',
         },
         'celery_logger': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'filters': None,
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': here('..', '..', '..',
@@ -524,12 +524,12 @@ LOGGING = {
         },
         'celery': {
             'handlers': ['celery_logger'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': True,
         },
         'celery.tasks': {
             'handlers': ['mail_admins', 'celery_logger'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': True,
         },
         'realtime.tasks': {

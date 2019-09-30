@@ -22,8 +22,8 @@ from sorl.thumbnail import get_thumbnail
 
 from realtime.fetch.shortcuts import fetch_data
 from realtime.forms import NetRequestForm
-from realtime.models.stations import Station, StationForecast
-from realtime.tasks import fetch_radar_images
+from realtime.models.stations import Station, StationForecast, Data
+from realtime.tasks import fetch_radar_images, adjust_data, data_exists
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -482,13 +482,23 @@ class FetchView(View):
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
 
-        data = fetch_data(
-            station.data_url,
-            station.data_format.name,
-            time_format=station.data_time_format.split(','),
-            date_format=station.data_date_format.split(','),
-        )
-        json_data = data.as_json()
+        try:
+            data = fetch_data(
+                station.data_url,
+                station.data_format.name,
+                time_format=station.data_time_format.split(',') if station.data_time_format else None,
+                date_format=station.data_date_format.split(',') if station.data_date_format else None,
+            )
+            json_data = data.as_json()
+
+            if not data_exists(station, data['datetime']):
+                new_data = Data(**adjust_data(station, data))
+                new_data.save()
+                logger.info('station %s fetch successfull' % (station.name))
+
+        except Exception as e:
+            logger.warn('station %s fetch failed: %s - datetime: ' % (station.name, str(e), str(data['datetime']))) # noqa
+
 
         return render(request, 'realtime/fetch.html', {
             'station': station,

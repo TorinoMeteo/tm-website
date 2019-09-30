@@ -151,7 +151,7 @@ class StationForecastViewSet(viewsets.ModelViewSet):
     @list_route()
     def next(self, request):
         queryset = StationForecast.objects.filter(
-            date__gte=datetime.datetime.now).order_by('date')
+            date__gte=datetime.datetime.now()).order_by('date')
         station_slug = self.request.query_params.get('station', None)
         if station_slug is not None:
             queryset = queryset.filter(station__slug=station_slug).distinct()
