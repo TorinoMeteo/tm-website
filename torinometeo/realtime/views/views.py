@@ -232,104 +232,107 @@ class StationHistoricView(DetailView):
 
         for d in context['data']:
             if d.get('temperature_max') is not None:
-                range_m += 1
-                t_mean_max_m = t_mean_max_m + d.get('temperature_max')
-                t_mean_min_m = t_mean_min_m + d.get('temperature_min')
-                t_mean_mean_m = t_mean_mean_m + d.get('temperature_mean')
+                try:
+                    range_m += 1
+                    t_mean_max_m = t_mean_max_m + d.get('temperature_max')
+                    t_mean_min_m = t_mean_min_m + d.get('temperature_min')
+                    t_mean_mean_m = t_mean_mean_m + d.get('temperature_mean')
 
-                if first_m or t_min_m > d.get('temperature_min'):
-                    t_min_m = d.get('temperature_min')
-                if first_m or t_max_m < d.get('temperature_max'):
-                    t_max_m = d.get('temperature_max')
+                    if first_m or t_min_m > d.get('temperature_min'):
+                        t_min_m = d.get('temperature_min')
+                    if first_m or t_max_m < d.get('temperature_max'):
+                        t_max_m = d.get('temperature_max')
 
-                if first_m or p_min_m > d.get('pressure_min'):
-                    p_min_m = d.get('pressure_min')
-                if first_m or p_max_m < d.get('pressure_max'):
-                    p_max_m = d.get('pressure_max')
+                    if first_m or p_min_m > d.get('pressure_min'):
+                        p_min_m = d.get('pressure_min')
+                    if first_m or p_max_m < d.get('pressure_max'):
+                        p_max_m = d.get('pressure_max')
 
-                if first_m or rh_min_m > d.get('relative_humidity_min'):
-                    rh_min_m = d.get('relative_humidity_min')
-                if first_m or rh_max_m < d.get('relative_humidity_max'):
-                    rh_max_m = d.get('relative_humidity_max')
+                    if first_m or rh_min_m > d.get('relative_humidity_min'):
+                        rh_min_m = d.get('relative_humidity_min')
+                    if first_m or rh_max_m < d.get('relative_humidity_max'):
+                        rh_max_m = d.get('relative_humidity_max')
 
-                r_sum_m = r_sum_m + d.get('rain', 0)
+                    r_sum_m = r_sum_m + d.get('rain', 0)
 
-                first_m = False
+                    first_m = False
 
-                if d.get('date_obj').day <= 10:
-                    range_1d += 1
-                    t_mean_max_1d = t_mean_max_1d + d.get('temperature_max')
-                    t_mean_min_1d = t_mean_min_1d + d.get('temperature_min')
-                    t_mean_mean_1d = t_mean_mean_1d + d.get('temperature_mean')
+                    if d.get('date_obj').day <= 10:
+                        range_1d += 1
+                        t_mean_max_1d = t_mean_max_1d + d.get('temperature_max')
+                        t_mean_min_1d = t_mean_min_1d + d.get('temperature_min')
+                        t_mean_mean_1d = t_mean_mean_1d + d.get('temperature_mean')
 
-                    if first_1d or t_min_1d > d.get('temperature_min'):
-                        t_min_1d = d.get('temperature_min')
-                    if first_1d or t_max_1d < d.get('temperature_max'):
-                        t_max_1d = d.get('temperature_max')
+                        if first_1d or t_min_1d > d.get('temperature_min'):
+                            t_min_1d = d.get('temperature_min')
+                        if first_1d or t_max_1d < d.get('temperature_max'):
+                            t_max_1d = d.get('temperature_max')
 
-                    if first_1d or p_min_1d > d.get('pressure_min'):
-                        p_min_1d = d.get('pressure_min')
-                    if first_1d or p_max_1d < d.get('pressure_max'):
-                        p_max_1d = d.get('pressure_max')
+                        if first_1d or p_min_1d > d.get('pressure_min'):
+                            p_min_1d = d.get('pressure_min')
+                        if first_1d or p_max_1d < d.get('pressure_max'):
+                            p_max_1d = d.get('pressure_max')
 
-                    if first_1d or rh_min_1d > d.get('relative_humidity_min'):
-                        rh_min_1d = d.get('relative_humidity_min')
-                    if first_1d or rh_max_1d < d.get('relative_humidity_max'):
-                        rh_max_1d = d.get('relative_humidity_max')
+                        if first_1d or rh_min_1d > d.get('relative_humidity_min'):
+                            rh_min_1d = d.get('relative_humidity_min')
+                        if first_1d or rh_max_1d < d.get('relative_humidity_max'):
+                            rh_max_1d = d.get('relative_humidity_max')
 
-                    r_sum_1d = r_sum_1d + d.get('rain', 0)
+                        r_sum_1d = r_sum_1d + d.get('rain', 0)
 
-                    first_1d = False
+                        first_1d = False
 
-                elif d.get('date_obj').day <= 20:
-                    range_2d += 1
-                    t_mean_max_2d = t_mean_max_2d + d.get('temperature_max')
-                    t_mean_min_2d = t_mean_min_2d + d.get('temperature_min')
-                    t_mean_mean_2d = t_mean_mean_2d + d.get('temperature_mean')
+                    elif d.get('date_obj').day <= 20:
+                        range_2d += 1
+                        t_mean_max_2d = t_mean_max_2d + d.get('temperature_max')
+                        t_mean_min_2d = t_mean_min_2d + d.get('temperature_min')
+                        t_mean_mean_2d = t_mean_mean_2d + d.get('temperature_mean')
 
-                    if first_2d or t_min_2d > d.get('temperature_min'):
-                        t_min_2d = d.get('temperature_min')
-                    if first_2d or t_max_2d < d.get('temperature_max'):
-                        t_max_2d = d.get('temperature_max')
+                        if first_2d or t_min_2d > d.get('temperature_min'):
+                            t_min_2d = d.get('temperature_min')
+                        if first_2d or t_max_2d < d.get('temperature_max'):
+                            t_max_2d = d.get('temperature_max')
 
-                    if first_2d or p_min_2d > d.get('pressure_min'):
-                        p_min_2d = d.get('pressure_min')
-                    if first_2d or p_max_2d < d.get('pressure_max'):
-                        p_max_2d = d.get('pressure_max')
+                        if first_2d or p_min_2d > d.get('pressure_min'):
+                            p_min_2d = d.get('pressure_min')
+                        if first_2d or p_max_2d < d.get('pressure_max'):
+                            p_max_2d = d.get('pressure_max')
 
-                    if first_2d or rh_min_2d > d.get('relative_humidity_min'):
-                        rh_min_2d = d.get('relative_humidity_min')
-                    if first_2d or rh_max_2d < d.get('relative_humidity_max'):
-                        rh_max_2d = d.get('relative_humidity_max')
+                        if first_2d or rh_min_2d > d.get('relative_humidity_min'):
+                            rh_min_2d = d.get('relative_humidity_min')
+                        if first_2d or rh_max_2d < d.get('relative_humidity_max'):
+                            rh_max_2d = d.get('relative_humidity_max')
 
-                    r_sum_2d = r_sum_2d + d.get('rain', 0)
+                        r_sum_2d = r_sum_2d + d.get('rain', 0)
 
-                    first_2d = False
+                        first_2d = False
 
-                elif d.get('date_obj').day <= last_day_month:
-                    range_3d += 1
-                    t_mean_max_3d = t_mean_max_3d + d.get('temperature_max')
-                    t_mean_min_3d = t_mean_min_3d + d.get('temperature_min')
-                    t_mean_mean_3d = t_mean_mean_3d + d.get('temperature_mean')
+                    elif d.get('date_obj').day <= last_day_month:
+                        range_3d += 1
+                        t_mean_max_3d = t_mean_max_3d + d.get('temperature_max')
+                        t_mean_min_3d = t_mean_min_3d + d.get('temperature_min')
+                        t_mean_mean_3d = t_mean_mean_3d + d.get('temperature_mean')
 
-                    if first_3d or t_min_3d > d.get('temperature_min'):
-                        t_min_3d = d.get('temperature_min')
-                    if first_3d or t_max_3d < d.get('temperature_max'):
-                        t_max_3d = d.get('temperature_max')
+                        if first_3d or t_min_3d > d.get('temperature_min'):
+                            t_min_3d = d.get('temperature_min')
+                        if first_3d or t_max_3d < d.get('temperature_max'):
+                            t_max_3d = d.get('temperature_max')
 
-                    if first_3d or p_min_3d > d.get('pressure_min'):
-                        p_min_3d = d.get('pressure_min')
-                    if first_3d or p_max_3d < d.get('pressure_max'):
-                        p_max_3d = d.get('pressure_max')
+                        if first_3d or p_min_3d > d.get('pressure_min'):
+                            p_min_3d = d.get('pressure_min')
+                        if first_3d or p_max_3d < d.get('pressure_max'):
+                            p_max_3d = d.get('pressure_max')
 
-                    if first_3d or rh_min_3d > d.get('relative_humidity_min'):
-                        rh_min_3d = d.get('relative_humidity_min')
-                    if first_3d or rh_max_3d < d.get('relative_humidity_max'):
-                        rh_max_3d = d.get('relative_humidity_max')
+                        if first_3d or rh_min_3d > d.get('relative_humidity_min'):
+                            rh_min_3d = d.get('relative_humidity_min')
+                        if first_3d or rh_max_3d < d.get('relative_humidity_max'):
+                            rh_max_3d = d.get('relative_humidity_max')
 
-                    r_sum_3d = r_sum_3d + d.get('rain', 0)
+                        r_sum_3d = r_sum_3d + d.get('rain', 0)
 
-                    first_3d = False
+                        first_3d = False
+                except:
+                    pass
 
         context['last_day_month'] = last_day_month
 

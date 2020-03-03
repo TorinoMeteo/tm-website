@@ -159,7 +159,9 @@ class Station(models.Model):
         #                           timezone.get_current_timezone())
 
     def forecast_url_credits(self):
-        return self.forecast_url.replace("forecast.xml", "")
+        if self.forecast_url:
+            return self.forecast_url.replace("forecast.xml", "")
+        return ""
 
     def weather_icon(self, encode=False):
         now = datetime.datetime.now()
