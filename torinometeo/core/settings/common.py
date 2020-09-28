@@ -401,6 +401,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_auth.pipeline.require_email',  # cut the pipeline to check if email is present
     'social_core.pipeline.social_auth.associate_by_email',
     'social_core.pipeline.user.create_user',
+    'social_auth.pipeline.set_password',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
