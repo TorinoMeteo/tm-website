@@ -27,10 +27,12 @@
         {% block meta_extra %}{% endblock %}
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,300italic,400italic,500,700,900' rel='stylesheet' type='text/css'>
         <link href="https://fonts.googleapis.com/css?family=Oleo+Script:700" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Mountains+of+Christmas" rel="stylesheet"> 
         {% stylesheet 'vendor' %}
         {% stylesheet 'torinometeo' %}
         {% block extra_css %}{% endblock %}
         <script src="{% static 'core/src/vendor/jquery/jquery.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.js"></script>
         {% javascript 'vendor' %}
         {% javascript 'torinometeo' %}
         <script>
@@ -54,6 +56,138 @@
           ga('set', 'anonymizeIp', true);
         </script>
         {% endif %}
+        <script>
+jQuery(document).ready(function () {
+particlesJS("particles-js", {
+  "particles": {
+    "number": {
+      "value": 400,
+      "density": {
+        "enable": true,
+        "value_area": 800
+      }
+    },
+    "color": {
+      "value": "#fff"
+    },
+    "shape": {
+      "type": "circle",
+      "stroke": {
+        "width": 0,
+        "color": "#000000"
+      },
+      "polygon": {
+        "nb_sides": 5
+      },
+    },
+    "opacity": {
+      "value": 1,
+      "random": false,
+      "anim": {
+        "enable": false,
+        "speed": 1,
+        "opacity_min": 0.1,
+        "sync": false
+      }
+    },
+    "size": {
+      "value": 10,
+      "random": true,
+      "anim": {
+        "enable": false,
+      }
+    },
+    "line_linked": {
+      "enable": false,
+    },
+    "move": {
+      "enable": true,
+      "speed": 3,
+      "direction": "bottom",
+      "random": false,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false,
+      "attract": {
+        "enable": false,
+        "rotateX": 600,
+        "rotateY": 1200
+      }
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": true,
+        "mode": "repulse"
+      },
+      "onclick": {
+        "enable": true,
+        "mode": "repulse"
+      },
+      "resize": true
+    },
+    "modes": {
+      "grab": {
+        "distance": 400,
+        "line_linked": {
+          "opacity": 0.5
+        }
+      },
+      "bubble": {
+        "distance": 100,
+        "size": 4,
+        "duration": 0.3,
+        "opacity": 1,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 100,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
+      }
+    }
+  },
+  "retina_detect": true
+});
+})
+        </script>
+<style>
+.merry {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+	color: #F2BB00;
+	font-family: 'Mountains of Christmas';
+	text-align: center;
+	grid-row: 1;
+	grid-column: 1/4;
+	align-self: center;
+	justify-self: center;
+    font-size: 4rem;
+    padding-top: 2rem;
+    z-index: 2;
+}
+
+.tree {
+    position: absolute;
+    bottom: 20px;
+    left: -50px;
+    height: 130px;
+}
+
+@media(min-width:600px) {
+    .tree {
+        left: 20px;
+    }
+}
+</style>
     </head>
     <body class="{% block body_css %}{% endblock %}">
         {% block header %}
@@ -78,6 +212,10 @@
                 </div><!-- /.container-fluid -->
             </nav>
         </header>
+        <div id="particles-js" style="height: 200px; position: relative;">
+            <div class="merry">Buone feste!</div>
+            <img class="tree" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25839/tree.svg" width="200px">
+        </div>
         {% endblock %}
         {% block jumbotron %}{% endblock %}
         {% block content %}{% endblock %}

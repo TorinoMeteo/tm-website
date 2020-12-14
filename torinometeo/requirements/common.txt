@@ -45,7 +45,7 @@ ipaddress==1.0.22
 itypes==1.1.0
 Jinja2==2.10.1
 kombu==4.5.0
-lxml==4.3.3
+lxml==4.6.2
 MarkupSafe==1.1.1
 meld3==1.0.2
 mock==3.0.5
