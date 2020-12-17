@@ -5,6 +5,29 @@ from .models.stations import (Data, HistoricData, RadarSnapshot, Station,
                               StationForecast, AirQualityStation)
 
 
+class AirQualityStationSerializer(serializers.ModelSerializer):
+    """ Air Quality Station Serializer
+    """
+    class Meta:
+        model = AirQualityStation
+        fields = (
+            'id',
+            'slug',
+            'name',
+            'station',
+            'description',
+            'nation',
+            'region',
+            'province',
+            'city',
+            'lat',
+            'lng',
+            'elevation',
+            'data_url',
+        )
+        depth = 1
+
+
 class StationSerializer(serializers.ModelSerializer):
     """ Realtime Station Serializer
     """
@@ -29,6 +52,7 @@ class StationSerializer(serializers.ModelSerializer):
             'image_url',
             'webcam',
             'webcam_url',
+            'airquality_stations',
         )
         depth = 1
 
@@ -158,25 +182,3 @@ class StationForecastSerializer(serializers.ModelSerializer):
         if f.station.forecast_url:
             return f.station.forecast_url.replace('forecast.xml', '')
         return None
-
-
-class AirQualityStationSerializer(serializers.ModelSerializer):
-    """ Air Quality Station Serializer
-    """
-    class Meta:
-        model = AirQualityStation
-        fields = (
-            'id',
-            'slug',
-            'name',
-            'description',
-            'nation',
-            'region',
-            'province',
-            'city',
-            'lat',
-            'lng',
-            'elevation',
-            'data_url',
-        )
-        depth = 1

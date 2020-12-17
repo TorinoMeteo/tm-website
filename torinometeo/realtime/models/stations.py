@@ -703,7 +703,7 @@ class AirQualityStation(models.Model):
     slug = models.SlugField('slug', max_length=128)
     short_name = models.CharField(
         'nome abbreviato', max_length=64, null=True, blank=True)
-    station = models.ForeignKey(Station, verbose_name='stazione meteo', on_delete=models.SET_NULL, related_name='air_quality_stations', blank=True, null=True)
+    station = models.ForeignKey(Station, verbose_name='stazione meteo', on_delete=models.SET_NULL, related_name='airquality_stations', blank=True, null=True)
     description = RichTextUploadingField('descrizione')
     data_url = models.URLField('URL dati')
     nation = models.ForeignKey(
