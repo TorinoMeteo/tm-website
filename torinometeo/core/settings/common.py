@@ -232,6 +232,8 @@ BATON = {
     'SITE_HEADER': '<img src="/static/core/src/img/logoTM.png" style="height: 50px;"/>',
     'SITE_TITLE': 'TorinoMeteo',
     'INDEX_TITLE': 'Amministrazione Sito',
+    'CHANGELIST_FILTERS_IN_MODAL': True,
+    'LOGIN_SPLASH': '/static/core/src/img/bg.jpg',
     'MENU': (
         {'type': 'title', 'label': 'Sistema',  'apps': ('auth', 'sites', 'constance', )},
         {'type': 'app', 'name': 'auth', 'label': 'Autenticazione', 'icon':'fa fa-lock'},

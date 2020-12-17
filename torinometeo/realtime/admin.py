@@ -5,7 +5,7 @@ from realtime.models.geo import Nation, Province, Region
 from realtime.models.stations import (Data, DataFormat, HistoricData,
                                       NetRequest, RadarColorConversion,
                                       RadarConvertParams, RadarSnapshot,
-                                      Station, StationForecast, )
+                                      Station, StationForecast, AirQualityStation, )
 
 
 # geo
@@ -251,3 +251,15 @@ class StationForecastAdmin(admin.ModelAdmin):
 
 
 admin.site.register(StationForecast, StationForecastAdmin)
+
+
+@admin.register(AirQualityStation)
+class AirQualityStationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'lat', 'lng', 'data', 'active', )
+    list_filter = ('active', )
+    search_fields = ('name', )
+    autocomplete_fields = ('station', )
+    prepopulated_fields = {'slug': ('name', )}
+
+    def data(self, instance):
+        return mark_safe('<a href="%s"><i class="fa fa-external-link"></i></a>' % instance.data_url)

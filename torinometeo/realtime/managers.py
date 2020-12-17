@@ -6,3 +6,10 @@ class StationManager(models.Manager):
     """
     def active(self, **kwargs):
         return self.filter(active=True, **kwargs)
+
+
+class AirQualityStationManager(models.Manager):
+    """ Defines the active method to easily retrieve active stations
+    """
+    def active(self, **kwargs):
+        return self.filter(active=True, **kwargs)

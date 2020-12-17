@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 
 from .models.stations import (Data, HistoricData, RadarSnapshot, Station,
-                              StationForecast)
+                              StationForecast, AirQualityStation)
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -158,3 +158,25 @@ class StationForecastSerializer(serializers.ModelSerializer):
         if f.station.forecast_url:
             return f.station.forecast_url.replace('forecast.xml', '')
         return None
+
+
+class AirQualityStationSerializer(serializers.ModelSerializer):
+    """ Air Quality Station Serializer
+    """
+    class Meta:
+        model = AirQualityStation
+        fields = (
+            'id',
+            'slug',
+            'name',
+            'description',
+            'nation',
+            'region',
+            'province',
+            'city',
+            'lat',
+            'lng',
+            'elevation',
+            'data_url',
+        )
+        depth = 1

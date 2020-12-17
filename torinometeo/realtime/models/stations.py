@@ -9,7 +9,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-from realtime.managers import StationManager
+from realtime.managers import StationManager, AirQualityStationManager
 from realtime.models.geo import Nation, Province, Region
 
 
@@ -692,3 +692,55 @@ class StationForecast(models.Model):
 
     def __str__(self):
         return '%s' % self.icon
+
+
+class AirQualityStation(models.Model):
+    # range in seconds for data to be considered live
+    RT_RANGE_SECONDS = 60 * 70
+    """ Station model
+    """
+    name = models.CharField('nome', max_length=128)
+    slug = models.SlugField('slug', max_length=128)
+    short_name = models.CharField(
+        'nome abbreviato', max_length=64, null=True, blank=True)
+    station = models.ForeignKey(Station, verbose_name='stazione meteo', on_delete=models.SET_NULL, related_name='air_quality_stations', blank=True, null=True)
+    description = RichTextUploadingField('descrizione')
+    data_url = models.URLField('URL dati')
+    nation = models.ForeignKey(
+        Nation,
+        verbose_name='nazione',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL)
+    region = models.ForeignKey(
+        Region,
+        verbose_name='regione',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL)
+    province = models.ForeignKey(
+        Province,
+        verbose_name='provincia',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL)
+    address = models.CharField(
+        'indirizzo', max_length=255, blank=True, null=True)
+    city = models.CharField(
+        'città/comune', max_length=255, blank=True, null=True)
+    cap = models.CharField('cap', max_length=10, blank=True, null=True)
+    lat = models.CharField('latitudine', max_length=255)
+    lng = models.CharField('longitudine', max_length=255)
+    elevation = models.IntegerField('altitudine', blank=True, null=True)
+
+    active = models.BooleanField('attiva', default=True)
+
+    objects = AirQualityStationManager()
+
+    class Meta:
+        verbose_name = 'stazione aria'
+        verbose_name_plural = 'stazioni aria'
+        ordering = ('name', )
+
+    def __str__(self):
+        return '%s' % self.name

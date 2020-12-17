@@ -8,11 +8,11 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from realtime.models.stations import (Data, HistoricData, RadarSnapshot,
-                                      Station, StationForecast)
+                                      Station, StationForecast, AirQualityStation)
 from realtime.serializers import (HistoricDataSerializer, JustDataSerializer,
                                   RadarSnapshotSerializer,
                                   RealtimeDataSerializer,
-                                  StationForecastSerializer)
+                                  StationForecastSerializer, AirQualityStationSerializer)
 
 
 class CurrentDayDataViewSet(viewsets.ViewSet):
@@ -158,3 +158,20 @@ class StationForecastViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class AirQualityStationViewSet(viewsets.ModelViewSet):
+    """ Air Quality Station viewset
+        Fetches all the active air quality stations
+    """
+    queryset = AirQualityStation.objects.active()
+    serializer_class = AirQualityStationSerializer
+
+    def get_permissions(self):
+        """
+        GET requests allowed to every one
+        POST requests require the user to have the add permission on the model. # noqa
+        PUT and PATCH requests require the user to have the change permission on the model. # noqa
+        DELETE requests require the user to have the delete permission on the model. # noqa
+        """
+        return (permissions.DjangoModelPermissionsOrAnonReadOnly(), )
