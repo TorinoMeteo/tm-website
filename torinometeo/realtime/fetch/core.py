@@ -26,11 +26,19 @@ class Data(dict):
     def __init__(self, *args, **kwargs):
         """ Just add datetime key, date + time"""
         super(Data, self).__init__(*args, **kwargs)
-        try:
-            self[DL['DATETIME']] = datetime.combine(self[DL['DATE']], self[DL['TIME']]) # noqa
-        except: # noqa
-            self[DL['DATETIME']] = None
+        if not self[DL['DATETIME']]:
+            try:
+                self[DL['DATETIME']] = datetime.combine(self[DL['DATE']], self[DL['TIME']]) # noqa
+            except: # noqa
+                self[DL['DATETIME']] = None
 
+    def as_json(self):
+        return json.dumps(self, cls=DateTimeEncoder)
+
+
+class AirQualityData(dict):
+    """ Wraps the python dict object to add convenience methods, i.e. as_json
+    """
     def as_json(self):
         return json.dumps(self, cls=DateTimeEncoder)
 

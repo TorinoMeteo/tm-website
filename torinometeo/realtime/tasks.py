@@ -1,39 +1,37 @@
 from __future__ import absolute_import
 
-import os
 import datetime
-import shutil
-import pytz
-from urllib.request import urlopen
 import json
+import os
+import shutil
+from urllib.request import urlopen
 
+import pytz
 import requests
-from requests.exceptions import HTTPError
-
 from bs4 import BeautifulSoup
-
+from celery.utils.log import get_task_logger
+from constance import config
+from django.conf import settings
+from django.db.models import Avg, Max, Min
+from requests.exceptions import HTTPError
 from stem import Signal
 from stem.control import Controller
 
-from django.db.models import Max, Min, Avg
-from django.conf import settings
-
 from core.celery import app
-from celery.utils.log import get_task_logger
 
-from .models.stations import Station, Data, HistoricData, RadarSnapshot, \
-    RadarColorConversion, RadarConvertParams, StationForecast
 from .fetch.shortcuts import fetch_data
-from constance import config
+from .models.stations import (AirQualityData, AirQualityStation, Data,
+                              HistoricData, RadarColorConversion,
+                              RadarConvertParams, RadarSnapshot, Station,
+                              StationForecast)
 
 logger = get_task_logger(__name__)
 
 
 def patch_max(station, datetime, variable):
-    max = Data.objects.filter(
-        station=station,
-        datetime__gte=datetime.date()
-    ).order_by('-%s' % variable).first()
+    max = Data.objects.filter(station=station,
+                              datetime__gte=datetime.date()).order_by(
+                                  '-%s' % variable).first()
     if max:
         return (getattr(max, variable), getattr(max, 'datetime').time())
     return (None, None)
@@ -42,10 +40,9 @@ def patch_max(station, datetime, variable):
 def patch_min(station, datetime, variable):
     """ Retrieves and patches missing max and min from prev measures
     """
-    min = Data.objects.filter(
-        station=station,
-        datetime__gte=datetime.date()
-    ).order_by('%s' % variable).first()
+    min = Data.objects.filter(station=station,
+                              datetime__gte=datetime.date()).order_by(
+                                  '%s' % variable).first()
     if min:
         return (getattr(min, variable), getattr(min, 'datetime').time())
     return (None, None)
@@ -56,8 +53,7 @@ def patch_wind_max(station, datetime):
     """
     max = Data.objects.filter(
         station=station,
-        datetime__gte=datetime.date()
-    ).order_by('-wind_strength').first()
+        datetime__gte=datetime.date()).order_by('-wind_strength').first()
     if max:
         return (max.wind_strength, max.wind_dir, max.datetime.time())
     return (None, None, None)
@@ -72,30 +68,36 @@ def adjust_data(station, data):
     data.pop('date', None)
     data.pop('time', None)
     # patch max and min
-    for var in ['temperature', 'pressure', 'dewpoint', 'relative_humidity', 'rain_rate']: # noqa
+    for var in [
+            'temperature', 'pressure', 'dewpoint', 'relative_humidity',
+            'rain_rate'
+    ]:  # noqa
         if ('%s_max' % var) not in data or data['%s_max' % var] is None:
-            (data['%s_max' % var], data['%s_max_time' % var]) = patch_max(
-                station, data['datetime'], var
-            )
+            (data['%s_max' % var],
+             data['%s_max_time' % var]) = patch_max(station, data['datetime'],
+                                                    var)
         if var != 'rain_rate':  # rain rate has no min
             if ('%s_min' % var) not in data or data['%s_min' % var] is None:
                 (data['%s_min' % var], data['%s_min_time' % var]) = patch_min(
-                    station, data['datetime'], var
-                )
+                    station, data['datetime'], var)
     if 'wind_strength_max' not in data or data['wind_strength_max'] is None:
-        (data['wind_strength_max'], data['wind_dir_max'], data['wind_max_time']) = patch_wind_max( # noqa
-            station, data['datetime']
-        )
+        (data['wind_strength_max'], data['wind_dir_max'],
+         data['wind_max_time']) = patch_wind_max(  # noqa
+             station, data['datetime'])
     return data
 
 
 def data_exists(station, datetime):
     """ Checks if datetime data was already saved
     """
-    count = Data.objects.filter(
-        station=station,
-        datetime=datetime
-    ).count()
+    count = Data.objects.filter(station=station, datetime=datetime).count()
+    return True if count else False
+
+
+def airqualitydata_exists(station, datetime):
+    """ Checks if datetime airquality data was already saved
+    """
+    count = AirQualityData.objects.filter(station=station, datetime=datetime).count()
     return True if count else False
 
 
@@ -111,8 +113,10 @@ def fetch_realtime_data():
             data = fetch_data(
                 station.data_url,
                 station.data_format.name,
-                time_format=station.data_time_format.split(',') if station.data_time_format else None,
-                date_format=station.data_date_format.split(',') if station.data_date_format else None,
+                time_format=station.data_time_format.split(',')
+                if station.data_time_format else None,
+                date_format=station.data_date_format.split(',')
+                if station.data_date_format else None,
             )
             if not data_exists(station, data['datetime']):
                 new_data = Data(**adjust_data(station, data))
@@ -120,9 +124,36 @@ def fetch_realtime_data():
                 logger.info('station %s fetch successfull' % (station.name))
 
         except Exception as e:
-            logger.warn('station %s fetch failed: %s' % (station.name, str(e))) # noqa
+            logger.warn('station %s fetch failed: %s' %
+                        (station.name, str(e)))  # noqa
 
     logger.info('END -- running task: fetch_realtime_data')
+    return True
+
+
+@app.task
+def fetch_airquality_data():
+    """ Fetches all airquality data from external urls
+        and populates the db
+    """
+    logger.info('BEGIN -- running task: fetch_airquality_data')
+
+    for station in AirQualityStation.objects.active():
+        try:
+            data = fetch_data(
+                station.data_url,
+                'airquality',
+            )
+            if not airqualitydata_exists(station, data['datetime']):
+                new_data = AirQualityData(station=station, **data)
+                new_data.save()
+                logger.info('station %s fetch successfull' % (station.name))
+
+        except Exception as e:
+            logger.warn('station %s fetch failed: %s' %
+                        (station.name, str(e)))  # noqa
+
+    logger.info('END -- running task: fetch_airquality_data')
     return True
 
 
@@ -174,7 +205,8 @@ def store_historic_data():
             history.save()
             logger.info('station %s history save successfull' % (station.name))
         except Exception as e:
-            logger.warn('station %s history save failed: %s' % (station.name, str(e))) # noqa
+            logger.warn('station %s history save failed: %s' %
+                        (station.name, str(e)))  # noqa
 
     logger.info('END -- running task: store_historic_data')
 
@@ -194,32 +226,43 @@ def clean_realtime_data():
 # Get Radar Image Based On Input timestamp if availale
 def fetch_radar_image(dt, src):
     remainder_dt = int(dt.minute) % 10
-    next_dt = dt + datetime.timedelta(minutes=10) - datetime.timedelta(minutes=remainder_dt) # noqa
+    next_dt = dt + datetime.timedelta(minutes=10) - datetime.timedelta(
+        minutes=remainder_dt)  # noqa
     base_url = config.RADAR_BASE_URL
-    remote_filename = 'VRAG05.CCSK_%s' % next_dt.astimezone(pytz.utc).strftime("%Y%m%d_%H%M") # noqa
-    local_filename = '%s.png' % next_dt.astimezone(pytz.utc).strftime("%Y%m%d%H%M") # noqa
+    remote_filename = 'VRAG05.CCSK_%s' % next_dt.astimezone(pytz.utc).strftime(
+        "%Y%m%d_%H%M")  # noqa
+    local_filename = '%s.png' % next_dt.astimezone(pytz.utc).strftime(
+        "%Y%m%d%H%M")  # noqa
     local_path = os.path.join(src, local_filename)
     image_dt = next_dt
     try:
         session = requests.session()
         # Tor uses the 9050 port as the default socks port
-        session.proxies = {'http':  'socks5://127.0.0.1:9050',
-                           'https': 'socks5://127.0.0.1:9050'}
+        session.proxies = {
+            'http': 'socks5://127.0.0.1:9050',
+            'https': 'socks5://127.0.0.1:9050'
+        }
         ip = get_ip(session)
         #r = session.get('http://media.meteonews.net/radar/chComMET_800x618_c2/%s.png' % remote_filename, stream=True) # noqa
         headers = {
-            'Host': 'www.meteosvizzera.admin.ch',
-            'Referer': 'http://www.meteosvizzera.admin.ch/home.html?tab=rain',
-            'USer-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0' # noqa
+            'Host':
+            'www.meteosvizzera.admin.ch',
+            'Referer':
+            'http://www.meteosvizzera.admin.ch/home.html?tab=rain',
+            'USer-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0'  # noqa
         }
-        r = session.get(base_url + remote_filename + '.png', headers=headers, stream=True) # noqa
+        r = session.get(base_url + remote_filename + '.png',
+                        headers=headers,
+                        stream=True)  # noqa
         r.raise_for_status()
         with open(local_path, 'wb') as out_file:
             shutil.copyfileobj(r.raw, out_file)
         del r
         return (ip, local_filename, image_dt)
     except HTTPError:
-        logger.error('Could not download '+ base_url+ remote_filename+'.png')
+        logger.error('Could not download ' + base_url + remote_filename +
+                     '.png')
         return False
     except Exception as e:
         logger.error(e)
@@ -229,15 +272,17 @@ def fetch_radar_image(dt, src):
 # Execute external script to change image color based on Color Replacement List
 def change_colors(img_path, conversions):
     for conversion in conversions:
-        cmd = "convert " + img_path + " -fuzz " + str(conversion[2]) + "% -fill \"" + str(conversion[1]) + "\" -opaque \"" + str(conversion[0]) + "\" " + img_path # noqa
+        cmd = "convert " + img_path + " -fuzz " + str(
+            conversion[2]) + "% -fill \"" + str(
+                conversion[1]) + "\" -opaque \"" + str(
+                    conversion[0]) + "\" " + img_path  # noqa
         logger.info('Executing imagemagick command: %s' % cmd)
         os.system(cmd)
-        params = ['-%s %s' % (p.param_name, p.param_value) for p in RadarConvertParams.objects.all()] # noqa
-        cmd = "convert %s %s %s" % (
-            img_path,
-            ' '.join(params),
-            img_path
-        )
+        params = [
+            '-%s %s' % (p.param_name, p.param_value)
+            for p in RadarConvertParams.objects.all()
+        ]  # noqa
+        cmd = "convert %s %s %s" % (img_path, ' '.join(params), img_path)
         logger.info('Executing imagemagick command: %s' % cmd)
         os.system(cmd)
 
@@ -267,9 +312,10 @@ def fetch_radar(dt, colors, src, dst):
         (ip, filename, datetime) = image_data
         if filename:
             logger.info('%s downloaded with IP %s' % (filename, ip))
-            change_colors(os.path.join(src, filename), colors) # noqa
+            change_colors(os.path.join(src, filename), colors)  # noqa
             try:
-                shutil.move(os.path.join(src, filename), os.path.join(dst, filename)) # noqa
+                shutil.move(os.path.join(src, filename),
+                            os.path.join(dst, filename))  # noqa
             except Exception as e:
                 logger.error('cannot move the image %s' % e)
                 return False
@@ -296,7 +342,8 @@ def fetch_radar_images():
             dt = last_radar_image.datetime
     except:
         pass
-    colors = [(c.original_color, c.converted_color, c.tolerance) for c in RadarColorConversion.objects.all()] # noqa
+    colors = [(c.original_color, c.converted_color, c.tolerance)
+              for c in RadarColorConversion.objects.all()]  # noqa
 
     src = '/tmp/'
     if settings.DEBUG:
@@ -306,12 +353,11 @@ def fetch_radar_images():
 
     result = fetch_radar(dt, colors, src, dst)
     if not result:
-        result = fetch_radar((dt + datetime.timedelta(minutes=10)), colors, src, dst)
+        result = fetch_radar((dt + datetime.timedelta(minutes=10)), colors,
+                             src, dst)
     if result:
-        snapshot = RadarSnapshot(
-            datetime=result.get('datetime'),
-            filename=result.get('filename')
-        )
+        snapshot = RadarSnapshot(datetime=result.get('datetime'),
+                                 filename=result.get('filename'))
         snapshot.save()
     logger.info('END -- running task: fetch_radar_images')
     return result

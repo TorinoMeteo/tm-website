@@ -5,7 +5,7 @@ from realtime.models.geo import Nation, Province, Region
 from realtime.models.stations import (Data, DataFormat, HistoricData,
                                       NetRequest, RadarColorConversion,
                                       RadarConvertParams, RadarSnapshot,
-                                      Station, StationForecast, AirQualityStation, )
+                                      Station, StationForecast, AirQualityStation, AirQualityData )
 
 
 # geo
@@ -255,7 +255,7 @@ admin.site.register(StationForecast, StationForecastAdmin)
 
 @admin.register(AirQualityStation)
 class AirQualityStationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'lat', 'lng', 'data', 'active', )
+    list_display = ('name', 'lat', 'lng', 'data', 'test_fetch', 'active', )
     list_filter = ('active', )
     search_fields = ('name', )
     autocomplete_fields = ('station', )
@@ -263,3 +263,23 @@ class AirQualityStationAdmin(admin.ModelAdmin):
 
     def data(self, instance):
         return mark_safe('<a href="%s"><i class="fa fa-external-link"></i></a>' % instance.data_url)
+
+    def test_fetch(self, obj):
+        return mark_safe(
+            '<a href="/realtime/airquality/fetch/%d" target="_blank">test</a>' % obj.id)
+
+
+@admin.register(AirQualityData)
+class AirQualityDataAdmin(admin.ModelAdmin):
+    list_display = [
+        'datetime',
+        'station',
+        'air_quality_index',
+        'pm1',
+        'pm25',
+        'pm10',
+    ]  # noqa
+    list_filter = (
+        'station',
+        'datetime',
+    )

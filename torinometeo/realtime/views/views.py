@@ -22,8 +22,8 @@ from sorl.thumbnail import get_thumbnail
 
 from realtime.fetch.shortcuts import fetch_data
 from realtime.forms import NetRequestForm
-from realtime.models.stations import Station, StationForecast, Data
-from realtime.tasks import fetch_radar_images, adjust_data, data_exists
+from realtime.models.stations import Station, StationForecast, Data, AirQualityStation, AirQualityData
+from realtime.tasks import fetch_radar_images, adjust_data, data_exists, airqualitydata_exists
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -502,6 +502,36 @@ class FetchView(View):
         except Exception as e:
             logger.warn('station %s fetch failed: %s - datetime: ' % (station.name, str(e), str(data['datetime']))) # noqa
 
+
+        return render(request, 'realtime/fetch.html', {
+            'station': station,
+            'data': data,
+            'json_data': json_data
+        })
+
+
+class AirQualityFetchView(View):
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AirQualityFetchView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, pk):
+        station = AirQualityStation.objects.get(pk=pk)
+
+        try:
+            data = fetch_data(
+                station.data_url,
+                'airquality',
+            )
+            json_data = data.as_json()
+
+            if not airqualitydata_exists(station, data['datetime']):
+                new_data = AirQualityData(station=station, **data)
+                new_data.save()
+                logger.info('station %s fetch successfull' % (station.name))
+
+        except Exception as e:
+            logger.warn('station %s fetch failed: %s - datetime: ' % (station.name, str(e), str(data['datetime']))) # noqa
 
         return render(request, 'realtime/fetch.html', {
             'station': station,

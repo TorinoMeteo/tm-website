@@ -65,4 +65,9 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(minute=30, hour=0),  # every day 00:30
         'args': ()
     },
+    'fetch-airquality-data': {
+        'task': 'realtime.tasks.fetch_airquality_data',
+        'schedule': timedelta(seconds=300),
+        'args': ()
+    },
 }

@@ -11,7 +11,7 @@ def parser_factory(type):
     path = '.parsers.%s'
     whitelist = [
         'txtwd', 'sintpi', 'clientraw', 'unito', 'weatherlink', 'weatherlink2',
-        'aprs', 'realtime', 'txtmp', 'tm'
+        'aprs', 'realtime', 'txtmp', 'tm', 'airquality'
     ]
     if type in whitelist:
         mod = importlib.import_module(path % type, __name__.rsplit('.', 1)[0])

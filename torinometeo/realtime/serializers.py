@@ -1,13 +1,44 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from .models.stations import (Data, HistoricData, RadarSnapshot, Station,
-                              StationForecast, AirQualityStation)
+from .models.stations import (AirQualityData, AirQualityStation, Data,
+                              HistoricData, RadarSnapshot, Station,
+                              StationForecast)
+
+
+class AirQualityDataSerializer(serializers.ModelSerializer):
+    """ Air Quality Data Serializer
+    """
+    class Meta:
+        model = AirQualityData
+        fields = (
+            'id',
+            'datetime',
+            'air_quality_index',
+            'pm1',
+            'pm1_max',
+            'pm1_max_time',
+            'pm1_min',
+            'pm1_min_time',
+            'pm25',
+            'pm25_max',
+            'pm25_max_time',
+            'pm25_min',
+            'pm25_min_time',
+            'pm10',
+            'pm10_max',
+            'pm10_max_time',
+            'pm10_min',
+            'pm10_min_time',
+        )
+        depth = 1
 
 
 class AirQualityStationSerializer(serializers.ModelSerializer):
     """ Air Quality Station Serializer
     """
+    last_data = serializers.SerializerMethodField()
+
     class Meta:
         model = AirQualityStation
         fields = (
@@ -24,9 +55,17 @@ class AirQualityStationSerializer(serializers.ModelSerializer):
             'lng',
             'elevation',
             'data_url',
+            'last_data',
         )
         depth = 1
 
+    def get_last_data(self, station):
+        last_data = station.data.order_by('-datetime').first()
+        if last_data:
+            serializer = AirQualityDataSerializer(last_data)
+            return serializer.data
+
+        return None
 
 class StationSerializer(serializers.ModelSerializer):
     """ Realtime Station Serializer

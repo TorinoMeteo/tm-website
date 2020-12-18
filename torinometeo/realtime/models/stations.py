@@ -744,3 +744,38 @@ class AirQualityStation(models.Model):
 
     def __str__(self):
         return '%s' % self.name
+
+
+class AirQualityData(models.Model):
+    station = models.ForeignKey(AirQualityStation, verbose_name='stazione', on_delete=models.CASCADE, related_name='data', )
+    datetime = models.DateTimeField('data e ora', auto_now=False, auto_now_add=False)
+    air_quality_index = models.IntegerField('indice qualità dell\'aria')
+    pm1 = models.IntegerField('pm 1')
+    pm1_max = models.IntegerField('pm 1 massimo')
+    pm1_max_time = models.TimeField(
+        'ora pm 1 massimo', blank=True, null=True)
+    pm1_min = models.IntegerField('pm 1 minimo')
+    pm1_min_time = models.TimeField(
+        'ora pm 1 massimo', blank=True, null=True)
+    pm25 = models.IntegerField('pm 2.5')
+    pm25_max = models.IntegerField('pm 2.5 massimo')
+    pm25_max_time = models.TimeField(
+        'ora pm 2.5 massimo', blank=True, null=True)
+    pm25_min = models.IntegerField('pm 2.5 minimo')
+    pm25_min_time = models.TimeField(
+        'ora pm 2.5 minimo', blank=True, null=True)
+    pm10 = models.IntegerField('pm 10')
+    pm10_max = models.IntegerField('pm 10 massimo')
+    pm10_max_time = models.TimeField(
+        'ora pm 10 massimo', blank=True, null=True)
+    pm10_min = models.IntegerField('pm 10 minimo')
+    pm10_min_time = models.TimeField(
+        'ora pm 10 minimo', blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Dati qualità dell\'aria'
+        verbose_name_plural = 'Dati qualità dell\'aria'
+
+    def __str__(self):
+        return '%s - %s' % (self.station.name,
+                            str(self.datetime) if self.datetime else '')

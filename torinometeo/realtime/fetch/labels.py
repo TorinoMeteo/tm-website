@@ -37,3 +37,23 @@ DATA_LABELS = {
     'RAIN_MONTH': 'rain_month',
     'RAIN_YEAR': 'rain_year'
 }
+
+AIRQUALITY_DATA_LABELS = {
+    'DATETIME': 'datetime',
+    'AIR_QUALITY_INDEX': 'air_quality_index',
+    'PM1': 'pm1',
+    'PM1_MAX': 'pm1_max',
+    'PM1_MAX_TIME': 'pm1_max_time',
+    'PM1_MIN': 'pm1_min',
+    'PM1_MIN_TIME': 'pm1_min_time',
+    'PM25': 'pm25',
+    'PM25_MAX': 'pm25_max',
+    'PM25_MAX_TIME': 'pm25_max_time',
+    'PM25_MIN': 'pm25_min',
+    'PM25_MIN_TIME': 'pm25_min_time',
+    'PM10': 'pm10',
+    'PM10_MAX': 'pm10_max',
+    'PM10_MAX_TIME': 'pm10_max_time',
+    'PM10_MIN': 'pm10_min',
+    'PM10_MIN_TIME': 'pm10_min_time',
+}

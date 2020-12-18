@@ -55,11 +55,20 @@ class Parser(object):
             # @TODO do something more specific with value errors?
             return None
 
+    def _clean_int(self, value):
+        return int(value)
+
+    def _clean_pm(self, value):
+        return int(value)
+
     def _clean_float(self, value):
         return self._to_float(value)
 
     def _clean_temp(self, value):
         return self._to_float_extremes(value, 'temp')
+
+    def _clean_datetime(self, value):
+        return dateutil.parser.parse(value)
 
     def _clean_time(self, value):
         if isinstance(self.time_format, basestring):
