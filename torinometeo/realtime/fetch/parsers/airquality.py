@@ -11,7 +11,7 @@ class AirqualityParser(Parser):
     # line num: (label, clean)
     data_map = {
         'datetime': (DL['DATETIME'], 'datetime'),
-        'air_quality_index': (DL['AIR_QUALITY_INDEX'], 'int'),
+        'air_quality_index': (DL['AIR_QUALITY_INDEX'], 'float'),
         'pm1': (DL['PM1'], 'pm'),
         'pm1_max': (DL['PM1_MAX'], 'pm'),
         'pm1_max_time': (DL['PM1_MAX_TIME'], 'time'),

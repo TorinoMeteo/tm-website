@@ -749,26 +749,27 @@ class AirQualityStation(models.Model):
 class AirQualityData(models.Model):
     station = models.ForeignKey(AirQualityStation, verbose_name='stazione', on_delete=models.CASCADE, related_name='data', )
     datetime = models.DateTimeField('data e ora', auto_now=False, auto_now_add=False)
-    air_quality_index = models.IntegerField('indice qualità dell\'aria')
-    pm1 = models.IntegerField('pm 1')
-    pm1_max = models.IntegerField('pm 1 massimo')
+    air_quality_index = models.DecimalField(
+        'indice qualità dell\'aria', max_digits=4, decimal_places=1)
+    pm1 = models.DecimalField('pm 1', max_digits=8, decimal_places=1)
+    pm1_max = models.DecimalField('pm 1 massimo', max_digits=8, decimal_places=1)
     pm1_max_time = models.TimeField(
         'ora pm 1 massimo', blank=True, null=True)
-    pm1_min = models.IntegerField('pm 1 minimo')
+    pm1_min = models.DecimalField('pm 1 minimo', max_digits=8, decimal_places=1)
     pm1_min_time = models.TimeField(
         'ora pm 1 massimo', blank=True, null=True)
-    pm25 = models.IntegerField('pm 2.5')
-    pm25_max = models.IntegerField('pm 2.5 massimo')
+    pm25 = models.DecimalField('pm 2.5', max_digits=8, decimal_places=1)
+    pm25_max = models.DecimalField('pm 2.5 massimo', max_digits=8, decimal_places=1)
     pm25_max_time = models.TimeField(
         'ora pm 2.5 massimo', blank=True, null=True)
-    pm25_min = models.IntegerField('pm 2.5 minimo')
+    pm25_min = models.DecimalField('pm 2.5 minimo', max_digits=8, decimal_places=1)
     pm25_min_time = models.TimeField(
         'ora pm 2.5 minimo', blank=True, null=True)
-    pm10 = models.IntegerField('pm 10')
-    pm10_max = models.IntegerField('pm 10 massimo')
+    pm10 = models.DecimalField('pm 10', max_digits=8, decimal_places=1)
+    pm10_max = models.DecimalField('pm 10 massimo', max_digits=8, decimal_places=1)
     pm10_max_time = models.TimeField(
         'ora pm 10 massimo', blank=True, null=True)
-    pm10_min = models.IntegerField('pm 10 minimo')
+    pm10_min = models.DecimalField('pm 10 minimo', max_digits=8, decimal_places=1)
     pm10_min_time = models.TimeField(
         'ora pm 10 minimo', blank=True, null=True)
 

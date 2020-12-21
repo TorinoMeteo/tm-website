@@ -59,7 +59,7 @@ class Parser(object):
         return int(value)
 
     def _clean_pm(self, value):
-        return int(value)
+        return self._to_float(value)
 
     def _clean_float(self, value):
         return self._to_float(value)
