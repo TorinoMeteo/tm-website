@@ -38,7 +38,7 @@ SECRET_KEY = env(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -265,7 +265,7 @@ BATON = {
     'SUPPORT_HREF': 'mailto:abidibo@gmail.com',
     'POWERED_BY': '<a href="https://www.abidibo.net">abidibo</a>',
     'ANALYTICS': {
-        'CREDENTIALS': os.path.join(BASE_DIR, 'credentials.json') if not DEBUG else os.path.join(BASE_DIR, '..', '..', 'credentials.json'),
+        'CREDENTIALS': os.path.join(BASE_DIR, 'credentials.json') if DEBUG else os.path.join(BASE_DIR, '..', '..', 'credentials.json'),
         'VIEW_ID': '34377537',
     }
 }
