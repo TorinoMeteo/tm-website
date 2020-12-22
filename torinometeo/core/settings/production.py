@@ -67,7 +67,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'fetch-airquality-data': {
         'task': 'realtime.tasks.fetch_airquality_data',
-        'schedule': timedelta(seconds=300),
+        'schedule': timedelta(seconds=500),
         'args': ()
     },
 }
