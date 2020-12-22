@@ -26,6 +26,7 @@ class Data(dict):
     def __init__(self, *args, **kwargs):
         """ Just add datetime key, date + time"""
         super(Data, self).__init__(*args, **kwargs)
+
         if DL['DATETIME'] not in self:
             try:
                 self[DL['DATETIME']] = datetime.combine(self[DL['DATE']], self[DL['TIME']]) # noqa
