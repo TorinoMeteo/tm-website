@@ -105,6 +105,12 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
         // end realtime data
         this.$dom.clear = jQuery('<div>', {'class': 'clearfix'}).appendTo(this.$dom.container);
 
+        // air quality
+        this.$dom.rt_air_quality_index = jQuery('<div>', {'class': 'rt-air-quality-index'}).appendTo(this.$dom.rt_data3);
+        this.$dom.rt_pm1 = jQuery('<div>', {'class': 'rt-pm1'}).appendTo(this.$dom.rt_data3);
+        this.$dom.rt_pm25 = jQuery('<div>', {'class': 'rt-pm25'}).appendTo(this.$dom.rt_data4);
+        this.$dom.rt_pm10 = jQuery('<div>', {'class': 'rt-pm10'}).appendTo(this.$dom.rt_data4);
+
         // spinner
         this.$dom.spinner_overlay = jQuery('<div>', {'class': 'spinner-overlay hidden'}).appendTo(this.$dom.container);
         this.$dom.spinner = jQuery('<div>', {'class': 'spinner hidden'}).appendTo(this.$dom.container);
@@ -274,6 +280,18 @@ torinometeo.realtime.Jumbotron = function(container_id, id_stations, name_statio
             this.$dom.rt_data_wind.html('<i class="wi wi-windy"></i> ND')
             this.$dom.rt_data_rain_rate.html('<i class="wi wi-raindrops"></i> ND')
             this.$dom.rt_data_rain.html('<i class="wi wi-umbrella"></i> ND')
+        }
+
+        if (data.airquality) {
+            this.$dom.rt_air_quality_index.html('<span class="aq-l">AQI</span> <span class="aq-v">' + this.renderValue(data.airquality.air_quality_index) + '</span>');
+            this.$dom.rt_pm1.html('<span class="aq-l">PM1</span> <span class="aq-v">' + this.renderValue(data.airquality.pm1) + '</span> μg/m³');
+            this.$dom.rt_pm25.html('<span class="aq-l">PM2.5</span> <span class="aq-v">' + this.renderValue(data.airquality.pm25) + '</span> μg/m³');
+            this.$dom.rt_pm10.html('<span class="aq-l">PM10</span> <span class="aq-v">' + this.renderValue(data.airquality.pm10) + '</span> μg/m³');
+        } else {
+            this.$dom.rt_air_quality_index.empty();
+            this.$dom.rt_pm1.empty();
+            this.$dom.rt_pm25.empty();
+            this.$dom.rt_pm10.empty();
         }
 
         this.$index == 0 ? this.$dom.prev_arrow.addClass('hidden') : this.$dom.prev_arrow.removeClass('hidden');

@@ -78,6 +78,15 @@ class JumbotronStationJsonView(View):
                     'rain_rate': realtime_data.rain_rate,
                     'rain': realtime_data.rain,
                 }
+            if station.airquality_stations.first():
+                airquality_data = station.airquality_stations.first().get_realtime_data()
+                if airquality_data is not None:
+                    data['airquality'] = {
+                        'air_quality_index': airquality_data.air_quality_index,
+                        'pm1': airquality_data.pm1,
+                        'pm25': airquality_data.pm25,
+                        'pm10': airquality_data.pm10,
+                    }
 
         return JsonResponse(data)
 

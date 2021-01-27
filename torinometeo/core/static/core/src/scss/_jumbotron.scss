@@ -1,250 +1,297 @@
 // scss-lint:disable all
 .jumbotron {
-    background-color: #fff;
-    background-image: url(../img/j_bkg.png), url(../img/html_bkg.jpg);
-    background-size: auto, cover;
-    background-repeat: repeat, no-repeat;
-    // background-position: top left, 50% 50%;
-    background-position: top left, 50% bottom;
-    box-shadow: 0 0 1px #eee !important;
-    margin-bottom: 0px !important;
-    margin-top: -26px;
-    position: relative;
-    font-family: $font-family-sans-serif;
-    padding: 40px 20px;
+  background-color: #fff;
+  background-image: url(../img/j_bkg.png), url(../img/html_bkg.jpg);
+  background-size: auto, cover;
+  background-repeat: repeat, no-repeat;
+  // background-position: top left, 50% 50%;
+  background-position: top left, 50% bottom;
+  box-shadow: 0 0 1px #eee !important;
+  margin-bottom: 0px !important;
+  margin-top: -26px;
+  position: relative;
+  font-family: $font-family-sans-serif;
+  padding: 40px 20px;
 
-    .station-title {
-      margin-top: 40px;
-
-      h1 {
-        float: left;
-      }
-    }
+  .station-title {
+    margin-top: 40px;
 
     h1 {
-        position: relative;
-        font-size: 30px !important;
-        cursor: pointer;
+      float: left;
+    }
+  }
 
-        @media(max-width: map-get($grid-breakpoints, 'md')) {
-          font-size: 40px;
-        }
+  h1 {
+    position: relative;
+    font-size: 30px !important;
+    cursor: pointer;
 
-        &:after {
-            content: "";
-            margin-left: 10px;
-            font-family: 'FontAwesome';
-            font-weight: 100;
-        }
+    @media (max-width: map-get($grid-breakpoints, "md")) {
+      font-size: 40px;
     }
 
-    .weather-icon {
-      float: left;
-      margin-top: 0px;
+    &:after {
+      content: "";
+      margin-left: 10px;
+      font-family: "FontAwesome";
+      font-weight: 100;
+    }
+  }
+
+  .weather-icon {
+    float: left;
+    margin-top: 0px;
+    margin-right: 10px;
+  }
+
+  .fa-star-o,
+  .fa-star {
+    font-size: 43px;
+    margin-right: 20px;
+    color: #0275d8;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  time {
+    line-height: 1.4;
+    &:before {
+      content: "";
+      font-family: "FontAwesome";
       margin-right: 10px;
     }
+  }
+  .geo {
+    &:before {
+      content: "";
+      font-family: "FontAwesome";
+      margin-right: 10px;
+    }
+    margin-right: 20px;
+  }
+  .time {
+    margin-right: 20px;
+  }
+  #rt-graph-wrapper {
+    position: relative;
+    height: 220px;
+    width: 100%;
+    padding: 0px;
+    float: left;
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+  #rt-graph-container {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+  }
+  #rt-graph-rail {
+    transition: all 0.2s ease;
+  }
+  #rt-graph-container,
+  #rt-graph-rail {
+    width: 100%;
+  }
+  .rt-label {
+    position: absolute;
+    z-index: 10;
+    font-size: 14px;
+    width: 60px;
+    height: 30px;
+    background: #ddd;
+    border: 1px solid #ccc;
+    color: #000;
+    text-align: center;
+    cursor: pointer;
+    line-height: 28px;
+    transform: rotate(90deg);
+    transform-origin: center;
+  }
+  .rt-label.active {
+    background: #fff;
+  }
+  .rt-relative-humidity-label,
+  .rt-rain-label {
+    border-radius: 0 12px 0 0;
+    right: -45px;
+  }
+  .rt-relative-humidity-label {
+    top: 15px;
+  }
+  .rt-rain-label {
+    top: 80px;
+  }
+  .rt-temperature-label,
+  .rt-pressure-label {
+    border-radius: 12px 0 0 0;
+    left: -45px;
+    transform: rotate(-90deg);
+  }
+  .rt-temperature-label {
+    top: 15px;
+  }
+  .rt-pressure-label {
+    top: 80px;
+  }
+  #rt-temperature-graph,
+  #rt-pressure-graph,
+  #rt-relative_humidity-graph,
+  #rt-rain-graph {
+    width: 100%;
+    height: 220px;
+    float: left;
+    margin-right: 10px;
+    // background: red;
+  }
+  .station-img {
+    width: 90%;
+    margin-top: 10px;
+    height: 180px;
+    border-radius: 12px;
+  }
+  .rt-data {
+    float: left;
+    margin-top: 20px;
 
-    .fa-star-o,
-    .fa-star {
-      font-size: 43px;
-      margin-right: 20px;
-      color: #0275d8;
-      cursor: pointer;
-      text-decoration: none;
+    @media (min-width: map-get($grid-breakpoints, "md")) {
+      margin-left: 20px;
     }
 
-    time {
-        line-height: 1.4;
-        &:before {
-            content: "";
-            font-family: 'FontAwesome';
-            margin-right: 10px;
-        }
-    }
-    .geo {
-        &:before {
-            content: "";
-            font-family: 'FontAwesome';
-            margin-right: 10px;
-        }
-        margin-right: 20px;
-    }
-    .time {
-      margin-right: 20px;
-    }
-    #rt-graph-wrapper {
-        position: relative;
-        height: 220px;
-        width: 100%;
-        padding: 0px;
-        float: left;
-        margin-left: 0px;
-        margin-top: 10px;
-    }
-    #rt-graph-container {
-        width: 100%;
-        height: 220px;
-        overflow: hidden;
-    }
-    #rt-graph-rail {
-        transition: all 0.2s ease;
-    }
-    #rt-graph-container, #rt-graph-rail {
-        width: 100%;
-    }
-    .rt-label {
-        position: absolute;
-        z-index: 10;
-        font-size: 14px;
-        width: 60px;
-        height: 30px;
-        background: #ddd;
-        border: 1px solid #ccc;
-        color: #000;
-        text-align: center;
-        cursor: pointer;
-        line-height: 28px;
-        transform: rotate(90deg);
-        transform-origin: center;
-    }
-    .rt-label.active {
-        background: #fff;
-    }
-    .rt-relative-humidity-label, .rt-rain-label {
-        border-radius: 0 12px 0 0;
-        right: -45px;
-    }
-    .rt-relative-humidity-label {
-        top: 15px;
-    }
-    .rt-rain-label {
-        top: 80px;
-    }
-    .rt-temperature-label, .rt-pressure-label {
-        border-radius: 12px 0 0 0;
-        left: -45px;
-        transform: rotate(-90deg);
-    }
-    .rt-temperature-label {
-        top: 15px;
-    }
-    .rt-pressure-label {
-        top: 80px;
-    }
-    #rt-temperature-graph, #rt-pressure-graph, #rt-relative_humidity-graph, #rt-rain-graph {
-        width: 100%;
-        height: 220px;
-        float: left;
-        margin-right: 10px;
-        // background: red;
-    }
-    .station-img {
-        width: 90%;
-        margin-top: 10px;
-        height: 180px;
-        border-radius: 12px;
-    }
-    .rt-data {
-        float: left;
-        margin-top: 20px;
+    div {
+      display: table-row;
 
-        @media(min-width: map-get($grid-breakpoints, 'md')) {
-          margin-left: 20px;
-        }
-
-        div {
-          display: table-row;
-
-          i {
-            padding: 10px;
-          }
-        }
-    }
-    .rt-data2 {
-      float: right;
-      text-align: right;
-      margin-left: 0;
-
-      @media(min-width: map-get($grid-breakpoints, 'lg')) {
-        float: left;
-        text-align: left;
+      i {
+        padding: 10px;
       }
     }
-    .rt-data-temperature, .rt-data-pressure, .rt-data-relative-humidity, .rt-data-wind, .rt-data-rain {
-        i {
-            font-size: 25px;
-        }
-        white-space: nowrap;
-        margin-right: 20px;
-        color: #444;
-        font-size: 18px;
-        span {
-            font-weight: bold;
-        }
-        span[data-heat] {
-            font-weight: 900;
-            font-size: 25px;
-            font-family: 'Roboto';
-        }
-    }
-    span[data-heat=vcold] { color: #74BBFB; }
-    span[data-heat=cold] { color: #60affe; }
-    span[data-heat=warm] { color: #ff9900; }
-    span[data-heat=hot] { color: #ff3300; }
-    span[data-heat=vhot] { color: #ff0000; }
-    // #rt-pressure-graph { background: yellow; } #rt-relative_humidity-graph { background: blue; }
-    .arrow-container {
-      float: right;
-      white-space: nowrap;
-    }
-    .arrow {
-        z-index:100;
-        font-size: 46px;
-        cursor: pointer;
-        &:hover {
-            color: #fa5e11;
-        }
-        float: right;
-    }
+  }
+  .rt-data2 {
+    float: right;
+    text-align: right;
+    margin-left: 0;
 
-    .arrow-next {
-      margin-left: 18px;
+    @media (min-width: map-get($grid-breakpoints, "lg")) {
+      float: left;
+      // text-align: left;
     }
-    .arrow-prev {
+  }
+  .rt-data-temperature,
+  .rt-data-pressure,
+  .rt-data-relative-humidity,
+  .rt-data-wind,
+  .rt-data-rain {
+    i {
+      font-size: 25px;
     }
-    .station-selection-layer {
-        position: absolute;
-        width: 300px;
-        max-height: 300px;
-        overflow: auto;
-        z-index: 100;
-        background: #fff;
-        border: 1px solid #aaa;
-        font-size: 18px;
-        ul {
-            padding-left: 0px;
-            margin-bottom: 0;
-        }
-        li {
-            list-style-type: none;
-            padding: 8px 5px;
-            border-top: 1px dotted #eee;
-            &:first-child {
-                border-top: 0px dotted #eee;
-            }
-            cursor: pointer;
-            &:hover {
-                background: #E5EDF4;
-            }
-        }
+    white-space: nowrap;
+    margin-right: 20px;
+    color: #444;
+    font-size: 18px;
+    span {
+      font-weight: bold;
     }
+    span[data-heat] {
+      font-weight: 900;
+      font-size: 25px;
+      font-family: "Roboto";
+    }
+  }
+  span[data-heat="vcold"] {
+    color: #74bbfb;
+  }
+  span[data-heat="cold"] {
+    color: #60affe;
+  }
+  span[data-heat="warm"] {
+    color: #ff9900;
+  }
+  span[data-heat="hot"] {
+    color: #ff3300;
+  }
+  span[data-heat="vhot"] {
+    color: #ff0000;
+  }
+  // #rt-pressure-graph { background: yellow; } #rt-relative_humidity-graph { background: blue; }
+  .arrow-container {
+    float: right;
+    white-space: nowrap;
+  }
+  .arrow {
+    z-index: 100;
+    font-size: 46px;
+    cursor: pointer;
+    &:hover {
+      color: #fa5e11;
+    }
+    float: right;
+  }
+
+  .arrow-next {
+    margin-left: 18px;
+  }
+  .arrow-prev {
+  }
+  .station-selection-layer {
+    position: absolute;
+    width: 300px;
+    max-height: 300px;
+    overflow: auto;
+    z-index: 100;
+    background: #fff;
+    border: 1px solid #aaa;
+    font-size: 18px;
+    ul {
+      padding-left: 0px;
+      margin-bottom: 0;
+    }
+    li {
+      list-style-type: none;
+      padding: 8px 5px;
+      border-top: 1px dotted #eee;
+      &:first-child {
+        border-top: 0px dotted #eee;
+      }
+      cursor: pointer;
+      &:hover {
+        background: #e5edf4;
+      }
+    }
+  }
+
+  .rt-air-quality-index,
+  .rt-pm1,
+  .rt-pm25,
+  .rt-pm10 {
+    font-weight: bold;
+  }
+
+  .aq-l {
+    background: #333;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-block;
+    font-size: .8rem;
+    font-weight: 400;
+    margin-bottom: .5rem;
+    margin-right: .7rem;
+    padding: .2rem;
+  }
+
+  .aq-v {
+    font-family: Roboto;
+    font-size: 25px;
+    font-weight: 900;
+    position: relative;
+    top: 4px;
+  }
 }
-@media(m-xwidth: map-get($grid-breakpoints, 'md')) {
-    .jumbotron {
-        padding: 40px 90px;
-        .arrow {
-            top: 50%;
-            font-size: 50px;
-        }
+@media (m-xwidth: map-get($grid-breakpoints, "md")) {
+  .jumbotron {
+    padding: 40px 90px;
+    .arrow {
+      top: 50%;
+      font-size: 50px;
     }
+  }
 }
