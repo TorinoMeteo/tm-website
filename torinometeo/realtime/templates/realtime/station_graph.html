@@ -24,6 +24,9 @@
                 <button type="button" class="btn btn-primary">
                     Grafici
                 </button>
+                {% if object.airquality_stations.count %}
+                    <a class="btn btn-secondary" href="{% url 'realtime-station-airquality' object.slug %}">Qualità dell'aria</a>
+                {% endif %}
             </div>
         </nav>
         <div class="row">

@@ -412,6 +412,27 @@ class StationGraphView(DetailView):
         return context
 
 
+class StationAirQualityView(DetailView):
+    """ Station detail view
+        airquality view
+    """
+    model = Station
+    template_name = 'realtime/station_airquality.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StationAirQualityView, self).get_context_data(**kwargs)
+        stations = []
+        for s in context['object'].airquality_stations.active():
+            stations.append({
+                'station': s,
+                'data': s.get_realtime_data()
+            })
+        context['stations'] = stations
+        context['offline_limit'] = AirQualityStation.RT_RANGE_SECONDS
+
+        return context
+
+
 class StationIdGraphView(DetailView):
     """ Station detail view
         graphs view

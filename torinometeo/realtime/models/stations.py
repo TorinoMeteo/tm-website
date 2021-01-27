@@ -745,6 +745,33 @@ class AirQualityStation(models.Model):
     def __str__(self):
         return '%s' % self.name
 
+    def now(self):
+        """ Returns the current datetime, for debug and dev purposes
+        """
+        return timezone.now()
+        # datetime_obj = datetime.datetime(2015, 03, 11, 10, 40, 00)
+        # return timezone.make_aware(datetime_obj,
+        #                           timezone.get_current_timezone())
+
+    def get_realtime_data(self):
+        """ Last measured data, if inside the AirQualityStation.RT_RANGE_SECONDS range
+            http://stackoverflow.com/questions/21918802/problems-filtering-django-datetime-field-by-month-and-day
+        """
+        date = self.now()
+        try:
+            data = AirQualityData.objects.filter(
+                station=self.id,
+                datetime__year=date.year,
+                datetime__month=date.month,
+                datetime__day=date.day).order_by('-id').first()
+            time_difference = self.now() - data.datetime
+            if (time_difference.total_seconds() > AirQualityStation.RT_RANGE_SECONDS):
+                return None
+
+            return data
+        except:
+            return None
+
 
 class AirQualityData(models.Model):
     station = models.ForeignKey(AirQualityStation, verbose_name='stazione', on_delete=models.CASCADE, related_name='data', )

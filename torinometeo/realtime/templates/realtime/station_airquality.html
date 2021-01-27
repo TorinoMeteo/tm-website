@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block jumbotron %}{% endblock %}
+
+{% block body_css %}page{% endblock %}
+{% block extra_js %}
+    <script src="//code.highcharts.com/highcharts.js" type="text/javascript"></script>
+    <script src="//code.highcharts.com/modules/exporting.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container margin-top faded main-content">
+    <section class="realtime-station">
+      <h1 class="clearfix">
+        {{ object.name }}
+      </h1>
+        <nav>
+            <div class="btn-group">
+                <a class="btn btn-secondary" href="{% url 'realtime-station' object.slug %}">Principale</a>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-realtime' object.slug %}">Live</a>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-historic' object.slug %}">Storico</a>
+                <a class="btn btn-secondary" href="{% url 'realtime-station-graph' object.slug %}">Grafici</a>
+                <button type="button" class="btn btn-primary">
+                    Qualità dell'aria
+                </button>
+            </div>
+            {% if object.weather_icon %}
+                <a href="{{ object.forecast_url_credits }}">
+                    <img class="" src="{{ object.weather_icon.icon }}" alt="{{ object.weather_icon.text }}" title="{{ object.weather_icon.text }}" style="margin-left: 20px;" />
+                </a>
+            {% endif %}
+        </nav>
+        <div class="row">
+            <div class="col-md-8">
+                {% for s in stations %}
+                    {% if s.data %}
+                        <p class="alert alert-info"><i class="fa fa-clock-o"></i> <strong>Ultima rilevazione</strong>: <strong>{{ s.data.datetime }}</strong></p>
+                    {% else %}
+                        <p class="alert alert-danger">
+                            <i class="fa fa-exclamation-triangle"></i> Stazione offline da più di {{ offline_limit }} secondi
+                        </p>
+                    {% endif %}
+                    <div>
+                        {{ s.station.description|safe }}
+                    </div>
+                    {% with s.data as data %}
+                    <p class="text-center" style="font-size: 1.4rem;">Indice qualità dell'aria: <strong>{{ data.air_quality_index }}</strong></p>
+                    <div class="table-responsive-vertical">
+                        <table class="table table-bordered realtime-data">
+                            <thead>
+                                <tr>
+                                    <th>PM 1</th>
+                                    <th>PM 2.5</th>
+                                    <th>PM 10</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-title="PM 1">{% if data %}{{ data.pm1 }} μg/m³{% else %}ND{% endif %}</td>
+                                    <td data-title="PM 2.5">{% if data %}{{ data.pm25 }} μg/m³{% else %}ND{% endif %}</td>
+                                    <td data-title="PM 10">{% if data %}{{ data.pm10 }} μg/m³{% else %}ND{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <td data-title="PM 1 max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.pm1_max }} μg/m³ alle {{ data.pm1_max_time }}{% else %}ND{% endif %}</td>
+                                    <td data-title="PM 2.5 max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.pm25_max }} μg/m³ alle {{ data.pm25_max_time }}{% else %}ND{% endif %}</td>
+                                    <td data-title="PM 10 max">{% if data %}<span class="hidden-sm-down">max: </span>{{ data.pm10_max }} μg/m³ alle {{ data.pm10_max_time }}{% else %}ND{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <td data-title="PM 1 min">{% if data %}<span class="hidden-sm-down">min: </span>{{ data.pm1_min }} μg/m³ alle {{ data.pm1_min_time }}{% else %}ND{% endif %}</td>
+                                    <td data-title="PM 2.5 min">{% if data %}<span class="hidden-sm-down">min: </span>{{ data.pm25_min }} μg/m³ alle {{ data.pm25_min_time }}{% else %}ND{% endif %}</td>
+                                    <td data-title="PM 10 min">{% if data %}<span class="hidden-sm-down">min: </span>{{ data.pm10_min }} μg/m³ alle {{ data.pm10_min_time }}{% else %}ND{% endif %}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><i class="fa fa-map-marker"></i> Mappa</h3>
+                    </div>
+                    <div id="map" style="width: 100%; height: 200px;"></div>
+                </div>
+                {% if object.webcam %}
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <h3><i class="fa fa-camera"></i> Webcam</h3>
+                        </div>
+                        <img class="img-responsive" src={{ object.webcam }} alt="webcam" />
+                    </div>
+                {% endif %}
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><i class="fa fa-cog"></i> Installazione</h3>
+                    </div>
+                    <img class="img-responsive" src="{{ object.image.url }}" alt="installazione" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCSI-Yv2nyso6vBZqZy75YbAxMnjTotOQ&callback=initMap" async defer></script>
+    <script>
+        var map,
+            initMap = function() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: {{ object.lat }}, lng: {{ object.lng }}},
+                    zoom: 8
+                });
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ object.lat }}, {{ object.lng }}),
+                    map: map
+                });
+            }
+    </script>
+</div>
+{% endblock %}
