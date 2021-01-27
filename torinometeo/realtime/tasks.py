@@ -212,6 +212,65 @@ def store_historic_data():
 
 
 @app.task
+def store_air_quality_historic_data():
+    """ Stores max min and avg values for yesterday
+    """
+    logger.info('BEGIN -- running task: store_air_quality_historic_data')
+    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+
+    for station in AirQualityStation.objects.active():
+        try:
+            # @CHECKME maybe data should be filtered date > yesterday 00:06:00
+            data = AirQualityData.objects.filter(
+                station=station,
+                datetime__year=yesterday.year,
+                datetime__month=yesterday.month,
+                datetime__day=yesterday.day,
+            )
+
+            # air quality index
+            max_air_quality_index = data.aggregate(Max('air_quality_index_max'))
+            min_air_quality_index = data.aggregate(Min('air_quality_index_min'))
+            avg_air_quality_index = data.aggregate(Avg('air_quality_index'))
+            # pm1
+            max_pm1 = data.aggregate(Max('pm1_max'))
+            min_pm1 = data.aggregate(Min('pm1_min'))
+            avg_pm1 = data.aggregate(Avg('pm1'))
+            # pm2.5
+            max_pm25 = data.aggregate(Max('pm25_max'))
+            min_pm25 = data.aggregate(Min('pm25_min'))
+            avg_pm25 = data.aggregate(Avg('pm25'))
+            # temperature
+            max_pm10 = data.aggregate(Max('pm10_max'))
+            min_pm10 = data.aggregate(Min('pm10_min'))
+            avg_pm10 = data.aggregate(Avg('pm10'))
+
+            history = HistoricAirQualityData(
+                station=station,
+                date=yesterday.date(),
+                air_quality_index_max=max_air_quality_index['air_quality_index_max__max'],
+                air_quality_index_min=min_air_quality_index['air_quality_index_min__min'],
+                air_quality_index_mean=avg_air_quality_index['air_quality_index_min__avg'],
+                pm1_max=max_pm1['pm1_max__max'],
+                pm1_min=min_pm1['pm1_min__min'],
+                pm1_mean=avg_pm1['pm1__avg'],
+                pm25_max=max_pm25['pm25_max__max'],
+                pm25_min=min_pm25['pm25_min__min'],
+                pm25_mean=avg_pm25['pm25__avg'],
+                pm10_max=max_pm10['pm10_max__max'],
+                pm10_min=min_pm10['pm10_min__min'],
+                pm10_mean=avg_pm10['pm10__avg'],
+            )
+            history.save()
+            logger.info('station %s history save successfull' % (station.name))
+        except Exception as e:
+            logger.warn('station %s history save failed: %s' %
+                        (station.name, str(e)))  # noqa
+
+    logger.info('END -- running task: store_air_quality_historic_data')
+
+
+@app.task
 def clean_realtime_data():
     """ Deletes data older than 1 week
     """
@@ -221,6 +280,16 @@ def clean_realtime_data():
     logger.info('delete realtime data older than 1 week successfull')
     logger.info('END -- running task: clean_realtime_data')
 
+
+@app.task
+def clean_air_quality_data():
+    """ Deletes data older than 1 week
+    """
+    logger.info('BEGIN -- running task: clean_air_quality_data')
+    date = datetime.datetime.now() - datetime.timedelta(days=7)
+    AirQualityData.objects.filter(datetime__lte=date).delete()
+    logger.info('delete air quality data older than 1 week successfull')
+    logger.info('END -- running task: clean_air_quality_data')
 
 # radar
 # Get Radar Image Based On Input timestamp if availale

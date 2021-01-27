@@ -2,10 +2,11 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from realtime.models.geo import Nation, Province, Region
-from realtime.models.stations import (Data, DataFormat, HistoricData,
-                                      NetRequest, RadarColorConversion,
-                                      RadarConvertParams, RadarSnapshot,
-                                      Station, StationForecast, AirQualityStation, AirQualityData )
+from realtime.models.stations import (AirQualityData, AirQualityStation, Data,
+                                      DataFormat, HistoricAirQualityData,
+                                      HistoricData, NetRequest,
+                                      RadarColorConversion, RadarConvertParams,
+                                      RadarSnapshot, Station, StationForecast)
 
 
 # geo
@@ -133,8 +134,8 @@ class StationAdmin(admin.ModelAdmin):
     )
 
     def get_data_url(self, obj):
-        return mark_safe(
-            '<a href="%s" target="_blank">vedi</a>' % obj.data_url)
+        return mark_safe('<a href="%s" target="_blank">vedi</a>' %
+                         obj.data_url)
 
     get_data_url.short_description = 'url dati'
 
@@ -151,7 +152,8 @@ class StationAdmin(admin.ModelAdmin):
 
     def test_forecast(self, obj):
         return mark_safe(
-            '<a href="/realtime/fetchforecast/%d" target="_blank">test</a>' % obj.id)
+            '<a href="/realtime/fetchforecast/%d" target="_blank">test</a>' %
+            obj.id)
 
 
 admin.site.register(Station, StationAdmin)
@@ -198,7 +200,10 @@ class HistoricDataAdmin(admin.ModelAdmin):
         'date',
         'station',
     )
-    list_filter = ('station', 'date', )
+    list_filter = (
+        'station',
+        'date',
+    )
 
 
 admin.site.register(HistoricData, HistoricDataAdmin)
@@ -246,8 +251,18 @@ admin.site.register(RadarConvertParams, RadarConvertParamsAdmin)
 
 
 class StationForecastAdmin(admin.ModelAdmin):
-    list_display = ('date', 'period', 'station', 'icon', 'text', )
-    list_filter = ('date', 'period', 'station', )
+    list_display = (
+        'date',
+        'period',
+        'station',
+        'icon',
+        'text',
+    )
+    list_filter = (
+        'date',
+        'period',
+        'station',
+    )
 
 
 admin.site.register(StationForecast, StationForecastAdmin)
@@ -255,18 +270,28 @@ admin.site.register(StationForecast, StationForecastAdmin)
 
 @admin.register(AirQualityStation)
 class AirQualityStationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'lat', 'lng', 'data', 'test_fetch', 'active', )
+    list_display = (
+        'name',
+        'lat',
+        'lng',
+        'data',
+        'test_fetch',
+        'active',
+    )
     list_filter = ('active', )
     search_fields = ('name', )
     autocomplete_fields = ('station', )
     prepopulated_fields = {'slug': ('name', )}
 
     def data(self, instance):
-        return mark_safe('<a href="%s"><i class="fa fa-external-link"></i></a>' % instance.data_url)
+        return mark_safe(
+            '<a href="%s"><i class="fa fa-external-link"></i></a>' %
+            instance.data_url)
 
     def test_fetch(self, obj):
         return mark_safe(
-            '<a href="/realtime/airquality/fetch/%d" target="_blank">test</a>' % obj.id)
+            '<a href="/realtime/airquality/fetch/%d" target="_blank">test</a>'
+            % obj.id)
 
 
 @admin.register(AirQualityData)
@@ -282,4 +307,16 @@ class AirQualityDataAdmin(admin.ModelAdmin):
     list_filter = (
         'station',
         'datetime',
+    )
+
+
+@admin.register(HistoricAirQualityData)
+class HistoricAirQualityDataAdmin(admin.ModelAdmin):
+    list_display = (
+        'date',
+        'station',
+    )
+    list_filter = (
+        'station',
+        'date',
     )

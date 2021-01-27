@@ -70,4 +70,14 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(seconds=500),
         'args': ()
     },
+    'clean-airquality-data': {
+        'task': 'realtime.tasks.clean_air_quality_data',
+        'schedule': crontab(hour=0, minute=10, day_of_week=1),  # every monday morning # noqa
+        'args': ()
+    },
+    'store-airquality-historic-data': {
+        'task': 'realtime.tasks.store_air_quality_historic_data',
+        'schedule': crontab(minute=20, hour=0),  # every day 00:20
+        'args': ()
+    },
 }

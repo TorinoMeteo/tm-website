@@ -780,3 +780,30 @@ class AirQualityData(models.Model):
     def __str__(self):
         return '%s - %s' % (self.station.name,
                             str(self.datetime) if self.datetime else '')
+
+
+class HistoricAirQualityData(models.Model):
+    station = models.ForeignKey(AirQualityStation, verbose_name='stazione', on_delete=models.CASCADE, related_name='historic_data', )
+    date = models.DateField('data', auto_now=False, auto_now_add=False)
+    air_quality_index_max = models.DecimalField(
+        'indice qualità dell\'aria massimo', max_digits=4, decimal_places=1)
+    air_quality_index_min = models.DecimalField(
+        'indice qualità dell\'aria minimo', max_digits=4, decimal_places=1)
+    air_quality_index_mean = models.DecimalField(
+        'indice qualità dell\'aria medio', max_digits=4, decimal_places=1)
+    pm1_max = models.DecimalField('pm 1 massimo', max_digits=8, decimal_places=1)
+    pm1_min = models.DecimalField('pm 1 minimo', max_digits=8, decimal_places=1)
+    pm1_mean = models.DecimalField('pm 1 minimo', max_digits=8, decimal_places=1)
+    pm25_max = models.DecimalField('pm 2.5 massimo', max_digits=8, decimal_places=1)
+    pm25_min = models.DecimalField('pm 2.5 minimo', max_digits=8, decimal_places=1)
+    pm25_mean = models.DecimalField('pm 2.5 minimo', max_digits=8, decimal_places=1)
+    pm10_max = models.DecimalField('pm 10 massimo', max_digits=8, decimal_places=1)
+    pm10_min = models.DecimalField('pm 10 minimo', max_digits=8, decimal_places=1)
+    pm10_mean = models.DecimalField('pm 10 minimo', max_digits=8, decimal_places=1)
+
+    class Meta:
+        verbose_name = 'Dati storici qualità dell\'aria'
+        verbose_name_plural = 'Dati storici qualità dell\'aria'
+
+    def __str__(self):
+        return '%s - %s' % (self.station, self.date)
