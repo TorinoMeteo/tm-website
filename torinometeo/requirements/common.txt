@@ -43,7 +43,7 @@ httplib2==0.12.3
 idna==2.8
 ipaddress==1.0.22
 itypes==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 kombu==4.5.0
 lxml==4.6.2
 MarkupSafe==1.1.1
