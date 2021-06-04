@@ -13,7 +13,7 @@ coreapi==2.3.3
 coreschema==0.0.4
 cryptography==2.6.1
 defusedxml==0.6.0
-Django==2.2.1
+Django==2.2.21
 https://github.com/otto-torino/django-baton/archive/v2.zip
 django-ckeditor==5.7.1
 django-cleanup==3.2.0
