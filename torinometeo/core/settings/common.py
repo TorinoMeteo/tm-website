@@ -46,6 +46,10 @@ ADMINS = (
     ('abidibo', 'web.sites.logs@gmail.com'),
 )
 
+# VCO
+VCO_USER = env('VCO_USER')
+VCO_PWD = env('VCO_PWD')
+
 # SITE
 SITE_ID = 1
 HTTPS = False

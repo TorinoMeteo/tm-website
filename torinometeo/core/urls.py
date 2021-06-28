@@ -28,7 +28,7 @@ from core.views import LoginView, LogoutView
 from forecast.views.api import DayForecastViewSet, ForecastViewSet
 from realtime.views.api import (CurrentDayDataViewSet, HistoricDataViewSet,
                                 LastRealtimeDataViewSet, RadarSnapshotViewSet,
-                                StationForecastViewSet, AirQualityStationViewSet)
+                                StationForecastViewSet, AirQualityStationViewSet, VCOApi)
 from webcam.views import Webcams
 
 # BEGIN API
@@ -50,6 +50,7 @@ router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
 router.register(r'webcam', Webcams, 'webcams')
 router.register(r'realtime/airqualitystations', AirQualityStationViewSet,
                 'air quality stations')
+
 # END API
 
 urlpatterns = [
@@ -76,6 +77,7 @@ urlpatterns = [
         LogoutView.as_view(),
         name='torinometeo-api-auth-logout'),
     url(r'^api/doc/$', schema_view),
+    url(r'^api/v1/vco$', VCOApi.as_view()),
     url(r'^api/v1/', include(router.urls))
 ]
 

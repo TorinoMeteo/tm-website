@@ -1,8 +1,13 @@
 import datetime
+import json
+import requests
 
 from django.db.models import Max
 from django.http import Http404
 from django.utils import timezone
+from django.conf import settings
+from django.http import JsonResponse
+from rest_framework.views import APIView
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -175,3 +180,19 @@ class AirQualityStationViewSet(viewsets.ModelViewSet):
         DELETE requests require the user to have the delete permission on the model. # noqa
         """
         return (permissions.DjangoModelPermissionsOrAnonReadOnly(), )
+
+
+class VCOApi(APIView):
+    def get(self, request):
+        lat = request.GET.get('lat')
+        lng = request.GET.get('lng')
+        init = datetime.datetime.now()
+        end = (init + datetime.timedelta(days=4)).replace(hour=23, minute=59, second=59, microsecond=999999)
+        r = requests.get('https://api.meteomatics.com/%s--%s:PT1H/t_2m:C,precip_1h:mm,weather_symbol_1h:idx/%s,%s/json?model=mix' % (
+            init.replace(tzinfo=datetime.timezone.utc).isoformat(),
+            end.replace(tzinfo=datetime.timezone.utc).isoformat(),
+            lat,
+            lng
+        ), auth=(settings.VCO_USER, settings.VCO_PWD))
+
+        return JsonResponse(json.loads(r.text))
