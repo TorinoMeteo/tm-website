@@ -12,17 +12,18 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from sorl.thumbnail import get_thumbnail
+from urllib.request import urlopen
 
 from realtime.fetch.shortcuts import fetch_data
 from realtime.forms import NetRequestForm
-from realtime.models.stations import Station, StationForecast, Data, AirQualityStation, AirQualityData
+from realtime.models.stations import Station, StationForecast, Data, AirQualityStation, AirQualityData, wind_dir_text_base
 from realtime.tasks import fetch_radar_images, adjust_data, data_exists, airqualitydata_exists
 
 # Get an instance of a logger
@@ -624,6 +625,33 @@ def fetch_radar(request):
         out = 'no fetch'
     return HttpResponse(out)
 
+def realtime_txt_data(request):
+    station_id = request.GET.get('id', None)
+    station = get_object_or_404(Station, id=station_id)
+    if not station.data_format.name == 'tm':
+        raise Http404()
+
+    url = station.data_url
+    json_data = urlopen(url).read()
+    data = json.loads(json_data)
+    data["hour"] = data["datetime"][8:10] + ':' + data["datetime"][10:12]
+    data["date"] = data["datetime"][6:8] + '/' + data["datetime"][4:6] + '/' + data["datetime"][2:4]
+    data["temperature_max_hour"] = data["temperature_max_time"][8:10] + ':' + data["temperature_max_time"][10:12]
+    data["temperature_min_hour"] = data["temperature_min_time"][8:10] + ':' + data["temperature_min_time"][10:12]
+    data["relative_humidity_max_hour"] = data["relative_humidity_max_time"][8:10] + ':' + data["relative_humidity_max_time"][10:12]
+    data["relative_humidity_min_hour"] = data["relative_humidity_min_time"][8:10] + ':' + data["relative_humidity_min_time"][10:12]
+    data["dewpoint_max_hour"] = data["dewpoint_max_time"][8:10] + ':' + data["dewpoint_max_time"][10:12]
+    data["dewpoint_min_hour"] = data["dewpoint_min_time"][8:10] + ':' + data["dewpoint_min_time"][10:12]
+    data["pressure_max_hour"] = data["pressure_max_time"][8:10] + ':' + data["pressure_max_time"][10:12]
+    data["pressure_min_hour"] = data["pressure_min_time"][8:10] + ':' + data["pressure_min_time"][10:12]
+    data["wind_dir"] = wind_dir_text_base(data["wind_dir"])
+    data["wind_dir_max"] = wind_dir_text_base(data["wind_dir_max"])
+    data["wind_max_hour"] = data["wind_max_time"][8:10] + ':' + data["wind_max_time"][10:12]
+
+    return render(request, 'realtime/realtime_txt_data.txt', {
+        'station': station,
+        'data': data,
+    }, content_type='text/plain')
 
 # def weather(request):
 #     stations = ''

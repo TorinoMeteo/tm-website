@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^jumbotron/station/(?P<id>[\d]+)/?$',
         views.JumbotronStationJsonView.as_view(),
         name='realtime-jumbotron-station-json'),
+    url(r'^realtime-txt-data/?$', views.realtime_txt_data, name='realtime-txt-data'),
     url(r'^rete/?$', views.NetView.as_view(), name='realtime-net'),
     url(r'^entra/richiesta-inviata/?$',
         views.NetRequestSentView.as_view(),

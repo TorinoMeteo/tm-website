@@ -1,0 +1,47 @@
+{{ station.short_name }}
+{{ data.hour }}
+{{ data.date }}
+------SEZIONE TEMP-------- (riga 04)
+{{ data.temperature }}
+{{ data.temperature_max }}
+{{ data.temperature_max_hour }}
+{{ data.temperature_min }}
+{{ data.temperature_min_hour }}
+--
+--
+--
+--
+--
+--
+------SEZIONE UMID-------- (riga 16)
+{{ data.relative_humidity }}
+{{ data.relative_humidity_max }}
+{{ data.relative_humidity_max_hour }}
+{{ data.relative_humidity_min }}
+{{ data.relative_humidity_min_hour }}
+------SEZIONE DEW-------- (riga 22)
+{{ data.dewpoint }}
+{{ data.dewpoint_max }}
+{{ data.dewpoint_max_hour }}
+{{ data.dewpoint_min }}
+{{ data.dewpoint_min_hour }}
+------SEZIONE BARO-------- (riga 28)
+{{ data.pressure }}
+{{ data.pressure_max }}
+{{ data.pressure_max_hour }}
+{{ data.pressure_min }}
+{{ data.pressure_min_hour }}
+------SEZIONE VENTO--------- (riga 34)
+{{ data.wind_strength }}
+{{ data.wind_dir }}
+{{ data.wind_strength_max }}
+{{ data.wind_dir_max }}
+{{ data.wind_max_hour }}
+------SEZIONE PRECIPITAZIONI------ (riga 40)
+{{ data.rain }}
+{{ data.rain_rate }}
+--
+--
+{{ data.rain_month }}
+{{ data.rain_year }}
+------- TorinoMeteo converter --------
