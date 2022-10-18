@@ -186,8 +186,8 @@ class VCOApi(APIView):
     def get(self, request):
         lat = request.GET.get('lat')
         lng = request.GET.get('lng')
-        init = datetime.datetime.now()
-        end = (init + datetime.timedelta(days=4)).replace(hour=23, minute=59, second=59, microsecond=999999)
+        init = (datetime.datetime.now() - datetime.timedelta(hours=2)).replace(minute=0, second=0)
+        end = (init + datetime.timedelta(days=9)).replace(hour=23, minute=59, second=59, microsecond=999999)
         r = requests.get('https://api.meteomatics.com/%s--%s:PT1H/t_2m:C,precip_1h:mm,wind_speed_10m:kmh,wind_dir_10m:d,weather_symbol_1h:idx/%s,%s/json?model=mix' % (
             init.replace(tzinfo=datetime.timezone.utc).isoformat(),
             end.replace(tzinfo=datetime.timezone.utc).isoformat(),
