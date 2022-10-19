@@ -647,6 +647,8 @@ def realtime_txt_data(request):
     data["wind_dir"] = wind_dir_text_base(data["wind_dir"])
     data["wind_dir_max"] = wind_dir_text_base(data["wind_dir_max"])
     data["wind_max_hour"] = data["wind_max_time"][8:10] + ':' + data["wind_max_time"][10:12]
+    data["heat_index_max_hour"] = data["heat_index_max_time"][8:10] + ':' + data["heat_index_max_time"][10:12]
+    data["wind_chill_min_hour"] = data["wind_chill_min_time"][8:10] + ':' + data["wind_chill_min_time"][10:12]
 
     return render(request, 'realtime/realtime_txt_data.txt', {
         'station': station,

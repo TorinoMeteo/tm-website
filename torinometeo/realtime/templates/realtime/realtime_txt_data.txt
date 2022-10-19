@@ -7,12 +7,12 @@
 {{ data.temperature_max_hour }}
 {{ data.temperature_min }}
 {{ data.temperature_min_hour }}
---
---
---
---
---
---
+{{ data.heat_index }}
+{{ data.heat_index_max }}
+{{ data.heat_index_max_hour }}
+{{ data.wind_chill }}
+{{ data.wind_chill_min }}
+{{ data.wind_chill_min_hour }}
 ------SEZIONE UMID-------- (riga 16)
 {{ data.relative_humidity }}
 {{ data.relative_humidity_max }}
