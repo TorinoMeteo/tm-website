@@ -645,7 +645,10 @@ def realtime_txt_data(request):
     data["pressure_max_hour"] = data["pressure_max_time"][8:10] + ':' + data["pressure_max_time"][10:12]
     data["pressure_min_hour"] = data["pressure_min_time"][8:10] + ':' + data["pressure_min_time"][10:12]
     data["wind_dir"] = wind_dir_text_base(data["wind_dir"]) if data["wind_dir"] else ""
-    data["wind_dir_max"] = wind_dir_text_base(data["wind_dir_max"]) if data["wind_dir_max"] else ""
+    try:
+        data["wind_dir_max"] = wind_dir_text_base(data["wind_dir_max"]) if data["wind_dir_max"] else ""
+    except:
+        data["wind_dir_max"] = ""
     data["wind_max_hour"] = data["wind_max_time"][8:10] + ':' + data["wind_max_time"][10:12]
     data["heat_index_max_hour"] = data["heat_index_max_time"][8:10] + ':' + data["heat_index_max_time"][10:12]
     data["wind_chill_min_hour"] = data["wind_chill_min_time"][8:10] + ':' + data["wind_chill_min_time"][10:12]
