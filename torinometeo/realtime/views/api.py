@@ -113,7 +113,7 @@ class StationHistoricDataViewSet(mixins.ListModelMixin, viewsets.GenericViewSet)
         try:
             from_date = datetime.datetime.fromtimestamp(int(self.request.query_params.get('from')))
             to_date = datetime.datetime.fromtimestamp(int(self.request.query_params.get('to')))
-            station = get_object_or_404(Station, slug=self.kwargs.slug)
+            station = get_object_or_404(Station, slug=self.kwargs.get('slug'))
             return HistoricData.objects.filter(station=station, date__gte=from_date, date__lte=to_date).order_by('station__name')
         except:
             raise NotAcceptable('Wrong params')

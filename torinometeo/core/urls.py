@@ -45,7 +45,7 @@ router.register(r'realtime/data', LastRealtimeDataViewSet,
                 'last realtime data')  # noqa
 router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
                 HistoricDataViewSet, 'history data')  # noqa
-router.register(r'realtime/(?P<slug>\w+)/history/',
+router.register(r'realtime/(?P<slug>\w+)/history',
                 StationHistoricDataViewSet, 'station history data')  # noqa
 router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
                 RadarSnapshotViewSet, 'radar images')  # noqa
