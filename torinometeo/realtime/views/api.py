@@ -7,10 +7,12 @@ from django.http import Http404
 from django.utils import timezone
 from django.conf import settings
 from django.http import JsonResponse
+from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
+from rest_framework.exceptions import NotAcceptable
 
 from realtime.models.stations import (Data, HistoricData, RadarSnapshot,
                                       Station, StationForecast, AirQualityStation)
@@ -101,6 +103,20 @@ class HistoricDataViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         return HistoricData.objects.filter(date=date).order_by('station__name')
 
+class StationHistoricDataViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """ StationHistoricData
+        Fetches historic data for a given station and period
+    """
+    serializer_class = HistoricDataSerializer
+
+    def get_queryset(self):
+        try:
+            from_date = datetime.datetime.strptime(self.request.query_params.get('from'), '%Y-%m-%d')
+            to_date = datetime.datetime.strptime(self.request.query_params.get('to'), '%Y-%m-%d')
+            station = get_object_or_404(Station, slug=self.kwargs.slug)
+            return HistoricData.objects.filter(station=station, date__gte=from_date, date__lte=to_date).order_by('station__name')
+        except:
+            raise NotAcceptable('Wrong params')
 
 class RadarSnapshotViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """ Radar snapshot

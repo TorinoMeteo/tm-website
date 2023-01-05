@@ -26,7 +26,7 @@ from baton.autodiscover import admin
 from core.routers import ApiRouter
 from core.views import LoginView, LogoutView
 from forecast.views.api import DayForecastViewSet, ForecastViewSet
-from realtime.views.api import (CurrentDayDataViewSet, HistoricDataViewSet,
+from realtime.views.api import (CurrentDayDataViewSet, HistoricDataViewSet, StationHistoricDataViewSet,
                                 LastRealtimeDataViewSet, RadarSnapshotViewSet,
                                 StationForecastViewSet, AirQualityStationViewSet, VCOApi)
 from webcam.views import Webcams
@@ -45,6 +45,8 @@ router.register(r'realtime/data', LastRealtimeDataViewSet,
                 'last realtime data')  # noqa
 router.register(r'realtime/history/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
                 HistoricDataViewSet, 'history data')  # noqa
+router.register(r'realtime/(?P<slug>\w+)/history/',
+                StationHistoricDataViewSet, 'station history data')  # noqa
 router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
                 RadarSnapshotViewSet, 'radar images')  # noqa
 router.register(r'webcam', Webcams, 'webcams')
