@@ -196,6 +196,7 @@ class RadarSnapshotSerializer(serializers.ModelSerializer):
 class StationForecastSerializer(serializers.ModelSerializer):
     """ Station Forecast Serializer
     """
+    station = StationSerializer()
     period = serializers.SerializerMethodField()
     icon = serializers.SerializerMethodField()
     credits = serializers.SerializerMethodField()
@@ -203,6 +204,7 @@ class StationForecastSerializer(serializers.ModelSerializer):
     class Meta:
         model = StationForecast
         fields = (
+            'station',
             'last_edit',
             'date',
             'period',
