@@ -3,8 +3,9 @@ import json
 import logging
 import random
 import string
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 from datetime import date, datetime
+import dateutil.parser
 
 import pytz
 import simplejson
@@ -24,7 +25,7 @@ from urllib.request import urlopen
 from realtime.fetch.shortcuts import fetch_data
 from realtime.forms import NetRequestForm
 from realtime.models.stations import Station, StationForecast, Data, AirQualityStation, AirQualityData, wind_dir_text_base
-from realtime.tasks import fetch_radar_images, adjust_data, data_exists, airqualitydata_exists
+from realtime.tasks import fetch_radar_images, adjust_data, data_exists, airqualitydata_exists, fetch_weather_forecast
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -578,26 +579,58 @@ class FetchForecastView(View):
 
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
+        # acmeweathersite.com support@acmeweathersite.com
+        url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%s&lon=%s" % (station.lat, station.lng)
+        hdr = { 'User-Agent' : 'torinometeo.org info@torinometeo.org' }
 
-        url = station.forecast_url
-        xml = urlopen(url).read()
-        soup = BeautifulSoup(xml, 'xml')
-        for t in soup.forecast.tabular.findAll('time'):
-            data = {
-                'precipitation': t.precipitation.attrs.get('value', None),
-                'wind_direction': t.windDirection.attrs.get('deg', None),
-                'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
-                'temperature': t.temperature.attrs.get('value', None),
-                'pressure': t.pressure.attrs.get('value', None),
-                'last_edit': soup.meta.lastupdate.string,
-                'icon': t.symbol.attrs.get('var', None),
-                'text': t.symbol.attrs.get('name', '')
-            }
+        req = Request(url, headers=hdr)
+        response = urlopen(req).read()
+        json_response = json.loads(response)
+
+        json_data = []
+
+        for obj in json_response.get('properties', {}).get('timeseries', []):
+            date = None
+            period = None
+            icon = None
+
+            time = obj.get('time', None)
+            time_obj = dateutil.parser.parse(time)
+
+            if time_obj.hour == 0 and time_obj.minute == 0 and time_obj.second == 0:
+                data = obj.get('data', {}).get('next_6_hours', {})
+                date = time_obj.date()
+                period = 0
+                icon = data.get('summary', {}).get('symbol_code', None)
+            elif time_obj.hour == 6 and time_obj.minute == 0 and time_obj.second == 0:
+                data = obj.get('data', {}).get('next_6_hours', {})
+                date = time_obj.date()
+                period = 1
+                icon = data.get('summary', {}).get('symbol_code', None)
+            elif time_obj.hour == 12 and time_obj.minute == 0 and time_obj.second == 0:
+                data = obj.get('data', {}).get('next_6_hours', {})
+                date = time_obj.date()
+                period = 2
+                icon = data.get('summary', {}).get('symbol_code', None)
+            elif time_obj.hour == 18 and time_obj.minute == 0 and time_obj.second == 0:
+                data = obj.get('data', {}).get('next_6_hours', {})
+                date = time_obj.date()
+                period = 3
+                icon = data.get('summary', {}).get('symbol_code', None)
+
+            if date:
+                json_data.append({
+                    'date': date.strftime("%Y:%m:%d") if date else None,
+                    'period': period,
+                    'icon': icon,
+                })
+
+        fetch_weather_forecast.delay()
 
         return render(request, 'realtime/fetchforecast.html', {
             'station': station,
-            'data': data,
-            'json_data': json.dumps(data),
+            'data': json_data,
+            'json_data': json.dumps(json_data),
         })
 
 

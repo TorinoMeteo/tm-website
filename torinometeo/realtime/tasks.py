@@ -4,7 +4,8 @@ import datetime
 import json
 import os
 import shutil
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
+import dateutil.parser
 
 import pytz
 import requests
@@ -437,37 +438,59 @@ def fetch_weather_forecast():
     logger.info('BEGIN -- running task: fetch_weather_forecast')
     for station in Station.objects.active():
         try:
-            url = station.forecast_url
-            xml = urlopen(url).read()
-            soup = BeautifulSoup(xml, 'xml')
-            for t in soup.forecast.tabular.findAll('time'):
-                data = {
-                    'precipitation': t.precipitation.attrs.get('value', None),
-                    'wind_direction': t.windDirection.attrs.get('deg', None),
-                    'wind_speed_mps': t.windSpeed.attrs.get('mps', None),
-                    'temperature': t.temperature.attrs.get('value', None),
-                    'pressure': t.pressure.attrs.get('value', None),
-                }
-                try:
-                    forecast = StationForecast.objects.get(
-                        station=station,
-                        date=datetime.datetime.strptime(
-                            t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
-                        period=t.attrs.get('period', None),
-                    )
-                except:
-                    forecast = StationForecast(
-                        station=station,
-                        date=datetime.datetime.strptime(
-                            t.attrs.get('from'), '%Y-%m-%dT%H:%M:%S').date(),
-                        period=t.attrs.get('period', None),
-                    )
-                forecast.last_edit = datetime.datetime.strptime(
-                    soup.meta.lastupdate.string, '%Y-%m-%dT%H:%M:%S')
-                forecast.icon = t.symbol.attrs.get('var', None)
-                forecast.text = t.symbol.attrs.get('name', '')
-                forecast.data = json.dumps(data)
-                forecast.save()
+            url = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=%s&lon=%s" % (station.lat, station.lng)
+            hdr = { 'User-Agent' : 'torinometeo.org info@torinometeo.org' }
+
+            req = Request(url, headers=hdr)
+            response = urlopen(req).read()
+            json_response = json.loads(response)
+            for obj in json_response.get('properties', {}).get('timeseries', []):
+                date = None
+                period = None
+                icon = None
+
+                time = obj.get('time', None)
+                time_obj = dateutil.parser.parse(time)
+
+                if time_obj.hour == 0 and time_obj.minute == 0 and time_obj.second == 0:
+                    data = obj.get('data', {}).get('next_6_hours', {})
+                    date = time_obj.date()
+                    period = 0
+                    icon = data.get('summary', {}).get('symbol_code', None)
+                elif time_obj.hour == 6 and time_obj.minute == 0 and time_obj.second == 0:
+                    data = obj.get('data', {}).get('next_6_hours', {})
+                    date = time_obj.date()
+                    period = 1
+                    icon = data.get('summary', {}).get('symbol_code', None)
+                elif time_obj.hour == 12 and time_obj.minute == 0 and time_obj.second == 0:
+                    data = obj.get('data', {}).get('next_6_hours', {})
+                    date = time_obj.date()
+                    period = 2
+                    icon = data.get('summary', {}).get('symbol_code', None)
+                elif time_obj.hour == 18 and time_obj.minute == 0 and time_obj.second == 0:
+                    data = obj.get('data', {}).get('next_6_hours', {})
+                    date = time_obj.date()
+                    period = 3
+                    icon = data.get('summary', {}).get('symbol_code', None)
+
+                if date:
+                    try:
+                        forecast = StationForecast.objects.get(
+                            station=station,
+                            date=date,
+                            period=period,
+                        )
+                    except:
+                        forecast = StationForecast(
+                            station=station,
+                            date=date,
+                            period=period,
+                        )
+                    forecast.last_edit = dateutil.parser.parse(json_response.get('properties').get('meta').get('updated_at'))
+                    forecast.icon = icon
+                    forecast.text = ''
+                    forecast.data = ''
+                    forecast.save()
         except:
             pass
     logger.info('END -- running task: fetch_weather_forecast')
