@@ -197,7 +197,7 @@ class StationForecastSerializer(serializers.ModelSerializer):
     """ Station Forecast Serializer
     """
     station = StationSerializer()
-    period = serializers.SerializerMethodField()
+    period_label = serializers.SerializerMethodField()
     icon = serializers.SerializerMethodField()
     credits = serializers.SerializerMethodField()
 
@@ -208,12 +208,13 @@ class StationForecastSerializer(serializers.ModelSerializer):
             'last_edit',
             'date',
             'period',
+            'period_label',
             'icon',
             'text',
             'credits',
         )
 
-    def get_period(self, f):
+    def get_period_label(self, f):
         return f.get_period_display()
 
     def get_icon(self, f):
