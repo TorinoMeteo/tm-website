@@ -124,6 +124,7 @@ class Station(models.Model):
     installation_position = models.CharField('posizionamento', max_length=255)
     elevation_ground = models.IntegerField('elevazione dal suolo')
     data_url = models.URLField('url dati', max_length=255)
+    data_token = models.CharField('token url dati', max_length=50, blank=True, null=True)
     data_format = models.ForeignKey(
         DataFormat, verbose_name='formato dati', on_delete=models.CASCADE)
     data_date_format = models.CharField(

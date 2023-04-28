@@ -117,6 +117,7 @@ class StationAdmin(admin.ModelAdmin):
         ('Dati', {
             'fields': (
                 'data_url',
+                'data_token',
                 'data_format',
                 'data_date_format',
                 'data_time_format',
