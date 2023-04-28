@@ -43,7 +43,7 @@ class UnitoParser(Parser):
         # 39: (DL['RAIN_YEAR'], 'float'),  # nd
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         f_lines = content.split(os.linesep)
         lines = []
         for line in f_lines:

@@ -44,7 +44,7 @@ class TxtwdParser(Parser):
         45: (DL['RAIN_YEAR'], 'float'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         lines = content.split(os.linesep)
         
         data = {}
@@ -53,8 +53,5 @@ class TxtwdParser(Parser):
             value = re.sub('<[^<]+?>', '', lines[k]).rstrip()
             value = self._clean(value, i[1])
             data[i[0]] = value
-
-        print("DATA")
-        print(data)
 
         return data

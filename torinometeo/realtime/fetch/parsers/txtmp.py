@@ -41,7 +41,7 @@ class TxtmpParser(Parser):
         38: (DL['RAIN_YEAR'], 'float'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         lines = content.split(os.linesep)
         
         data = {}

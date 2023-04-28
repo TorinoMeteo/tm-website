@@ -28,7 +28,7 @@ class ClientrawParser(Parser):
         9: (DL['RAIN_YEAR'], 'float')
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
 
         rawdata = content.split(' ')
         rawdata.append(str(rawdata[29]) + ':' + str(rawdata[30]))

@@ -21,15 +21,17 @@ class GreenplanetParser(Parser):
                 or_data = d
 
         if or_data is not None:
-            date = dateutil.parser.parse(or_data.get('Data'))
-            date_aware = date.replace(tzinfo=pytz.timezone('Europe/London'))
+            local = pytz.timezone("Europe/London") # UTC+1
+            naive = dateutil.parser.parse(or_data.get('Data'))
+            local_dt = local.localize(naive, is_dst=None)
+            date_aware = local_dt.astimezone(pytz.timezone("Europe/Rome"))
 
             max_temp = float(or_data.get('TemperaturaAriaMax'))
             max_temp_time = date_aware.time()
             max_temp_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-temperature_max').first()
             if max_temp_prev is not None:
                 if max_temp_prev.temperature_max > max_temp:
-                    max_temp = max_temp_prev.temperature_max
+                    max_temp = float(max_temp_prev.temperature_max)
                     max_temp_time = max_temp_prev.temperature_max_time
 
             min_temp = float(or_data.get('TemperaturaAriaMin'))
@@ -37,7 +39,7 @@ class GreenplanetParser(Parser):
             min_temp_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-temperature_min').first()
             if min_temp_prev is not None:
                 if min_temp_prev.temperature_min < min_temp:
-                    min_temp = min_temp_prev.temperature_min
+                    min_temp = float(min_temp_prev.temperature_min)
                     min_temp_time = min_temp_prev.temperature_min_time
 
             max_relative_humidity = float(or_data.get('UmiditaRelativaMax'))
@@ -45,7 +47,7 @@ class GreenplanetParser(Parser):
             max_relative_humidity_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-relative_humidity_max').first()
             if max_relative_humidity_prev is not None:
                 if max_relative_humidity_prev.relative_humidity_max > max_relative_humidity:
-                    max_relative_humidity = max_relative_humidity_prev.relative_humidity_max
+                    max_relative_humidity = float(max_relative_humidity_prev.relative_humidity_max)
                     max_relative_humidity_time = max_relative_humidity_prev.relative_humidity_max_time
 
             min_relative_humidity = float(or_data.get('UmiditaRelativaMin'))
@@ -53,7 +55,7 @@ class GreenplanetParser(Parser):
             min_relative_humidity_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-relative_humidity_min').first()
             if min_relative_humidity_prev is not None:
                 if min_relative_humidity_prev.relative_humidity_min < min_relative_humidity:
-                    min_relative_humidity = min_relative_humidity_prev.relative_humidity_min
+                    min_relative_humidity = float(min_relative_humidity_prev.relative_humidity_min)
                     min_relative_humidity_time = min_relative_humidity_prev.relative_humidity_min_time
 
             max_wind = float(or_data.get('VelocitaVento2mMax'))
@@ -61,12 +63,12 @@ class GreenplanetParser(Parser):
             max_wind_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-wind_strength_max').first()
             if max_wind_prev is not None:
                 if max_wind_prev.wind_strength_max > max_wind:
-                    max_wind = max_wind_prev.wind_strength_max
+                    max_wind = float(max_wind_prev.wind_strength_max)
                     max_wind_time = max_wind_prev.wind_max_time
 
             data = {
-                'time': date.time(),
-                'date': date.date(),
+                'time': date_aware.time(),
+                'date': date_aware.date(),
                 'temperature': float(or_data.get('TemperaturaAriaMedia')),
                 'temperature_max': max_temp,
                 'temperature_max_time': max_temp_time,

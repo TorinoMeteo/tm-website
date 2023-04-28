@@ -31,7 +31,7 @@ class RealtimeParser(Parser):
         20: (DL['RAIN_YEAR'], 'float'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         rawdata = content.split(' ')
         data = {}
         for k, i in self.data_map.items():

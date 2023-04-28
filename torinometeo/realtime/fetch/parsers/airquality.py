@@ -29,7 +29,7 @@ class AirqualityParser(Parser):
         'pm10_min_time': (DL['PM10_MIN_TIME'], 'time'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         aux = re.sub(r"[\r\n\t\f\v]", r"", content)
         aux = re.sub(r",}", r"}", aux)
         jsondata = json.loads(aux)

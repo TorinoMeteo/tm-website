@@ -21,7 +21,7 @@ class AprsParser(Parser):
         'rain_since_midnight': (DL['RAIN'], 'rain'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         soup = BeautifulSoup(content, 'html.parser')
         results = soup.get_text().rstrip().splitlines()[-1]
         aprsData = aprslib.parse(results)

@@ -45,7 +45,7 @@ class TmParser(Parser):
         'rain_year': (DL['RAIN_YEAR'], 'float'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         aux = re.sub(r"[\r\n\t\f\v]", r"", content)
         aux = re.sub(r",}", r"}", aux)
         jsondata = json.loads(aux)

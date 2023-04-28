@@ -29,7 +29,7 @@ class SintpiParser(Parser):
         'rain': (DL['RAIN_YEAR'], 'float'),
     }
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
 
         jsondata = json.loads(content)
         jsondata.update({'measure_time': jsondata['last_measure_time']})

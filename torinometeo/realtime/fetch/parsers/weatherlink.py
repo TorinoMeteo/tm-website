@@ -7,7 +7,7 @@ from ..labels import DATA_LABELS as DL
 
 class WeatherlinkParser(Parser):
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         self.content = content
 
         data = {}

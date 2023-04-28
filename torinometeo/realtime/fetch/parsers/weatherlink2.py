@@ -84,7 +84,7 @@ class Weatherlink2Parser(Parser):
     def _clean_rain_yearin(self, value):
         return self._clean_float(float(value) * 25.4)
 
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         jsondata = json.loads(content)
         # datetime contained in a single field
         datetime = dateutil.parser.parse(jsondata['observation_time_rfc822'])
