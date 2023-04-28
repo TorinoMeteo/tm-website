@@ -54,4 +54,7 @@ class TxtwdParser(Parser):
             value = self._clean(value, i[1])
             data[i[0]] = value
 
+        print("DATA")
+        print(data)
+
         return data

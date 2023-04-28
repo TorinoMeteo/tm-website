@@ -6,7 +6,7 @@ def fetch_data(url, type, **kwargs):
         Returns a fetch.core.Data object, which is a python
         dict with some convenience methods, i.e. as_json
     """
-    content = fetch(url)
+    content = fetch(url, kwargs.get('headers', {}))
     data = parse(content, type, **kwargs)
 
     return data

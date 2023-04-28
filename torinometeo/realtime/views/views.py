@@ -4,7 +4,7 @@ import logging
 import random
 import string
 from urllib.request import urlopen, Request
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import dateutil.parser
 
 import pytz
@@ -517,12 +517,22 @@ class FetchView(View):
     def get(self, request, pk):
         station = Station.objects.get(pk=pk)
 
+        url = station.data_url
+        # GreenPlanet needs some more work, is a private :D API
+        if station.data_format.name == 'greenplanet':
+            url = url + "&dtfrom=%s&dtto=%s" % (
+                datetime.now().strftime('%Y-%m-%d'),
+                datetime.now().strftime('%Y-%m-%d'),
+            )
+
         try:
             data = fetch_data(
                 station.data_url,
                 station.data_format.name,
                 time_format=station.data_time_format.split(',') if station.data_time_format else None,
                 date_format=station.data_date_format.split(',') if station.data_date_format else None,
+                headers={ "Authorization": station.data_token } if station.data_token else {},
+                station=station,
             )
             json_data = data.as_json()
 

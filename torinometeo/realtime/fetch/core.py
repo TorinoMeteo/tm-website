@@ -44,10 +44,10 @@ class AirQualityData(dict):
         return json.dumps(self, cls=DateTimeEncoder)
 
 
-def fetch(url):
+def fetch(url, headers={}):
     """ Fetches an url content
     """
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'} # noqa
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36', **headers} # noqa
     response = requests.get(url, headers=headers).text
     return response
 
@@ -56,4 +56,4 @@ def parse(content, type, **kwargs):
     """ Parses the given content base upon type
     """
     klass = parser_factory(type)(**kwargs)
-    return Data(klass.parse(content))
+    return Data(klass.parse(content, **kwargs))

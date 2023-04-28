@@ -76,7 +76,7 @@ def set_station_image_folder(instance, filename):
 class Station(models.Model):
 
     # range in seconds for data to be considered live
-    RT_RANGE_SECONDS = 60 * 70
+    RT_RANGE_SECONDS = 60 * 120
     """ Station model
     """
     name = models.CharField('nome', max_length=128)
