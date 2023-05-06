@@ -16,7 +16,10 @@ class GreenplanetParser(Parser):
         json_data = json.loads(content)
         data_list = json_data.get('list')
         or_data = None
+        rain = 0
         for d in data_list:
+            if d.get('Pioggia') != "":
+                rain += int(d.get('Pioggia', 0))
             if d.get('TemperaturaAriaMedia') != "":
                 or_data = d
 
@@ -94,7 +97,7 @@ class GreenplanetParser(Parser):
                 'wind_strength_max': max_wind,
                 'wind_dir_max': None,
                 'wind_max_time': max_wind_time,
-                'rain': None,
+                'rain': rain,
                 'rain_rate': float(or_data.get('Pioggia')),
                 'rain_rate_max': None,
                 'rain_rate_max_time': None,
