@@ -150,7 +150,7 @@ class StationAdmin(admin.ModelAdmin):
     def test_fetch(self, obj):
         if obj.data_format.name == 'greenplanet':
             return mark_safe(
-                '<a href="/realtime/fetch/%d" target="_blank">test</a> <a href="/realtime/fix/%d" target="_blank">fix</a>' % (obj.id, obj.id))
+                '<a href="/realtime/fetch/%d" target="_blank">test</a> - <a href="/realtime/fix/%d" target="_blank">fix</a> - <a href="/realtime/fixhistory/%d" target="_blank">fix history</a>' % (obj.id, obj.id, obj.id))
         else:
             return mark_safe(
                 '<a href="/realtime/fetch/%d" target="_blank">test</a>' % obj.id)

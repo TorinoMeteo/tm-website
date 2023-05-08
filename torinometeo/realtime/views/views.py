@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta
 import dateutil.parser
 
 import pytz
+from requests import Response
 import simplejson
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -19,6 +20,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, View
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+from django.db.models import Avg, Max, Min
 from sorl.thumbnail import get_thumbnail
 from urllib.request import urlopen
 from realtime.fetch.core import fetch
@@ -27,7 +29,7 @@ from realtime.fetch.parsers.greenplanet import GreenplanetParser
 from realtime.fetch.shortcuts import fetch_data
 from realtime.fetch.core import Data as FetchData
 from realtime.forms import NetRequestForm
-from realtime.models.stations import Station, StationForecast, Data, AirQualityStation, AirQualityData, wind_dir_text_base
+from realtime.models.stations import HistoricData, Station, StationForecast, Data, AirQualityStation, AirQualityData, wind_dir_text_base
 from realtime.tasks import fetch_radar_images, adjust_data, data_exists, airqualitydata_exists, fetch_weather_forecast
 
 # Get an instance of a logger
@@ -590,6 +592,55 @@ class FixGreenplanetView(View):
             'data': data,
             'json_data': json_data
         })
+
+class FixGreenplanetHistoryView(View):
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FixGreenplanetHistoryView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, pk):
+        yesterday = datetime.now() - timedelta(days=1)
+
+        station = Station.objects.get(pk=pk)
+        data = Data.objects.filter(
+            station=station,
+            datetime__year=yesterday.year,
+            datetime__month=yesterday.month,
+            datetime__day=yesterday.day,
+        )
+        # temperature
+        max_temp = data.aggregate(Max('temperature_max'))
+        min_temp = data.aggregate(Min('temperature_min'))
+        avg_temp = data.aggregate(Avg('temperature'))
+        # relative humidity
+        max_rh = data.aggregate(Max('relative_humidity_max'))
+        min_rh = data.aggregate(Min('relative_humidity_min'))
+        avg_rh = data.aggregate(Avg('relative_humidity'))
+        # temperature
+        max_press = data.aggregate(Max('pressure_max'))
+        min_press = data.aggregate(Min('pressure_min'))
+        avg_press = data.aggregate(Avg('pressure'))
+        # rain
+        max_rain = data.aggregate(Max('rain'))
+
+        history = HistoricData(
+            station=station,
+            date=yesterday.date(),
+            temperature_max=max_temp['temperature_max__max'],
+            temperature_min=min_temp['temperature_min__min'],
+            temperature_mean=avg_temp['temperature__avg'],
+            relative_humidity_max=max_rh['relative_humidity_max__max'],
+            relative_humidity_min=min_rh['relative_humidity_min__min'],
+            relative_humidity_mean=avg_rh['relative_humidity__avg'],
+            pressure_max=max_press['pressure_max__max'],
+            pressure_min=min_press['pressure_min__min'],
+            pressure_mean=avg_press['pressure__avg'],
+            rain=max_rain['rain__max'],
+            )
+        history.save()
+
+        return HttpResponse("ok", status=200)
 
 
 class AirQualityFetchView(View):
