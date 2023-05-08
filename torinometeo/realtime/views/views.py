@@ -21,8 +21,11 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from sorl.thumbnail import get_thumbnail
 from urllib.request import urlopen
+from realtime.fetch.core import fetch
+from realtime.fetch.parsers.greenplanet import GreenplanetParser
 
 from realtime.fetch.shortcuts import fetch_data
+from realtime.fetch.core import Data as FetchData
 from realtime.forms import NetRequestForm
 from realtime.models.stations import Station, StationForecast, Data, AirQualityStation, AirQualityData, wind_dir_text_base
 from realtime.tasks import fetch_radar_images, adjust_data, data_exists, airqualitydata_exists, fetch_weather_forecast
@@ -527,7 +530,7 @@ class FetchView(View):
 
         try:
             data = fetch_data(
-                station.data_url,
+                url,
                 station.data_format.name,
                 time_format=station.data_time_format.split(',') if station.data_time_format else None,
                 date_format=station.data_date_format.split(',') if station.data_date_format else None,
@@ -543,6 +546,43 @@ class FetchView(View):
 
         except Exception as e:
             logger.warn('station %s fetch failed: %s - datetime: ' % (station.name, str(e), str(data['datetime']))) # noqa
+
+
+        return render(request, 'realtime/fetch.html', {
+            'station': station,
+            'data': data,
+            'json_data': json_data
+        })
+
+
+class FixGreenplanetView(View):
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FixGreenplanetView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, pk):
+        station = Station.objects.get(pk=pk)
+        yesterday = datetime.now() - timedelta(1)
+        date_from = request.GET.get('from', yesterday.strftime('%Y-%m-%d'))
+        date_to = request.GET.get('to', yesterday.strftime('%Y-%m-%d'))
+
+        url = station.data_url
+        # GreenPlanet needs some more work, is a private :D API
+        url = url + "&dtfrom=%s&dtto=%s" % (
+            date_from,
+            date_to,
+        )
+
+        content = fetch(url, headers={ "Authorization": station.data_token } if station.data_token else {})
+
+        parser = GreenplanetParser()
+        for data in parser.parse_all(content):
+            json_data = FetchData(data).as_json()
+
+            if not data_exists(station, data['datetime']):
+                new_data = Data(**adjust_data(station, data))
+                new_data.save()
+                logger.info('station %s fetch successfull' % (station.name))
 
 
         return render(request, 'realtime/fetch.html', {

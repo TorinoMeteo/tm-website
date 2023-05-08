@@ -111,8 +111,15 @@ def fetch_realtime_data():
 
     for station in Station.objects.active():
         try:
+            url = station.data_url
+            # GreenPlanet needs some more work, is a private :D API
+            if station.data_format.name == 'greenplanet':
+                url = url + "&dtfrom=%s&dtto=%s" % (
+                    datetime.now().strftime('%Y-%m-%d'),
+                    datetime.now().strftime('%Y-%m-%d'),
+                )
             data = fetch_data(
-                station.data_url,
+                url,
                 station.data_format.name,
                 time_format=station.data_time_format.split(',')
                 if station.data_time_format else None,

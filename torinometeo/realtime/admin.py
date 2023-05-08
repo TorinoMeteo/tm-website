@@ -148,8 +148,12 @@ class StationAdmin(admin.ModelAdmin):
     get_webcam.short_description = 'webcam'
 
     def test_fetch(self, obj):
-        return mark_safe(
-            '<a href="/realtime/fetch/%d" target="_blank">test</a>' % obj.id)
+        if obj.data_format.name == 'greenplanet':
+            return mark_safe(
+                '<a href="/realtime/fetch/%d" target="_blank">test</a> <a href="/realtime/fix/%d" target="_blank">fix</a>' % (obj.id, obj.id))
+        else:
+            return mark_safe(
+                '<a href="/realtime/fetch/%d" target="_blank">test</a>' % obj.id)
 
     def test_forecast(self, obj):
         return mark_safe(
