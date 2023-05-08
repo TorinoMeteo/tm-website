@@ -115,8 +115,8 @@ def fetch_realtime_data():
             # GreenPlanet needs some more work, is a private :D API
             if station.data_format.name == 'greenplanet':
                 url = url + "&dtfrom=%s&dtto=%s" % (
-                    datetime.now().strftime('%Y-%m-%d'),
-                    datetime.now().strftime('%Y-%m-%d'),
+                    datetime.datetime.now().strftime('%Y-%m-%d'),
+                    datetime.datetime.now().strftime('%Y-%m-%d'),
                 )
             data = fetch_data(
                 url,
