@@ -227,7 +227,7 @@ class Station(models.Model):
             station=self.id,
             datetime__year=date.year,
             datetime__month=date.month,
-            datetime__day=date.day).order_by('id').distinct()
+            datetime__day=date.day).order_by('datetime').distinct()
         for record in data:
             aux_datetime = timezone.localtime(record.datetime,
                                               pytz.timezone(
