@@ -202,7 +202,7 @@ class Station(models.Model):
                 station=self.id,
                 datetime__year=date.year,
                 datetime__month=date.month,
-                datetime__day=date.day).order_by('-id').first()
+                datetime__day=date.day).order_by('-datetime').first()
             time_difference = self.now() - data.datetime
             if (time_difference.total_seconds() > Station.RT_RANGE_SECONDS):
                 return None
@@ -277,7 +277,7 @@ class Station(models.Model):
         date_from = date - datetime.timedelta(days=1)
         data = Data.objects.filter(
             station=self.id,
-            datetime__gte=date_from).order_by('id').distinct()
+            datetime__gte=date_from).order_by('datetime').distinct()
         for record in data:
             aux_datetime = timezone.localtime(record.datetime,
                                               pytz.timezone(
