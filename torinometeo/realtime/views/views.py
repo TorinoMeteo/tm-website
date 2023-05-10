@@ -558,8 +558,10 @@ class FetchView(View):
 
 
 class FixGreenplanetView(View):
-    @method_decorator(staff_member_required)
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff and request.GET('key', None) != settings.CRONTAB_KEY:
+            raise Http404
+
         return super(FixGreenplanetView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, pk):

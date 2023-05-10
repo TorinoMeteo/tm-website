@@ -53,6 +53,7 @@ VCO_PWD = env('VCO_PWD')
 # SITE
 SITE_ID = 1
 HTTPS = False
+CRONTAB_KEY = env('CRONTAB_KEY', 'crontabkey')
 
 # MAIL
 EMAIL_HOST = 'localhost'
