@@ -85,9 +85,10 @@ class PizzaGptApiView(View):
 
     def post(self, request):
         bs = request.POST.get('date').encode('utf-8')
-        h = hmac.new( settings.API_KEY, bs, hashlib.sha256 )
-        digest = h.digest()
-        signature = base64.b64encode(digest)
+        dig = hmac.new(
+            bytes(settings.API_KEY, 'latin-1'), bs,
+            digestmod=hashlib.sha256).digest()
+        signature = base64.b64encode(dig).decode()
 
         if signature != request.POST.get('signature', None):
             return JsonResponse({'success': False}, status=401)
