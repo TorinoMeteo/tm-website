@@ -24,7 +24,7 @@ from rest_framework_swagger.views import get_swagger_view
 from baton.autodiscover import admin
 
 from core.routers import ApiRouter
-from core.views import LoginView, LogoutView
+from core.views import LoginView, LogoutView, PizzaGptApiView
 from forecast.views.api import DayForecastViewSet, ForecastViewSet
 from realtime.views.api import (CurrentDayDataViewSet, HistoricDataViewSet, StationHistoricDataViewSet,
                                 LastRealtimeDataViewSet, RadarSnapshotViewSet,
@@ -35,6 +35,7 @@ from webcam.views import Webcams
 schema_view = get_swagger_view(title='TorinoMeteo REST API')
 # django rest default api view
 router = ApiRouter()
+
 router.register(r'realtime/forecast', StationForecastViewSet,
                 'station forecast')
 router.register(r'forecast/day', DayForecastViewSet, 'forecast day')
@@ -60,6 +61,7 @@ urlpatterns = [
     url('baton/', include('baton.urls')),
     url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
     # ckeditor uploader
+    url(r'api/pizzagpt/suggestions', PizzaGptApiView.as_view(), name='pizzagpt-suggestion-api'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^realtime/', include('realtime.urls')),
     url(r'^blog/', include('blog.urls')),

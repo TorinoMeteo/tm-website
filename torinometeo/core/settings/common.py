@@ -36,6 +36,7 @@ SECRET_KEY = env(
     'SECRET_KEY',
     '49saa%ruey1&!nveiz*f(cu$)0pje8wz7u++y-0ljd2)9r)j8h'
 )
+API_KEY = env('API_KEY', '49saa%ruey1&!nveiz*f(cu$)0pje8wz7u++y-0ljd2)9r)j8h')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

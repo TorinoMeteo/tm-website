@@ -1,10 +1,29 @@
 from django.contrib.auth import authenticate
+from django.views.generic import View
+from django.utils.decorators import method_decorator
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+
 from core.serializers import UserSerializer
+
+import base64
+import hmac
+import hashlib
+import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LoginView(views.APIView):
@@ -55,3 +74,63 @@ class LogoutView(views.APIView):
             'status': 'OK',
             'message': 'Logout succedeed.'
         }, status=status.HTTP_200_OK)
+
+
+class PizzaGptApiView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        # no need for CSRF protection since it is an HMAC request
+        return super(PizzaGptApiView,
+                     self).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        bs = request.POST.get('date').encode('utf-8')
+        h = hmac.new( settings.API_KEY, bs, hashlib.sha256 )
+        digest = h.digest()
+        signature = base64.b64encode(digest)
+
+        if signature != request.POST.get('signature', None):
+            return JsonResponse({'success': False}, status=401)
+
+        question = request.POST.get('question', None)
+
+        if question is not None:
+            logger.info('Question: ' + question)
+            # try:
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-extensions')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+
+            logger.info('Starting driver')
+
+            path = '/snap/bin/chromium.chromedriver'
+            driver = webdriver.Chrome(options=chrome_options, executable_path=path)
+
+            driver.get("https://www.pizzagpt.it")
+
+            logger.info('accept cookies')
+            button = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/div[2]/div[1]/div[3]/div[2]/button[1]/p')))
+            logger.info('button found')
+            button.click()
+
+            logger.info('Waiting for textarea')
+            textarea = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div/div[1]/div[4]/div/textarea')))
+            textarea.send_keys(question);
+            button = driver.find_element(By.XPATH, '//*[@id="send"]')
+            button.click()
+
+            logger.info('Textarea found')
+
+            while 'Caricamento' in WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div/div[1]/div[3]/div[2]/div[3]/div[2]'))).text:
+                time.sleep(5)
+
+            response_text = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="__nuxt"]/div/div[1]/div[3]/div[2]/div[3]/div[2]'))).text
+            json_response = {'success': True, 'text': response_text}
+
+            return JsonResponse(json_response, status=200)
+            # except Exception as e:
+                # return JsonResponse({'success': False}, status=429)
+
+        return JsonResponse({'success': False}, status=429)
