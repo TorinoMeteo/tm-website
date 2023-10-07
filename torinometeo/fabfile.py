@@ -150,7 +150,7 @@ def production(ctx):
     """ Production server settings """
     ctx.config.run.env['path'] = '/home/torinometeo/www/torinometeo'
     ctx.config.run.env['conn'] = Connection(
-        host='torinometeo.org', user='torinometeo')
+        host='new.torinometeo.org', user='torinometeo')
     ctx.config.run.env['db_password'] = env('REMOTE_DB_PWD')
     ctx.config.run.env['sudo_password'] = env('REMOTE_USER_PWD')
 

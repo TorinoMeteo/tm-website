@@ -50,11 +50,11 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(minute=10, hour=0),  # every day 00:10
         'args': ()
     },
-    'fetch-radar-images': {
-        'task': 'realtime.tasks.fetch_radar_images',
-        'schedule': timedelta(seconds=240),
-        'args': ()
-    },
+    # 'fetch-radar-images': {
+    #     'task': 'realtime.tasks.fetch_radar_images',
+    #     'schedule': timedelta(seconds=240),
+    #     'args': ()
+    # },
     'fetch-weather-forecast': {
         'task': 'realtime.tasks.fetch_weather_forecast',
         'schedule': crontab(minute=0, hour='0,12'),  # every 12 hours
