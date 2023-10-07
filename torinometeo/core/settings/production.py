@@ -10,7 +10,7 @@ from .common import * # noqa
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['ws.torinometeo.org', 'torinometeo.org', 'www.torinometeo.org', ] # noqa
+ALLOWED_HOSTS = ['ws.torinometeo.org', 'torinometeo.org', 'www.torinometeo.org', 'new.torinometeo.org' ] # noqa
 
 HTTPS = True
 SESSION_COOKIE_SECURE = True
