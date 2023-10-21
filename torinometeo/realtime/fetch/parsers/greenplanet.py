@@ -62,12 +62,14 @@ class GreenplanetParser(Parser):
                     min_relative_humidity_time = min_relative_humidity_prev.relative_humidity_min_time
 
             max_wind = float(or_data.get('VelocitaVento2mMax'))
+            max_wind_dir = float(or_data.get('DirezioneVento')) if or_data.get('DirezioneVento') is not "" else None
             max_wind_time = date_aware.time()
             max_wind_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-wind_strength_max').first()
             if max_wind_prev is not None:
                 if max_wind_prev.wind_strength_max > max_wind:
                     max_wind = float(max_wind_prev.wind_strength_max)
                     max_wind_time = max_wind_prev.wind_max_time
+                    max_wind_dir = float(max_wind_prev.wind_dir_max)
 
             data = {
                 'datetime': date_aware,
@@ -94,9 +96,9 @@ class GreenplanetParser(Parser):
                 'pressure_min': None,
                 'pressure_min_time': None,
                 'wind_strength': float(or_data.get('VelocitaVento2mMedia')),
-                'wind_dir': None,
+                'wind_dir': float(or_data.get('DirezioneVento')) if or_data.get('DirezioneVento') is not "" else None,
                 'wind_strength_max': max_wind,
-                'wind_dir_max': None,
+                'wind_dir_max': max_wind_dir,
                 'wind_max_time': max_wind_time,
                 'rain': rain,
                 'rain_rate': float(or_data.get('Pioggia')),
@@ -120,6 +122,8 @@ class GreenplanetParser(Parser):
             if d.get('TemperaturaAriaMedia') != "":
                 or_data = d
 
+                print("DATA")
+                print(or_data)
                 if or_data is not None:
                     local = pytz.timezone("Europe/London") # UTC+1
                     naive = dateutil.parser.parse(or_data.get('Data'))
@@ -159,12 +163,14 @@ class GreenplanetParser(Parser):
                             min_relative_humidity_time = min_relative_humidity_prev.relative_humidity_min_time
 
                     max_wind = float(or_data.get('VelocitaVento2mMax'))
+                    max_wind_dir = float(or_data.get('DirezioneVento')) if or_data.get('DirezioneVento') is not "" else None
                     max_wind_time = date_aware.time()
                     max_wind_prev = Data.objects.filter(station=station, datetime__date=date_aware.date()).order_by('-wind_strength_max').first()
                     if max_wind_prev is not None:
                         if max_wind_prev.wind_strength_max > max_wind:
                             max_wind = float(max_wind_prev.wind_strength_max)
                             max_wind_time = max_wind_prev.wind_max_time
+                            max_wind_dir = float(max_wind_prev.wind_dir_max)
 
                     data = {
                         'datetime': date_aware,
@@ -191,9 +197,9 @@ class GreenplanetParser(Parser):
                         'pressure_min': None,
                         'pressure_min_time': None,
                         'wind_strength': float(or_data.get('VelocitaVento2mMedia')),
-                        'wind_dir': None,
+                        'wind_dir': float(or_data.get('DirezioneVento')) if or_data.get('DirezioneVento') is not "" else None,
                         'wind_strength_max': max_wind,
-                        'wind_dir_max': None,
+                        'wind_dir_max': max_wind_dir,
                         'wind_max_time': max_wind_time,
                         'rain': rain,
                         'rain_rate': float(or_data.get('Pioggia')),
