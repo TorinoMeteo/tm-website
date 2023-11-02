@@ -530,24 +530,24 @@ class FetchView(View):
                 datetime.now().strftime('%Y-%m-%d'),
             )
 
-        try:
-            data = fetch_data(
-                url,
-                station.data_format.name,
-                time_format=station.data_time_format.split(',') if station.data_time_format else None,
-                date_format=station.data_date_format.split(',') if station.data_date_format else None,
-                headers={ "Authorization": station.data_token } if station.data_token else {},
-                station=station,
-            )
-            json_data = data.as_json()
+        # try:
+        data = fetch_data(
+            url,
+            station.data_format.name,
+            time_format=station.data_time_format.split(',') if station.data_time_format else None,
+            date_format=station.data_date_format.split(',') if station.data_date_format else None,
+            headers={ "Authorization": station.data_token } if station.data_token else {},
+            station=station,
+        )
+        json_data = data.as_json()
 
-            if not data_exists(station, data['datetime']):
-                new_data = Data(**adjust_data(station, data))
-                new_data.save()
-                logger.info('station %s fetch successfull' % (station.name))
+        if not data_exists(station, data['datetime']):
+            new_data = Data(**adjust_data(station, data))
+            new_data.save()
+            logger.info('station %s fetch successfull' % (station.name))
 
-        except Exception as e:
-            logger.warn('station %s fetch failed: %s - datetime: ' % (station.name, str(e), str(data['datetime']))) # noqa
+        # except Exception as e:
+        #     logger.warn('station %s fetch failed: %s - datetime: ' % (station.name, str(e), str(data['datetime']))) # noqa
 
 
         return render(request, 'realtime/fetch.html', {

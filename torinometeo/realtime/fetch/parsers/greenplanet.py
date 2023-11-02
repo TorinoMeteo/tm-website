@@ -69,7 +69,7 @@ class GreenplanetParser(Parser):
                 if max_wind_prev.wind_strength_max > max_wind:
                     max_wind = float(max_wind_prev.wind_strength_max)
                     max_wind_time = max_wind_prev.wind_max_time
-                    max_wind_dir = float(max_wind_prev.wind_dir_max)
+                    max_wind_dir = float(max_wind_prev.wind_dir_max) if max_wind_prev.wind_dir_max and max_wind_prev.wind_dir_max != '--' else None
 
             data = {
                 'datetime': date_aware,
