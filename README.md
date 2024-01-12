@@ -1,6 +1,6 @@
 # TorinoMeteo
 
-Associazione culturale per lo studio dei fenomeni meteorologici
+Associazione culturale per lo studio dei fenomeni meteorologici.
 
 ## Getting Started
 
