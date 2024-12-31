@@ -19,7 +19,7 @@ $link-color: #fb730f;
 }
 
 .navbar-brand {
-  background: url('../img/logoTM.png') no-repeat center center;
+  background: $bg-navbar url('../img/logoTM.png') no-repeat center center;
   background-size: 100px;
   border-radius: 0 0 10px 10px;
   box-sizing: content-box;
@@ -47,7 +47,7 @@ $link-color: #fb730f;
   font-family: 'Roboto';
   height: 100%;
   line-height: 1.5;
-  margin-top: 100px;
+  margin-top: 74px;
   overflow: auto;
   padding-top: 20px;
   position: fixed;
@@ -66,14 +66,12 @@ $link-color: #fb730f;
   }
 
   .menu-container-sx {
-    margin-top: 16px;
     @include media-breakpoint-up(xl) {
       float: left;
     }
   }
 
   .menu-container-dx {
-    margin-top: 16px;
     @include media-breakpoint-up(xl) {
       float: right;
 
