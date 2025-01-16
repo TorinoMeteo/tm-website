@@ -114,19 +114,16 @@ h1, h2, h3 {
   article {
     // background: lighten(#FFDF4E, 25%);
     background: #FEFCD0;
-    opacity: .7;
     overflow: auto;
   }
   article + article {
     // background: lighten(#A9DAFC, 14%);
     background: #D7ECC0;
-    opacity: .7;
     margin-top: 100px;
   }
   article + article + article {
     // background: lighten(#FCF8CB, 5%);
     background: #D7ECC0;
-    opacity: .7;
   }
 }
 .blog-aside {
