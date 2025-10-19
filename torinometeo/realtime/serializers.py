@@ -1,5 +1,8 @@
 from django.conf import settings
 from rest_framework import serializers
+from decimal import Decimal
+from datetime import date
+
 
 from .models.stations import (AirQualityData, AirQualityStation, Data,
                               HistoricData, RadarSnapshot, Station,
@@ -224,3 +227,60 @@ class StationForecastSerializer(serializers.ModelSerializer):
         if f.station.forecast_url:
             return f.station.forecast_url.replace('forecast.xml', '')
         return None
+
+
+class MonthlyTemperatureSerializer(serializers.Serializer):
+    """
+    Serializer for the monthly aggregated temperature data.
+    
+    This is a standard Serializer (not a ModelSerializer) because 
+    the input data (the queryset result) is a list of dictionaries 
+    from a grouping/aggregation query, not a list of model instances.
+    """
+
+    # The 'month' field comes from the TruncMonth function, which 
+    # returns a datetime.date object representing the first day of the month.
+    month = serializers.DateField(
+        label='Month Start Date', 
+        help_text='The start date of the aggregation month (e.g., 2024-01-01).'
+    )
+    
+    # The 'station' field is the foreign key ID we grouped by.
+    station = serializers.IntegerField(
+        label='Station ID', 
+        help_text='The ID of the meteorological station.'
+    )
+
+    # This field holds the calculated average temperature. The name 
+    # 'average_temperature' matches the alias used in the .annotate() query.
+    average_temperature = serializers.DecimalField(
+        label='Average Temperature',
+        max_digits=4, 
+        decimal_places=2,
+        required=False,
+        allow_null=True,
+        help_text='The calculated mean temperature for the month.'
+    )
+
+    class Meta:
+        # Define fields explicitly, as this is standard Serializer (not model-backed)
+        fields = ['month', 'station', 'average_temperature']
+
+    def to_representation(self, instance):
+        """
+        Customizes the output representation, ensuring Decimal values 
+        are correctly converted to strings for standard API output.
+        """
+        data = super().to_representation(instance)
+        
+        # Format the decimal to a cleaner string representation, 
+        # handling None values gracefully.
+        temp = instance.get('average_temperature')
+        if temp is not None:
+             # Round to 2 decimal places and ensure it's converted to a string
+            data['average_temperature'] = f"{temp:.2f}"
+        
+        # Convert date object to ISO format string
+        data['month'] = instance.get('month').strftime('%Y-%m') 
+        
+        return data

@@ -7,6 +7,8 @@ from django.http import Http404
 from django.utils import timezone
 from django.conf import settings
 from django.http import JsonResponse
+from django.db.models import Avg
+from django.db.models.functions import TruncMonth
 from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import mixins, permissions, status, viewsets
@@ -19,7 +21,7 @@ from realtime.models.stations import (Data, HistoricData, RadarSnapshot,
 from realtime.serializers import (HistoricDataSerializer, JustDataSerializer,
                                   RadarSnapshotSerializer,
                                   RealtimeDataSerializer,
-                                  StationForecastSerializer, AirQualityStationSerializer)
+                                  StationForecastSerializer, AirQualityStationSerializer, MonthlyTemperatureSerializer)
 
 
 class CurrentDayDataViewSet(viewsets.ViewSet):
@@ -212,3 +214,41 @@ class VCOApi(APIView):
         ), auth=(settings.VCO_USER, settings.VCO_PWD))
 
         return JsonResponse(json.loads(r.text))
+
+
+class MonthMeanTemperature(viewsets.ViewSet):
+    """ Month mean temperature
+    """
+
+    def retrieve(self, request, pk=None):
+        """
+        Gets the last fetched data for the given station
+        """
+        try:
+            station = Station.objects.get(slug=pk)
+            monthly_avg_temp = HistoricData.objects.filter(
+                station__slug=pk, 
+                # Optional: Filter out records where the temperature mean is NULL 
+                # before calculation for cleaner averages.
+                temperature_mean__isnull=False
+            ).annotate(
+                # Truncate the 'date' to the month level. This creates a new
+                # field/grouping key that represents the first day of that month.
+                month=TruncMonth('date')
+            ).values(
+                # Group the results by the 'month' (which includes the year)
+                # and the 'station' (if you were querying multiple stations)
+                'month', 
+                'station' 
+            ).annotate(
+                # Calculate the average of 'temperature_mean' for each 'month' group
+                average_temperature=Avg('temperature_mean')
+            ).order_by(
+                # Order the results chronologically
+                'month'
+            )
+
+            serializer = MonthlyTemperatureSerializer(monthly_avg_temp, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Station.DoesNotExist:
+            raise Http404()

@@ -28,7 +28,7 @@ from core.views import LoginView, LogoutView, PizzaGptApiView
 from forecast.views.api import DayForecastViewSet, ForecastViewSet
 from realtime.views.api import (CurrentDayDataViewSet, HistoricDataViewSet, StationHistoricDataViewSet,
                                 LastRealtimeDataViewSet, RadarSnapshotViewSet,
-                                StationForecastViewSet, AirQualityStationViewSet, VCOApi)
+                                StationForecastViewSet, AirQualityStationViewSet, VCOApi, MonthMeanTemperature)
 from webcam.views import Webcams
 
 # BEGIN API
@@ -50,6 +50,8 @@ router.register(r'realtime/(?P<slug>\w+)/history',
                 StationHistoricDataViewSet, 'station history data')  # noqa
 router.register(r'realtime/radar/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)',
                 RadarSnapshotViewSet, 'radar images')  # noqa
+router.register(r'realtime/monthly', MonthMeanTemperature,
+                'monthly mean temperature')  # noqa
 router.register(r'webcam', Webcams, 'webcams')
 router.register(r'realtime/airqualitystations', AirQualityStationViewSet,
                 'air quality stations')
