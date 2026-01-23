@@ -42,4 +42,4 @@ class NetRequestForm(forms.ModelForm):
         firstname = self.cleaned_data['firstname']
         lastname = self.cleaned_data['lastname']
         city = self.cleaned_data['city']
-        send_mail('Richiesta ingresso nella rete %s %s (%s)' % (firstname, lastname, city), 'Un nuovo utente ha richiesto di entrare a far parte della rete Realtime. Accedi all\'area amministrativa per visualizzare tutte le informazioni', settings.NOREPLY_EMAIL, [settings.NET_REQUEST_EMAIL], fail_silently=False)
+        send_mail('Richiesta ingresso nella rete %s %s (%s)' % (firstname, lastname, city), 'Un nuovo utente ha richiesto di entrare a far parte della rete Realtime. Accedi all\'area amministrativa per visualizzare tutte le informazioni', settings.NOREPLY_EMAIL, [settings.NET_REQUEST_EMAIL], fail_silently=True)
